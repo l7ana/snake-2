@@ -22,7 +22,15 @@ const config = {
         MainMenu,
         Game,
         GameOver
-    ]
+    ],
+    physics: {
+        default: 'arcade',
+        arcade: { 
+            debug: false,
+            fps: 12,
+            OVERLAP_BIAS: 50
+         }
+    }
 };
 
 export default new Phaser.Game(config);

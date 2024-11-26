@@ -33,6 +33,10 @@ export class Preloader extends Scene
         this.load.setPath('assets');
 
         this.load.image('logo', 'logo.png');
+        
+        this.load.spritesheet('head', './sprites/HeadSprite.png', {frameWidth: 50, frameHeight: 50});
+        this.load.spritesheet('body', './sprites/MiddleSprite.png', {frameWidth: 50, frameHeight: 50});
+        this.load.image('food', 'foodsample.png')
     }
 
     create ()
@@ -42,5 +46,14 @@ export class Preloader extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('MainMenu');
+
+        
+        //  Our player animations, turning, walking left and walking right.
+        this.anims.create({
+            key: 'head',
+            frames: this.anims.generateFrameNames('head', { prefix: '', start: 0, end: 1 }),
+            frameRate: 6,
+            repeat: -1
+        });
     }
 }
