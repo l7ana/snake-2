@@ -27,7 +27,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: { 
-            debug: false,
+            debug: true,
             fps: 12,
             OVERLAP_BIAS: 50
          }

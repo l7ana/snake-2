@@ -50,6 +50,8 @@ export class Game extends Scene
         this.physics.add.existing(food);
 
         // this.physics.add.collider(snake, food);
+
+        this.physics.add.overlap(snake, food, this.log, [], this);
         // this.physics.add.collider(snake, food, this.collectFood, null, this);
         
         this.physics.add.overlap(snake, food, function(b1, b2) {
@@ -62,6 +64,9 @@ export class Game extends Scene
         cursors = this.input.keyboard.createCursorKeys();
 
         this.input.keyboard.on('keydown-Q', this.log, this );
+
+        this.physics.world.drawDebug = false;
+        this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
 
         // this.input.once('pointerdown', () => {
 
@@ -116,6 +121,16 @@ export class Game extends Scene
             //         repositionFood();
             //     }
         }
+
+        if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
+            if (this.physics.world.drawDebug) {
+              this.physics.world.drawDebug = false;
+              this.physics.world.debugGraphic.clear();
+            }
+            else {
+              this.physics.world.drawDebug = true;
+            }
+          }
 
     }
 }
