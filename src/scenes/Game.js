@@ -5,6 +5,9 @@ import Food from '../components/Food.js';
 var snake;
 var food;
 var cursors;
+var map;
+var tileset;
+var layer;
 
 export class Game extends Scene
 {
@@ -17,7 +20,16 @@ export class Game extends Scene
     {
         this.cameras.main.setBackgroundColor(0x00ff00);
 
-        this.add.image(512, 384, 'background').setAlpha(0.5);
+        // this.add.image(512, 384, 'background').setAlpha(0.5);
+
+        // Creating a blank tilemap with the specified dimensions
+        map = this.make.tilemap({ key: 'map'});
+        console.log(map)
+        tileset = map.addTilesetImage('tileset1', 'tiles', 32, 32);
+        layer = map.createLayer("Tile Layer 1", [tileset]);
+        // populateBoardAndTrackEmptyTiles
+
+        // this.area = this.add.tileSprite(150, 150, 300, 300, "area").setOrigin(0, 0);
 
         // this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
         //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
@@ -25,14 +37,24 @@ export class Game extends Scene
         //     align: 'center'
         // }).setOrigin(0.5);
         food = new Food(this, 16, 8);
+        snake = new Snake(this, 8, 8);
         console.log(food);
 
-        snake = new Snake(this, 8, 8);
+        snake.touchesArea = false;
         console.log(snake);
-        console.log(this);
+        this.txt = this.add.text(300, 10, 'DOES NOT TOUCH', { color: '#FF0000' });
+        // console.log(this);
 
-        this.physics.add.collider(snake, food);
-        this.physics.add.collider(snake, food, this.collectFood, null, this);
+        this.physics.add.existing(snake);
+        // this.physics.arcade.enable(snake);
+        this.physics.add.existing(food);
+
+        // this.physics.add.collider(snake, food);
+        // this.physics.add.collider(snake, food, this.collectFood, null, this);
+        
+        this.physics.add.overlap(snake, food, function(b1, b2) {
+        	snake.touchesArea = true;
+        });
 
         // this.physics.add.overlap(this.snake, this.food, (snake, food) => snake.collideWithFood(food));
 
@@ -48,7 +70,6 @@ export class Game extends Scene
         // });
     }
     
-    
     collectFood (snake, food) {
         food.disableBody(true, true);
         snake.grow();
@@ -60,6 +81,9 @@ export class Game extends Scene
     }
 
     update (time, delta) {
+        this.txt.setText(snake.touchesArea ? 'TOUCHES':'DOES NOT TOUCH');
+        snake.touchesArea = false;
+
         if (!snake.alive)
             { return; }
 
@@ -83,9 +107,9 @@ export class Game extends Scene
             snake.faceDown();
             // this.setVelocityY(this.speed); 
         }
-        snake.update(time);
+        snake.update(time, layer);
 
-        if (snake.update(time)) {
+        if (snake.update(time, layer)) {
             snake.collideWithFood(food);
             // if (snake.collideWithFood(food))
             //     {

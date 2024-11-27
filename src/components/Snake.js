@@ -31,15 +31,16 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     
     this.onCollide = true;
     this.onOverlap = true;
+    this.enableBody = true;
   
     this.play('head');
   }
 
-  update(time) {
+  update(time, layer) {
     if (time >= this.moveTime)
       {
         // console.log(time)
-        return this.move(time); 
+        return this.move(time, layer); 
       }
   }
 
@@ -71,24 +72,37 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
       }
   }
 
-  move (time) {
+  move (time, layer) {
     // console.log(this.heading)
     switch (this.heading)
     {
       case LEFT:
           this.x = this.x - 1;
+
+          this.x -= 32;
+          this.angle = 180;
+          // const tile = layer.getTileAtWorldXY(this.x - 32, this.y, true);
+          // if (tile.index === 1){
+          //   return
+          // } else {
+          //   this.x -= 32;
+          //   this.angle = 180;
+          // }
           break;
 
       case RIGHT:
           this.x = this.x + 1;
+          this.angle = 0;
           break;
 
       case UP:
           this.y = this.y - 1;
+          this.angle = 270;
           break;
 
       case DOWN:
           this.y = this.y + 1;
+          this.angle = 90;
           break;
     }
     this.direction = this.heading;

@@ -37,6 +37,8 @@ export class Preloader extends Scene
         this.load.spritesheet('head', './sprites/HeadSprite.png', {frameWidth: 50, frameHeight: 50});
         this.load.spritesheet('body', './sprites/MiddleSprite.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('food', 'foodsample.png')
+        this.load.image('tiles', 'drawtiles-spaced.png')
+        this.load.tilemapTiledJSON('map', 'blankmap2.json');
     }
 
     create ()

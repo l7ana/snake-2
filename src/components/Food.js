@@ -1,15 +1,16 @@
-export default class Food extends Phaser.GameObjects.Image
+export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y) {
     super(scene, x, y);
     
-    Phaser.GameObjects.Image.call(this, scene)
+    Phaser.Physics.Arcade.Image.call(this, scene)
 
     this.setTexture('food');
     this.setPosition(x * 16, y * 16);
     this.setOrigin(0);
     this.onCollide = true;
     this.onOverlap = true;
+    this.enableBody = true;
 
     this.setScale(2);
 
