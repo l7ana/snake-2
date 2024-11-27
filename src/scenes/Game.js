@@ -1,13 +1,13 @@
-import { Scene } from 'phaser';
+import { Scene, Grid } from 'phaser';
 import Snake from '../components/Snake.js';
 import Food from '../components/Food.js';
 
 var snake;
 var food;
 var cursors;
-var map;
-var tileset;
-var layer;
+// var map;
+// var tileset;
+// var layer;
 var timeline2;
 
 export class Game extends Scene
@@ -20,14 +20,15 @@ export class Game extends Scene
     create ()
     {
         this.cameras.main.setBackgroundColor(0x00ff00);
-
+        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1)
+        console.log(this)
         // this.add.image(512, 384, 'background').setAlpha(0.5);
 
         // Creating a blank tilemap with the specified dimensions
-        map = this.make.tilemap({ key: 'map'});
-        console.log(map)
-        tileset = map.addTilesetImage('tileset1', 'tiles', 32, 32);
-        layer = map.createLayer("Tile Layer 1", [tileset]);
+        // map = this.make.tilemap({ key: 'map'});
+        // console.log(map)
+        // tileset = map.addTilesetImage('tileset1', 'tiles', 32, 32);
+        // layer = map.createLayer("Tile Layer 1", [tileset]);
         // populateBoardAndTrackEmptyTiles
         // this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
         //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
@@ -109,17 +110,14 @@ export class Game extends Scene
         if (cursors.left.isDown)
         { 
             snake.faceLeft();
-            // snake.setVelocityX(-1*this.speed);
          }
         else if (cursors.right.isDown)
         { 
             snake.faceRight();
-            // snake.setVelocityX(this.speed);
         }
         else if (cursors.up.isDown)
         { 
             snake.faceUp();
-            // this.setVelocityY(-1*this.speed);
         }
         else if (cursors.down.isDown)
         { 
