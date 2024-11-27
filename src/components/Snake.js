@@ -78,6 +78,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     {
       case LEFT:
           this.x = this.x - 1;
+          //need to change how this.x transforms in the increment
 
           this.x -= 32;
           this.angle = 180;
