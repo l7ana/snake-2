@@ -28,14 +28,20 @@ export class Game extends Scene
         tileset = map.addTilesetImage('tileset1', 'tiles', 32, 32);
         layer = map.createLayer("Tile Layer 1", [tileset]);
         // populateBoardAndTrackEmptyTiles
-
-        // this.area = this.add.tileSprite(150, 150, 300, 300, "area").setOrigin(0, 0);
-
         // this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
         //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
         //     stroke: '#000000', strokeThickness: 8,
         //     align: 'center'
         // }).setOrigin(0.5);
+        const timeline = this.add.timeline();
+        timeline.repeat().play();
+        timeline.add({
+          in: 1000,
+          run: () => {
+            console.log('hi')
+          }
+        })
+
         food = new Food(this, 16, 8);
         snake = new Snake(this, 8, 8);
         console.log(food);
@@ -112,9 +118,9 @@ export class Game extends Scene
             snake.faceDown();
             // this.setVelocityY(this.speed); 
         }
-        snake.update(time, layer);
+        // snake.update(time);
 
-        if (snake.update(time, layer)) {
+        if (snake.update(time)) {
             snake.collideWithFood(food);
             // if (snake.collideWithFood(food))
             //     {

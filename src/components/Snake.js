@@ -36,11 +36,10 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     this.play('head');
   }
 
-  update(time, layer) {
+  update(time) {
     if (time >= this.moveTime)
       {
-        // console.log(time)
-        return this.move(time, layer); 
+        return this.move(time); 
       }
   }
 
@@ -72,7 +71,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
       }
   }
 
-  move (time, layer) {
+  move (time) {
     // console.log(this.heading)
     switch (this.heading)
     {
