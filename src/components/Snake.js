@@ -8,7 +8,7 @@ var RIGHT = 3;
 export default class Snake extends Phaser.Physics.Arcade.Sprite
 {
   constructor (scene, x, y) {
-    super(scene, x*16 , y*16, 'head', '0');
+    super(scene, x , y, 'head', '0');
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -18,7 +18,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     this.headPosition = new Phaser.Geom.Point(x, y);
     this.body = scene.add.group();
 
-    this.head = this.body.create(x*16 , y*16, 'head');
+    this.head = this.body.create(x , y, 'head');
     this.head.setOrigin(0);
 
     this.alive = true;

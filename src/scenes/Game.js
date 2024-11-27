@@ -8,6 +8,7 @@ var cursors;
 var map;
 var tileset;
 var layer;
+var timeline2;
 
 export class Game extends Scene
 {
@@ -33,17 +34,26 @@ export class Game extends Scene
         //     stroke: '#000000', strokeThickness: 8,
         //     align: 'center'
         // }).setOrigin(0.5);
-        const timeline = this.add.timeline();
-        timeline.repeat().play();
-        timeline.add({
+        // const timeline = this.add.timeline();
+        // timeline.repeat().play();
+        // timeline.add({
+        //   in: 1000,
+        //   run: () => {
+        //     console.log('hi')   
+        //   }
+        // })
+
+        const timeline2 = this.add.timeline();
+        timeline2.repeat().play();
+        timeline2.add({
           in: 1000,
           run: () => {
-            console.log('hi')
+            console.log(snake.x, snake.y);
           }
         })
 
-        food = new Food(this, 16, 8);
-        snake = new Snake(this, 8, 8);
+        food = new Food(this, 100, 100);
+        snake = new Snake(this, 80, 80);
         console.log(food);
 
         snake.touchesArea = false;
@@ -63,8 +73,6 @@ export class Game extends Scene
         this.physics.add.overlap(snake, food, function(b1, b2) {
         	snake.touchesArea = true;
         });
-
-        // this.physics.add.overlap(this.snake, this.food, (snake, food) => snake.collideWithFood(food));
 
         //  Create our keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
@@ -119,14 +127,9 @@ export class Game extends Scene
             // this.setVelocityY(this.speed); 
         }
         // snake.update(time);
-
-        if (snake.update(time)) {
-            snake.collideWithFood(food);
-            // if (snake.collideWithFood(food))
-            //     {
-            //         repositionFood();
-            //     }
-        }
+        // if (snake.update(time)) {
+        //     snake.collideWithFood(food);
+        // }
 
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
