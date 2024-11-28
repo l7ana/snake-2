@@ -47,6 +47,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     if (this.direction === UP || this.direction === DOWN)
       { 
         this.heading = LEFT;
+        this.angle = 180;
       }
   }
 
@@ -54,6 +55,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     if (this.direction === UP || this.direction === DOWN)
       {
         this.heading = RIGHT;
+        this.angle = 0;
       }
   }
 
@@ -61,6 +63,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     if (this.direction === LEFT || this.direction === RIGHT)
       {
           this.heading = UP;
+          this.angle = 270;
       }
   }
 
@@ -68,6 +71,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     if (this.direction === LEFT || this.direction === RIGHT)
       {
           this.heading = DOWN;
+          this.angle = 90;
       }
   }
 
@@ -76,31 +80,19 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     switch (this.heading)
     {
       case LEFT:
-          this.x = this.x - 1;
-          //need to change how this.x transforms in the increment
-          this.angle = 180;
-          // const tile = layer.getTileAtWorldXY(this.x - 32, this.y, true);
-          // if (tile.index === 1){
-          //   return
-          // } else {
-          //   this.x -= 32;
-          //   this.angle = 180;
-          // }
+          this.x = this.x - 32;
           break;
 
       case RIGHT:
-          this.x = this.x + 1;
-          this.angle = 0;
+          this.x = this.x + 32;
           break;
 
       case UP:
-          this.y = this.y - 1;
-          this.angle = 270;
+          this.y = this.y - 32;
           break;
 
       case DOWN:
-          this.y = this.y + 1;
-          this.angle = 90;
+          this.y = this.y + 32;
           break;
     }
     this.direction = this.heading;

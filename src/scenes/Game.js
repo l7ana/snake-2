@@ -20,41 +20,33 @@ export class Game extends Scene
     create ()
     {
         this.cameras.main.setBackgroundColor(0x00ff00);
-        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1)
+        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1);
         console.log(this)
         // this.add.image(512, 384, 'background').setAlpha(0.5);
 
-        // Creating a blank tilemap with the specified dimensions
-        // map = this.make.tilemap({ key: 'map'});
-        // console.log(map)
-        // tileset = map.addTilesetImage('tileset1', 'tiles', 32, 32);
-        // layer = map.createLayer("Tile Layer 1", [tileset]);
-        // populateBoardAndTrackEmptyTiles
         // this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
         //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
         //     stroke: '#000000', strokeThickness: 8,
         //     align: 'center'
         // }).setOrigin(0.5);
-        // const timeline = this.add.timeline();
-        // timeline.repeat().play();
-        // timeline.add({
-        //   in: 1000,
-        //   run: () => {
-        //     console.log('hi')   
-        //   }
-        // })
-
         const timeline2 = this.add.timeline();
         timeline2.repeat().play();
+        // timeline2.add({
+        //   in: 1000,
+        //   run: () => {
+        //     console.log(snake.x, snake.y);
+        //   }
+        // })
         timeline2.add({
-          in: 1000,
-          run: () => {
-            console.log(snake.x, snake.y);
-          }
-        })
+            in: 250,
+            run: () => {
+              snake.move();
+              console.log(snake.x, snake.y);
+            }
+          })
 
-        food = new Food(this, 100, 100);
-        snake = new Snake(this, 80, 80);
+        food = new Food(this, 2, 2);
+        snake = new Snake(this, 512, 384);
         console.log(food);
 
         snake.touchesArea = false;
