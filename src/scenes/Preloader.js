@@ -34,11 +34,10 @@ export class Preloader extends Scene
 
         this.load.image('logo', 'logo.png');
         
-        this.load.spritesheet('head', './sprites/HeadSprite.png', {frameWidth: 50, frameHeight: 50});
-        this.load.spritesheet('body', './sprites/MiddleSprite.png', {frameWidth: 50, frameHeight: 50});
-        this.load.image('food', 'foodsample.png')
-        this.load.image('tiles', 'drawtiles-spaced.png')
-        this.load.tilemapTiledJSON('map', 'blankmap2.json');
+        // this.load.spritesheet('head', './sprites/HeadSprite.png', {frameWidth: 50, frameHeight: 50});
+        this.load.image('body', 'body.png');
+            // this.load.spritesheet('body', 'body.png', {frameWidth: 50, frameHeight: 50});
+        this.load.image('food', 'food.png')
     }
 
     create ()

@@ -1,14 +1,10 @@
-import { Scene, Grid } from 'phaser';
+import { Scene } from 'phaser';
 import Snake from '../components/Snake.js';
 import Food from '../components/Food.js';
 
 var snake;
 var food;
 var cursors;
-// var map;
-// var tileset;
-// var layer;
-var timeline2;
 
 export class Game extends Scene
 {
@@ -20,107 +16,22 @@ export class Game extends Scene
     create ()
     {
         this.cameras.main.setBackgroundColor(0x00ff00);
-        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1);
-        console.log(this)
-        // this.add.image(512, 384, 'background').setAlpha(0.5);
-
-        // this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
-        //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-        //     stroke: '#000000', strokeThickness: 8,
-        //     align: 'center'
-        // }).setOrigin(0.5);
-        const timeline2 = this.add.timeline();
-        timeline2.repeat().play();
-        // timeline2.add({
-        //   in: 1000,
-        //   run: () => {
-        //     console.log(snake.x, snake.y);
-        //   }
-        // })
-        timeline2.add({
-            in: 250,
-            run: () => {
-              snake.move();
-              console.log(snake.x, snake.y);
-            }
-          })
-
-        food = new Food(this, 2, 2);
-        snake = new Snake(this, 512, 384);
-        console.log(food);
-
-        snake.touchesArea = false;
-        console.log(snake);
-        this.txt = this.add.text(300, 10, 'DOES NOT TOUCH', { color: '#FF0000' });
-        // console.log(this);
-
-        this.physics.add.existing(snake);
-        // this.physics.arcade.enable(snake);
-        this.physics.add.existing(food);
-
-        // this.physics.add.collider(snake, food);
-
-        this.physics.add.overlap(snake, food, this.log, [], this);
-        // this.physics.add.collider(snake, food, this.collectFood, null, this);
+        // this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1);
         
-        this.physics.add.overlap(snake, food, function(b1, b2) {
-        	snake.touchesArea = true;
-        });
-
         //  Create our keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
-
-        this.input.keyboard.on('keydown-Q', this.log, this );
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
 
-        // this.input.once('pointerdown', () => {
-
-        //     this.scene.start('GameOver');
-
-        // });
+       
+        food = new Food(this, 3, 4);
+        snake = new Snake(this, 8, 8);
+    
     }
     
-    collectFood (snake, food) {
-        food.disableBody(true, true);
-        snake.grow();
-        food.eat();
-    }
-
-    log () {
-        console.log(`snake is ${snake.x}, ${snake.y} and food is ${food.x}, ${food.y}` );
-    }
 
     update (time, delta) {
-        this.txt.setText(snake.touchesArea ? 'TOUCHES':'DOES NOT TOUCH');
-        snake.touchesArea = false;
-
-        if (!snake.alive)
-            { return; }
-
-        if (cursors.left.isDown)
-        { 
-            snake.faceLeft();
-         }
-        else if (cursors.right.isDown)
-        { 
-            snake.faceRight();
-        }
-        else if (cursors.up.isDown)
-        { 
-            snake.faceUp();
-        }
-        else if (cursors.down.isDown)
-        { 
-            snake.faceDown();
-            // this.setVelocityY(this.speed); 
-        }
-        // snake.update(time);
-        // if (snake.update(time)) {
-        //     snake.collideWithFood(food);
-        // }
-
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
@@ -131,5 +42,102 @@ export class Game extends Scene
             }
           }
 
+          if (!snake.alive)
+          {
+            return;
+          }
+      
+          /**
+          * Check which key is pressed, and then change the direction the snake
+          * is heading based on that. The checks ensure you don't double-back
+          * on yourself, for example if you're moving to the right and you press
+          * the LEFT cursor, it ignores it, because the only valid directions you
+          * can move in at that time is up and down.
+          */
+          if (cursors.left.isDown)
+          {
+              snake.faceLeft();
+          }
+          else if (cursors.right.isDown)
+          {
+              snake.faceRight();
+          }
+          else if (cursors.up.isDown)
+          {
+              snake.faceUp();
+          }
+          else if (cursors.down.isDown)
+          {
+              snake.faceDown();
+          }
+
+          if (snake.update(time))
+          {
+              //  If the snake updated, we need to check for collision against food
+      
+              if (snake.collideWithFood(food))
+              {
+                  this.repositionFood();
+              }
+          }
+    }
+
+    /**
+    * We can place the food anywhere in our 40x30 grid
+    * *except* on-top of the snake, so we need
+    * to filter those out of the possible food locations.
+    * If there aren't any locations left, they've won!
+    *
+    * @method repositionFood
+    * @return {boolean} true if the food was placed, otherwise false
+    */
+    repositionFood () {
+        //  First create an array that assumes all positions
+    //  are valid for the new piece of food
+
+    //  A Grid we'll use to reposition the food each time it's eaten
+    var testGrid = [];
+
+    for (var y = 0; y < 30; y++)
+    {
+        testGrid[y] = [];
+
+        for (var x = 0; x < 40; x++)
+        {
+            testGrid[y][x] = true;
+        }
+    }
+
+    snake.updateGrid(testGrid);
+
+    //  Purge out false positions
+    var validLocations = [];
+
+    for (var y = 0; y < 30; y++)
+    {
+        for (var x = 0; x < 40; x++)
+        {
+            if (testGrid[y][x] === true)
+            {
+                //  Is this position valid for food? If so, add it here ...
+                validLocations.push({ x: x, y: y });
+            }
+        }
+    }
+
+    if (validLocations.length > 0)
+    {
+        //  Use the RNG to pick a random food position
+        var pos = Phaser.Math.RND.pick(validLocations);
+
+        //  And place it
+        food.setPosition(pos.x * 16, pos.y * 16);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
     }
 }
