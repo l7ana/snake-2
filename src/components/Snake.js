@@ -33,7 +33,7 @@ export default class Snake extends Phaser.Physics.Arcade.Sprite
     this.onOverlap = true;
     this.enableBody = true;
   
-    this.play('head');
+    // this.play('head');
   }
 
   update(time) {
