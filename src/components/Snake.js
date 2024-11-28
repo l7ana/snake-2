@@ -11,6 +11,8 @@ var Snake = new Phaser.Class({
   function Snake (scene, x, y)
   {
       this.headPosition = new Phaser.Geom.Point(x, y);
+      
+      // Phaser.Physics.Arcade.Sprite.call(this, scene)
 
       this.body = scene.add.group();
 
@@ -27,6 +29,8 @@ var Snake = new Phaser.Class({
 
       this.heading = RIGHT;
       this.direction = RIGHT;
+      
+      scene.physics.add.existing(this.body);
   },
 
   update: function (time)
@@ -133,7 +137,8 @@ var Snake = new Phaser.Class({
 
   collideWithFood: function (food)
   {
-      if (this.head.x === food.x && this.head.y === food.y)
+      if (this.head.x >= food.x - 8 && this.head.x <= food.x + 8 && 
+          this.head.y >= food.y - 8 && this.head.y <= food.y + 8 )
       {
           this.grow();
 

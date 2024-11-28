@@ -23,10 +23,9 @@ export class Game extends Scene
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-
        
-        food = new Food(this, 3, 4);
-        snake = new Snake(this, 8, 8);
+          food = new Food(this, 3, 4);
+          snake = new Snake(this, 8, 8);
     
     }
     
@@ -36,6 +35,9 @@ export class Game extends Scene
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
+              console.log(snake.head.x, snake.head.y)
+              console.log(food)
+            //   console.log(this.physics)
             }
             else {
               this.physics.world.drawDebug = true;
