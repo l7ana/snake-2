@@ -16,7 +16,7 @@ export class Game extends Scene
     create ()
     {
         this.cameras.main.setBackgroundColor(0x00ff00);
-        // this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1);
+        this.add.grid(1024/2, 768/2, 1024, 768, 16, 16, 0xffffff, .25, 0xffffff, 1);
         
         //  Create our keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
@@ -100,11 +100,12 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < 30; y++)
+    for (var y = 0; y < 50; y++)
+        //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < 40; x++)
+        for (var x = 0; x < 50; x++)
         {
             testGrid[y][x] = true;
         }
@@ -115,9 +116,9 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < 30; y++)
+    for (var y = 0; y < 50; y++)
     {
-        for (var x = 0; x < 40; x++)
+        for (var x = 0; x < 50; x++)
         {
             if (testGrid[y][x] === true)
             {
