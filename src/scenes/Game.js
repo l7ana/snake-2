@@ -111,12 +111,12 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < 40; y++)
+    for (var y = 0; y < 24; y++)
         //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < 40; x++)
+        for (var x = 0; x < 32; x++)
         {
             testGrid[y][x] = true;
         }
@@ -127,9 +127,9 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < 40; y++)
+    for (var y = 0; y < 24; y++)
     {
-        for (var x = 0; x < 40; x++)
+        for (var x = 0; x < 32; x++)
         {
             if (testGrid[y][x] === true)
             {

@@ -26,11 +26,10 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
-    var x = Phaser.Math.Between(0, 10);
-    var y = Phaser.Math.Between(0, 10);
-    // what to do about set location going outside of bounds?
+    var x = Phaser.Math.Between(0, 31);
+    var y = Phaser.Math.Between(0, 23);
 
     this.setPosition(x * 32, y * 32);
-    console.log(this.x, this.y)
+    // console.log(this.x, this.y)
   }
 }
