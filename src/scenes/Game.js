@@ -5,6 +5,7 @@ import Food from '../components/Food.js';
 var snake;
 var food;
 var cursors;
+var text;
 
 export class Game extends Scene
 {
@@ -23,14 +24,22 @@ export class Game extends Scene
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+        this.pointer = this.input.pointer1;
        
           food = new Food(this, 3, 4);
           snake = new Snake(this, 8, 8);
+
+        this.text = this.add.text(320, 128, 'dead', { font: '48px Courier', fill: '#00ff00', align: 'center' }).setOrigin(0.5);
+        
+        this.text.setVisible(false);
     
     }
     
 
     update (time, delta) {
+        if (this.input.pointer1.isDown) {
+            console.log(pointer1.position)
+        }
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
@@ -46,6 +55,8 @@ export class Game extends Scene
 
           if (!snake.alive)
           {
+            
+            this.text.setVisible(true);
             return;
           }
       
@@ -100,12 +111,12 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < 50; y++)
+    for (var y = 0; y < 40; y++)
         //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < 50; x++)
+        for (var x = 0; x < 40; x++)
         {
             testGrid[y][x] = true;
         }
@@ -116,9 +127,9 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < 50; y++)
+    for (var y = 0; y < 40; y++)
     {
-        for (var x = 0; x < 50; x++)
+        for (var x = 0; x < 40; x++)
         {
             if (testGrid[y][x] === true)
             {

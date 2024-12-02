@@ -1,23 +1,20 @@
 export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y) {
-    super(scene, x*32 + 1, y*32 + 2);
+    super(scene, x*64 + 1, y*64 + 2);
     
     Phaser.Physics.Arcade.Image.call(this, scene)
 
     this.setTexture('food');
-    this.setPosition(x*32 + 1, y*32 + 2);
+    this.setPosition(x*64 + 1, y*64 + 2);
     this.setOrigin(0);
     this.onCollide = true;
     this.onOverlap = true;
     this.enableBody = true;
 
-    this.width = 32;
-    this.height = 32;
-
-    this.xRange = this.x - 32;
-    this.yRange = this.y - 32;
-
+    this.width = 64;
+    this.height = 64;
+    
     this.total = 0;
 
     scene.children.add(this);
@@ -29,9 +26,11 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
-    var x = Phaser.Math.Between(0, 39);
-    var y = Phaser.Math.Between(0, 29);
+    var x = Phaser.Math.Between(0, 10);
+    var y = Phaser.Math.Between(0, 10);
+    // what to do about set location going outside of bounds?
 
     this.setPosition(x * 32, y * 32);
+    console.log(this.x, this.y)
   }
 }
