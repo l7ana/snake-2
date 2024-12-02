@@ -16,7 +16,7 @@ var Snake = new Phaser.Class({
 
       this.body = scene.add.group();
 
-      this.head = this.body.create(x * 16, y * 16, 'body');
+      this.head = this.body.create(x * 32, y * 32, 'body');
       this.head.setOrigin(0);
 
       this.alive = true;
@@ -104,7 +104,7 @@ var Snake = new Phaser.Class({
       this.direction = this.heading;
 
       //  Update the body segments and place the last coordinate into this.tail
-      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * 16, this.headPosition.y * 16, 1, this.tail);
+      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * 32, this.headPosition.y * 32, 1, this.tail);
 
       //  Check to see if any of the body pieces have the same x/y as the head
       //  If they do, the head ran into the body
@@ -163,8 +163,8 @@ var Snake = new Phaser.Class({
       //  Remove all body pieces from valid positions list
       this.body.children.each(function (segment) {
 
-          var bx = segment.x / 16;
-          var by = segment.y / 16;
+          var bx = segment.x / 32;
+          var by = segment.y / 32;
 
           grid[by][bx] = false;
 

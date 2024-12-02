@@ -15,8 +15,8 @@ export class Game extends Scene
 
     create ()
     {
-        this.cameras.main.setBackgroundColor(0x00ff00);
-        this.add.grid(1024/2, 768/2, 1024, 768, 16, 16, 0xffffff, .25, 0xffffff, 1);
+        // this.cameras.main.setBackgroundColor(0x00ff00);
+        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
         
         //  Create our keyboard controls
         cursors = this.input.keyboard.createCursorKeys();
@@ -134,7 +134,7 @@ export class Game extends Scene
         var pos = Phaser.Math.RND.pick(validLocations);
 
         //  And place it
-        food.setPosition(pos.x * 16, pos.y * 16);
+        food.setPosition(pos.x * 32, pos.y * 32);
 
         return true;
     }

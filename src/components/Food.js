@@ -15,8 +15,8 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.width = 32;
     this.height = 32;
 
-    this.xRange = this.x - 16;
-    this.yRange = this.y - 16;
+    this.xRange = this.x - 32;
+    this.yRange = this.y - 32;
 
     this.total = 0;
 
@@ -32,6 +32,6 @@ export default class Food extends Phaser.Physics.Arcade.Image
     var x = Phaser.Math.Between(0, 39);
     var y = Phaser.Math.Between(0, 29);
 
-    this.setPosition(x * 16, y * 16);
+    this.setPosition(x * 32, y * 32);
   }
 }
