@@ -20,7 +20,14 @@ export class Game extends Scene
         this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
         
         //  Create our keyboard controls
-        cursors = this.input.keyboard.createCursorKeys();
+        if (!this.sys.game.device.input.touch) {
+            cursors = this.input.keyboard.createCursorKeys()
+            console.log('not mobile!')
+        } else {
+            this.buildMobileControls()
+            console.log('mobile!')
+        }
+        // cursors = this.input.keyboard.createCursorKeys();
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
@@ -93,6 +100,54 @@ export class Game extends Scene
                   this.repositionFood();
               }
           }
+    }
+
+    buildMobileControls () {
+        this.input.addPointer(2);
+        this.input.topOnly = true;
+
+        this.cursors = {
+            'up': {},
+            'left': {},
+            'right': {},
+            'down': {},
+        }
+
+        const pointerDown = key => {
+            // modifies this.cursors with the property that we check in update() method
+            this.cursors[key].isDown = true
+        }
+        const pointerUp = key => {
+            this.cursors[key].isDown = false
+        }
+
+        // button sizing
+        const WIDTH = 167
+        const HEIGHT = 153
+
+        // gutter width between buttons
+        const GUTTER = 12
+        
+
+        // Create a button helper
+        const createBtn = (key, x, y, width=WIDTH, height=HEIGHT) => {
+            // Add a faded out red rectangle for our button
+            this.add.rectangle(x, y, width, height, 0xff0000, 0.07)
+                .setOrigin(0,0)
+                .setScrollFactor(0)
+                .setInteractive()
+                .on('pointerdown', () => pointerDown(key))
+                .on('pointerup', () => pointerUp(key))
+        }
+        
+        // Y coordinate to place buttons
+        const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
+
+        // create player control buttons
+        createBtn('left', GUTTER, BTN_Y)
+        createBtn('right', WIDTH + 2*GUTTER, BTN_Y)
+        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        createBtn('down', GAME_WIDTH - WIDTH - GUTTER, BTN_Y)
     }
 
     /**
