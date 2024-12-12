@@ -19,6 +19,20 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5);
 
+        if (!this.sys.game.device.input.touch) {
+            this.add.text(512, 500, 'not mobile', {
+                fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
+                stroke: '#000000', strokeThickness: 8,
+                align: 'center'
+            }).setOrigin(0.5);
+        } else {
+            this.add.text(512, 500, 'mobile', {
+                fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
+                stroke: '#000000', strokeThickness: 8,
+                align: 'center'
+            }).setOrigin(0.5);
+        }
+
         this.input.once('pointerdown', () => {
 
             this.scene.start('Game');
