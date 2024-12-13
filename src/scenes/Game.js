@@ -21,13 +21,12 @@ export class Game extends Scene
         
         //  Create our keyboard controls
         if (!this.sys.game.device.input.touch) {
-            cursors = this.input.keyboard.createCursorKeys()
+            this.cursors = this.input.keyboard.createCursorKeys()
             console.log('not mobile!')
         } else {
             this.buildMobileControls()
             console.log('mobile!')
         }
-        // cursors = this.input.keyboard.createCursorKeys();
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
@@ -44,9 +43,6 @@ export class Game extends Scene
     
 
     update (time, delta) {
-        // if (this.input.pointer1.isDown) {
-        //     console.log(pointer1.position)
-        // }
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
