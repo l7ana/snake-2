@@ -124,7 +124,7 @@ export class Game extends Scene
         // button sizing
         const WIDTH = 167
         const HEIGHT = 153
-        const GAME_HEIGHT = 368
+        const GAME_HEIGHT = 768
         const GAME_WIDTH = 1024
 
         // gutter width between buttons
@@ -140,6 +140,13 @@ export class Game extends Scene
                 .setInteractive()
                 .on('pointerdown', () => pointerDown(key))
                 .on('pointerup', () => pointerUp(key))
+            this.add.text(x, y, key, {
+                fontFamily: 'Arial Black',
+                fontSize: 60,
+                color: '#ffffff'
+            })
+            // const triangle = this.add.triangle(x+10, y-10, (x+width-10), y - (height/2), x+10, y+(height-10))
+            // graphics.fillTriangleShape(triangle)
         }
         
         // Y coordinate to place buttons
