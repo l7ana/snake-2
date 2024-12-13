@@ -31,7 +31,7 @@ export class Game extends Scene
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        this.pointer = this.input.pointer1;
+        // this.pointer = this.input.pointer1;
        
           food = new Food(this, 3, 4);
           snake = new Snake(this, 8, 8);
@@ -44,9 +44,9 @@ export class Game extends Scene
     
 
     update (time, delta) {
-        if (this.input.pointer1.isDown) {
-            console.log(pointer1.position)
-        }
+        // if (this.input.pointer1.isDown) {
+        //     console.log(pointer1.position)
+        // }
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
@@ -74,19 +74,19 @@ export class Game extends Scene
           * the LEFT cursor, it ignores it, because the only valid directions you
           * can move in at that time is up and down.
           */
-          if (cursors.left.isDown)
+          if (this.cursors.left.isDown)
           {
               snake.faceLeft();
           }
-          else if (cursors.right.isDown)
+          else if (this.cursors.right.isDown)
           {
               snake.faceRight();
           }
-          else if (cursors.up.isDown)
+          else if (this.cursors.up.isDown)
           {
               snake.faceUp();
           }
-          else if (cursors.down.isDown)
+          else if (this.cursors.down.isDown)
           {
               snake.faceDown();
           }
@@ -124,6 +124,8 @@ export class Game extends Scene
         // button sizing
         const WIDTH = 167
         const HEIGHT = 153
+        const GAME_HEIGHT = 368
+        const GAME_WIDTH = 1024
 
         // gutter width between buttons
         const GUTTER = 12
