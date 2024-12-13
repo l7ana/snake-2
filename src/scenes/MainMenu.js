@@ -26,7 +26,7 @@ export class MainMenu extends Scene
                 align: 'center'
             }).setOrigin(0.5);
         } else {
-            this.input.addPointer(2);
+            // this.input.addPointer(2);
             this.add.text(512, 500, 'mobile', {
                 fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
                 stroke: '#000000', strokeThickness: 8,
@@ -34,10 +34,19 @@ export class MainMenu extends Scene
             }).setOrigin(0.5);
         }
 
-        this.input.once('pointerdown', () => {
+        this.pointer = this.input.activePointer;
 
+        // this.input.once('pointerdown', () => {
+
+        //     this.scene.start('Game');
+
+        // });
+    }
+    update () {
+        if ((this.pointer.isDown)) {
+            
             this.scene.start('Game');
+        }
 
-        });
     }
 }
