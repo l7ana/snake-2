@@ -26,6 +26,7 @@ export class MainMenu extends Scene
                 align: 'center'
             }).setOrigin(0.5);
         } else {
+            this.input.addPointer(2);
             this.add.text(512, 500, 'mobile', {
                 fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
                 stroke: '#000000', strokeThickness: 8,
