@@ -57,9 +57,13 @@ export class Game extends Scene
           }
 
           if (!snake.alive)
-          {
-            
+          { 
             this.text.setVisible(true);
+            this.input.once('pointerdown', () => {
+
+                this.scene.start('Preloader');
+    
+            });
             return;
           }
       
