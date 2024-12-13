@@ -30,6 +30,7 @@ export default class Food extends Phaser.Physics.Arcade.Image
     var y = Phaser.Math.Between(0, 23);
 
     this.setPosition(x * 32, y * 32);
-    // console.log(this.x, this.y)
+    
+    //cycle through the food textures
   }
 }

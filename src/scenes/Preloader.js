@@ -38,6 +38,15 @@ export class Preloader extends Scene
         this.load.image('body', 'body.png');
             // this.load.spritesheet('body', 'body.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('food', 'food.png')
+        //load treats
+        this.load.image('food1', '/treat/cookie_chocolate_chip.png')
+        this.load.image('food2', '/treat/cupcake.png')
+        this.load.image('food3', '/treat/doughnut.png')
+        this.load.image('food4', '/treat/ice_cream_bar_01.png')
+        this.load.image('food5', '/treat/ice_cream_sundae_02.png')
+        this.load.image('food6', '/treat/popsicle.png')
+        this.load.image('food7', '/treat/shake.png')
+        this.load.image('food8', '/treat/ice_cream_sandwich_02.png')
     }
 
     create ()
