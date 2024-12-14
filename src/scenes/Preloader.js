@@ -47,6 +47,12 @@ export class Preloader extends Scene
         this.load.image('food6', '/treat/popsicle.png')
         this.load.image('food7', '/treat/shake.png')
         this.load.image('food8', '/treat/ice_cream_sandwich_02.png')
+
+        //load key buttons
+        this.load.image('left', '/buttons/KeyboardButtonsDir_left.png')
+        this.load.image('right', '/buttons/KeyboardButtonsDir_right.png')
+        this.load.image('up', '/buttons/KeyboardButtonsDir_up.png')
+        this.load.image('down', '/buttons/KeyboardButtonsDir_down.png')
     }
 
     create ()

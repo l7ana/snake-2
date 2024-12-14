@@ -113,8 +113,8 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 167
-        const HEIGHT = 153
+        const WIDTH = 50
+        const HEIGHT = 50
         const GAME_HEIGHT = 768
         const GAME_WIDTH = 1024
 
@@ -123,31 +123,28 @@ export class Game extends Scene
         
 
         // Create a button helper
-        const createBtn = (key, x, y, width=WIDTH, height=HEIGHT) => {
-            // Add a faded out red rectangle for our button
-            this.add.rectangle(x, y, width, height, 0xff0000, 0.07)
+        const createBtn = (key, x, y) => {
+            this.add.image(x, y, key)
                 .setOrigin(0,0)
                 .setScrollFactor(0)
                 .setInteractive()
                 .on('pointerdown', () => pointerDown(key))
                 .on('pointerup', () => pointerUp(key))
-            this.add.text(x, y, key, {
-                fontFamily: 'Arial Black',
-                fontSize: 60,
-                color: '#ffffff'
-            })
-            // const triangle = this.add.triangle(x+10, y-10, (x+width-10), y - (height/2), x+10, y+(height-10))
-            // graphics.fillTriangleShape(triangle)
+            //key is same for button direction and calling image texture
         }
         
         // Y coordinate to place buttons
         const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
 
         // create player control buttons
-        createBtn('left', GUTTER, BTN_Y)
-        createBtn('right', WIDTH + 2*GUTTER, BTN_Y)
-        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
-        createBtn('down', GAME_WIDTH - WIDTH - GUTTER, BTN_Y)
+        createBtn('left', GAME_WIDTH - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
+        createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
+        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
+        createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        // createBtn('left', GUTTER, BTN_Y)
+        // createBtn('right', WIDTH + 2*GUTTER, BTN_Y)
+        // createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        // createBtn('down', GAME_WIDTH - WIDTH - GUTTER, BTN_Y)
     }
 
     /**
