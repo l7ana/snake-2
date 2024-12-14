@@ -48,7 +48,8 @@ export class Game extends Scene
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
               console.log(snake.head.x, snake.head.y)
-              console.log(food)
+            //   console.log(food)
+              console.log(food.textures)
             //   console.log(this.physics)
             }
             else {
@@ -98,6 +99,7 @@ export class Game extends Scene
               if (snake.collideWithFood(food))
               {
                   this.repositionFood();
+                  food.change();
               }
           }
     }
