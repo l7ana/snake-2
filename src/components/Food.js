@@ -29,12 +29,13 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
+    // x & y is based on the base size 32, and how many times it can fit within the game area
     var x = Phaser.Math.Between(0, 31);
     var y = Phaser.Math.Between(0, 23);
 
     this.setPosition(x * 32, y * 32);
   }
-  
+
   change () {
     //cycle through the food textures
     //7 total items (8, but index 0 is 1)

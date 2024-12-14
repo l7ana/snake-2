@@ -4,8 +4,6 @@ import Food from '../components/Food.js';
 
 var snake;
 var food;
-var cursors;
-var text;
 
 export class Game extends Scene
 {
@@ -42,9 +40,7 @@ export class Game extends Scene
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
               console.log(snake.head.x, snake.head.y)
-            //   console.log(food)
-              console.log(food.textures)
-            //   console.log(this.physics)
+              console.log(food)
             }
             else {
               this.physics.world.drawDebug = true;
@@ -177,6 +173,7 @@ export class Game extends Scene
     snake.updateGrid(testGrid);
 
     //  Purge out false positions
+    // x & y is based on the base size 32, and how many times it can fit within the game area
     var validLocations = [];
 
     for (var y = 0; y < 24; y++)
