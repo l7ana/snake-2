@@ -4,6 +4,7 @@ import Food from '../components/Food.js';
 
 var snake;
 var food;
+var joystick;
 
 export class Game extends Scene
 {
@@ -93,54 +94,20 @@ export class Game extends Scene
         this.input.addPointer(2);
         this.input.topOnly = true;
 
-        this.cursors = {
-            'up': {},
-            'left': {},
-            'right': {},
-            'down': {},
-        }
-
-        const pointerDown = key => {
-            // modifies this.cursors with the property that we check in update() method
-            this.cursors[key].isDown = true
-        }
-        const pointerUp = key => {
-            this.cursors[key].isDown = false
-        }
-
-        // button sizing
-        const WIDTH = 50
-        const HEIGHT = 50
-        const GAME_HEIGHT = 768
-        const GAME_WIDTH = 1024
-
-        // gutter width between buttons
-        const GUTTER = 12
+        // var joyStick = this.plugins.get('rexvirtualjoystickplugin').addPlayer(this, config);
+        joystick = this.plugins.get('rexVirtualJoystick').add(this, {
+            x: 1024 - 100,
+            y: 768 - 100,
+            radius: 100,
+            dir: '4dir',
+            base: this.add.circle(0, 0, 100, 0x888888),
+            thumb: this.add.circle(0, 0, 50, 0xcccccc),
+            enable: true
+            // forceMin: 16,
+            // fixed: true,
+        })
         
-
-        // Create a button helper
-        const createBtn = (key, x, y) => {
-            this.add.image(x, y, key)
-                .setOrigin(0,0)
-                .setScrollFactor(0)
-                .setInteractive()
-                .on('pointerdown', () => pointerDown(key))
-                .on('pointerup', () => pointerUp(key))
-            //key is same for button direction and calling image texture
-        }
-        
-        // Y coordinate to place buttons
-        const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
-
-        // create player control buttons
-        createBtn('left', GAME_WIDTH - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
-        createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
-        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
-        createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
-        // createBtn('left', GUTTER, BTN_Y)
-        // createBtn('right', WIDTH + 2*GUTTER, BTN_Y)
-        // createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
-        // createBtn('down', GAME_WIDTH - WIDTH - GUTTER, BTN_Y)
+        this.cursors = joystick.createCursorKeys();
     }
 
     /**

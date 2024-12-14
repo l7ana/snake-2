@@ -53,6 +53,9 @@ export class Preloader extends Scene
         this.load.image('right', '/buttons/KeyboardButtonsDir_right.png')
         this.load.image('up', '/buttons/KeyboardButtonsDir_up.png')
         this.load.image('down', '/buttons/KeyboardButtonsDir_down.png')
+
+        
+        this.load.plugin('rexvirtualjoystickplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
     }
 
     create ()
