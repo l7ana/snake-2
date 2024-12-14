@@ -34,6 +34,7 @@ export default class Food extends Phaser.Physics.Arcade.Image
 
     this.setPosition(x * 32, y * 32);
   }
+  
   change () {
     //cycle through the food textures
     //7 total items (8, but index 0 is 1)

@@ -22,10 +22,8 @@ export class Game extends Scene
         //  Create our keyboard controls
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys()
-            console.log('not mobile!')
         } else {
             this.buildMobileControls()
-            console.log('mobile!')
         }
 
         this.physics.world.drawDebug = false;
@@ -34,10 +32,6 @@ export class Game extends Scene
        
           food = new Food(this, 3, 4);
           snake = new Snake(this, 8, 8);
-
-        this.text = this.add.text(320, 128, 'dead', { font: '48px Courier', fill: '#00ff00', align: 'center' }).setOrigin(0.5);
-        
-        this.text.setVisible(false);
     
     }
     
@@ -59,12 +53,7 @@ export class Game extends Scene
 
           if (!snake.alive)
           { 
-            this.text.setVisible(true);
-            this.input.once('pointerdown', () => {
-
-                this.scene.start('Preloader');
-    
-            });
+            this.scene.start('GameOver');
             return;
           }
       
