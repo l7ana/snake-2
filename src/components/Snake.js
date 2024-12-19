@@ -12,11 +12,17 @@ var Snake = new Phaser.Class({
   {
       this.headPosition = new Phaser.Geom.Point(x, y);
       
-      // Phaser.Physics.Arcade.Sprite.call(this, scene)
-
+      this.cellSize = 32;
+      
+      if (!scene.sys.game.device.input.touch) {
+          this.cellSize = 32;
+      } else {
+        this.cellSize = 64;
+      }
+      
       this.body = scene.add.group();
 
-      this.head = this.body.create(x * 32, y * 32, 'body');
+      this.head = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 1);
       this.head.setOrigin(0);
 
       this.alive = true;
@@ -137,8 +143,8 @@ var Snake = new Phaser.Class({
 
   collideWithFood: function (food)
   {
-      if (this.head.x >= food.x - 8 && this.head.x <= food.x + 8 && 
-          this.head.y >= food.y - 8 && this.head.y <= food.y + 8 )
+      if (this.head.x >= food.x - (this.cellSize / 2) && this.head.x <= food.x + (this.cellSize / 2) && 
+          this.head.y >= food.y - (this.cellSize / 2) && this.head.y <= food.y + (this.cellSize / 2) )
       {
           this.grow();
 
@@ -161,10 +167,12 @@ var Snake = new Phaser.Class({
   updateGrid: function (grid)
   {
       //  Remove all body pieces from valid positions list
+      var baseSize = this.cellSize;
       this.body.children.each(function (segment) {
 
-          var bx = segment.x / 32;
-          var by = segment.y / 32;
+          var bx = segment.x / baseSize;
+        //   var bx = Phaser.Math.Snap.Floor(segment.x, baseSize);
+          var by = segment.y / baseSize;
 
           grid[by][bx] = false;
 

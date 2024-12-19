@@ -2,6 +2,16 @@ export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y) {
     super(scene, x*64 + 1, y*64 + 2);
+
+    if (!scene.sys.game.device.input.touch) {
+      this.cellSize = 32;
+      this.cellXMax = 32;
+      this.cellYMax = 24;
+    } else {
+      this.cellSize = 64;
+      this.cellXMax = 16;
+      this.cellYMax = 12;
+    }
     
     Phaser.Physics.Arcade.Image.call(this, scene)
 
@@ -15,8 +25,10 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.onOverlap = true;
     this.enableBody = true;
 
-    this.width = 64;
-    this.height = 64;
+    this.width = this.cellSize;
+    this.height = this.cellSize;
+    this.displayHeight = this.cellSize;
+    this.displayWidth = this.cellSize;
     
     this.total = 0;
 
@@ -30,10 +42,10 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.total++;
 
     // x & y is based on the base size 32, and how many times it can fit within the game area
-    var x = Phaser.Math.Between(0, 31);
-    var y = Phaser.Math.Between(0, 23);
+    var x = Phaser.Math.Between(0, this.cellXMax - 1);
+    var y = Phaser.Math.Between(0, this.cellYMax - 1);
 
-    this.setPosition(x * 32, y * 32);
+    this.setPosition(x * this.cellSize, y * this.cellSize);
   }
 
   change () {

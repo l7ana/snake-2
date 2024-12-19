@@ -4,6 +4,9 @@ import Food from '../components/Food.js';
 
 var snake;
 var food;
+var cellSize;
+var cellYMax;
+var cellXMax;
 
 export class Game extends Scene
 {
@@ -14,22 +17,28 @@ export class Game extends Scene
 
     create ()
     {
-        // this.cameras.main.setBackgroundColor(0x00ff00);
-        this.add.grid(1024/2, 768/2, 1024, 768, 32, 32, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
-        
-        //  Create our keyboard controls
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys()
+            //grid cell is 32 x 32 on desktop
+            cellSize = 32;
+            cellXMax = 32;
+            cellYMax = 24;
         } else {
             this.buildMobileControls()
+            //grid cell is 64 x 64 on mobile
+            cellSize = 64;
+            cellXMax = 16;
+            cellYMax = 12;
         }
+        
+        this.add.grid(1024/2, 768/2, 1024, 768, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         // this.pointer = this.input.pointer1;
        
           food = new Food(this, 3, 4);
-          snake = new Snake(this, 8, 8);
+          snake = new Snake(this, 8, 8, cellSize);
     
     }
     
@@ -39,7 +48,7 @@ export class Game extends Scene
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
-              console.log(snake.head.x, snake.head.y)
+              console.log(snake)
               console.log(food)
             }
             else {
@@ -53,13 +62,6 @@ export class Game extends Scene
             return;
           }
       
-          /**
-          * Check which key is pressed, and then change the direction the snake
-          * is heading based on that. The checks ensure you don't double-back
-          * on yourself, for example if you're moving to the right and you press
-          * the LEFT cursor, it ignores it, because the only valid directions you
-          * can move in at that time is up and down.
-          */
           if (this.cursors.left.isDown)
           {
               snake.faceLeft();
@@ -109,8 +111,8 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 50
-        const HEIGHT = 50
+        const WIDTH = 64
+        const HEIGHT = 64
         const GAME_HEIGHT = 768
         const GAME_WIDTH = 1024
 
@@ -137,10 +139,6 @@ export class Game extends Scene
         createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
         createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
         createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
-        // createBtn('left', GUTTER, BTN_Y)
-        // createBtn('right', WIDTH + 2*GUTTER, BTN_Y)
-        // createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
-        // createBtn('down', GAME_WIDTH - WIDTH - GUTTER, BTN_Y)
     }
 
     /**
@@ -159,12 +157,12 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < 24; y++)
+    for (var y = 0; y < cellYMax; y++)
         //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < 32; x++)
+        for (var x = 0; x < cellXMax; x++)
         {
             testGrid[y][x] = true;
         }
@@ -176,9 +174,9 @@ export class Game extends Scene
     // x & y is based on the base size 32, and how many times it can fit within the game area
     var validLocations = [];
 
-    for (var y = 0; y < 24; y++)
+    for (var y = 0; y < cellYMax; y++)
     {
-        for (var x = 0; x < 32; x++)
+        for (var x = 0; x < cellXMax; x++)
         {
             if (testGrid[y][x] === true)
             {
@@ -194,7 +192,7 @@ export class Game extends Scene
         var pos = Phaser.Math.RND.pick(validLocations);
 
         //  And place it
-        food.setPosition(pos.x * 32, pos.y * 32);
+        food.setPosition(pos.x * cellSize, pos.y * cellSize);
 
         return true;
     }

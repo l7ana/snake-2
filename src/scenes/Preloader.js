@@ -36,6 +36,7 @@ export class Preloader extends Scene
         
         this.load.spritesheet('head', './sprites/HeadSprite.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('body', 'body.png');
+        this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
             // this.load.spritesheet('body', 'body.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('food', 'food.png')
         //load treats
