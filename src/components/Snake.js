@@ -178,6 +178,7 @@ var Snake = new Phaser.Class({
           var by = segment.y / baseSize;
           var bx = segment.x / baseSize;
         //   var bx = Phaser.Math.Snap.Floor(segment.x, baseSize);
+        //IDK what is happening here. the validity of positions arent working
           console.log(segment)
           console.log(`segment.x: ${segment.x}`)
           console.log(`segment.y: ${segment.y}`)
