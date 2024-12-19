@@ -1,7 +1,7 @@
 export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y) {
-    super(scene, x*64 + 1, y*64 + 2);
+    super(scene, x + 1, y + 2);
 
     if (!scene.sys.game.device.input.touch) {
       this.cellSize = 32;
@@ -19,7 +19,7 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.textureKey = 0
 
     this.setTexture(this.textures[this.textureKey]);
-    this.setPosition(x*64 + 1, y*64 + 2);
+    this.setPosition(x * this.cellSize + 1, y * this.cellSize + 2);
     this.setOrigin(0);
     this.onCollide = true;
     this.onOverlap = true;

@@ -157,12 +157,12 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < cellYMax; y++)
+    for (var y = 0; y < cellYMax - 1; y++)
         //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < cellXMax; x++)
+        for (var x = 0; x < cellXMax - 1; x++)
         {
             testGrid[y][x] = true;
         }
