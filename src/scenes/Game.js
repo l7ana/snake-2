@@ -8,6 +8,11 @@ var cellSize;
 var cellYMax;
 var cellXMax;
 
+var gameWidth;
+var gameHeight;
+var gameCenterWidth;
+var gameCenterHeight;
+
 export class Game extends Scene
 {
     constructor ()
@@ -17,6 +22,11 @@ export class Game extends Scene
 
     create ()
     {
+        gameWidth = this.cameras.main.width;
+        gameHeight = this.cameras.main.height;
+        gameCenterWidth = gameWidth / 2;
+        gameCenterHeight = gameHeight / 2;
+        
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys()
             //grid cell is 32 x 32 on desktop
@@ -113,8 +123,6 @@ export class Game extends Scene
         // button sizing
         const WIDTH = 64
         const HEIGHT = 64
-        const GAME_HEIGHT = 768
-        const GAME_WIDTH = 1024
 
         // gutter width between buttons
         const GUTTER = 12
@@ -132,13 +140,13 @@ export class Game extends Scene
         }
         
         // Y coordinate to place buttons
-        const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
+        const BTN_Y = gameHeight - HEIGHT - GUTTER
 
         // create player control buttons
-        createBtn('left', GAME_WIDTH - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
-        createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
-        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
-        createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        createBtn('left', gameWidth - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
+        createBtn('right', gameWidth - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
+        createBtn('up', gameWidth - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
+        createBtn('down', gameWidth - 2*(WIDTH + GUTTER), BTN_Y)
     }
 
     /**
