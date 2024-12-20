@@ -41,7 +41,6 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
-    // x & y is based on the base size 32, and how many times it can fit within the game area
     var x = Phaser.Math.Between(0, this.cellXMax - 1);
     var y = Phaser.Math.Between(0, this.cellYMax - 1);
 

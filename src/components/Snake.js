@@ -183,7 +183,6 @@ var Snake = new Phaser.Class({
           console.log(`segment.x: ${segment.x}`)
           console.log(`segment.y: ${segment.y}`)
 
-          console.log(grid)
           grid[by][bx] = false;
 
       });

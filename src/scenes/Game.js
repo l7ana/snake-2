@@ -10,8 +10,8 @@ var cellXMax;
 
 var gameWidth;
 var gameHeight;
-var gameCenterWidth;
-var gameCenterHeight;
+var gameHalfWidth;
+var gameHalfHeight;
 
 export class Game extends Scene
 {
@@ -24,29 +24,25 @@ export class Game extends Scene
     {
         gameWidth = this.cameras.main.width;
         gameHeight = this.cameras.main.height;
-        gameCenterWidth = gameWidth / 2;
-        gameCenterHeight = gameHeight / 2;
+        gameHalfWidth = gameWidth / 2;
+        gameHalfHeight = gameHeight / 2;
         
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys()
-            //grid cell is 32 x 32 on desktop
             cellSize = 32;
             cellXMax = 32;
             cellYMax = 24;
+            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
         } else {
-            this.buildMobileControls()
-            //grid cell is 64 x 64 on mobile
             cellSize = 64;
             cellXMax = 16;
             cellYMax = 12;
+            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
+            this.buildMobileControls()
         }
         
-        this.add.grid(1024/2, 768/2, 1024, 768, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
-
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        // this.pointer = this.input.pointer1;
-       
           food = new Food(this, 3, 4);
           snake = new Snake(this, 8, 8, cellSize);
     
@@ -121,13 +117,12 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 64
-        const HEIGHT = 64
+        const WIDTH = 100
+        const HEIGHT = 100
 
         // gutter width between buttons
         const GUTTER = 12
         
-
         // Create a button helper
         const createBtn = (key, x, y) => {
             this.add.image(x, y, key)
@@ -166,7 +161,6 @@ export class Game extends Scene
     var testGrid = [];
 
     for (var y = 0; y < cellYMax - 1; y++)
-        //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
@@ -179,17 +173,17 @@ export class Game extends Scene
     snake.updateGrid(testGrid);
 
     //  Purge out false positions
-    // x & y is based on the base size 32, and how many times it can fit within the game area
     var validLocations = [];
 
-    for (var y = 0; y < cellYMax; y++)
+    for (var y = 0; y < cellYMax - 1; y++)
     {
-        for (var x = 0; x < cellXMax; x++)
+        for (var x = 0; x < cellXMax - 1; x++)
         {
             if (testGrid[y][x] === true)
             {
                 //  Is this position valid for food? If so, add it here ...
                 validLocations.push({ x: x, y: y });
+                console.log(validLocations)
             }
         }
     }
@@ -201,7 +195,6 @@ export class Game extends Scene
 
         //  And place it
         food.setPosition(pos.x * cellSize, pos.y * cellSize);
-
         return true;
     }
     else
