@@ -7,23 +7,32 @@ import { Preloader } from './scenes/Preloader';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
+
+let width = 1024;
+let height = 768;
+
+function isMobile() {
+    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+    return regex.test(navigator.userAgent);
+  }
+  
+  if (isMobile()) {
+    console.log("Mobile device detected");
+    width = 768;
+    height = 1024;
+  } else {
+    console.log("Desktop device detected");
+  }
+
 const config = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
+    width: width,
+    height: height,
     parent: 'game-container',
     backgroundColor: '#f4ffd4',
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        min: {
-            width: 480,
-            height: 640
-        },
-        max: {
-            width: 1600,
-            height: 1200
-        }
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     scene: [
         Boot,
@@ -40,15 +49,6 @@ const config = {
             OVERLAP_BIAS: 50
          }
     },
-    // plugins: {
-    //     scene: [
-    //       {
-    //         key: "gridEngine",
-    //         plugin: GridEngine,
-    //         mapping: "gridEngine",
-    //       },
-    //     ],
-    //   },
 };
 
 export default new Phaser.Game(config);
