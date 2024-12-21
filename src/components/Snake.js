@@ -156,6 +156,8 @@ var Snake = new Phaser.Class({
       newPart.width = this.cellSize;
       newPart.height = this.cellSize;
 
+      //do we create a new instance of arcade sprite here?
+
       //error change last part, need to do in new formula?
       if (this.body.children >= 1) {
           var endTail = Phaser.Actions.GetLast(this.body.getChildren());
