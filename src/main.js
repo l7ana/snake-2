@@ -8,8 +8,8 @@ import { Preloader } from './scenes/Preloader';
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 
-let width = 1024;
-let height = 768;
+let width = 1200;
+let height = 800;
 
 function isMobile() {
     const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
@@ -18,8 +18,8 @@ function isMobile() {
   
   if (isMobile()) {
     console.log("Mobile device detected");
-    width = 768;
-    height = 1024;
+    width = 800;
+    height = 1200;
   } else {
     console.log("Desktop device detected");
   }
