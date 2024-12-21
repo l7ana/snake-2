@@ -8,6 +8,11 @@ var cellSize;
 var cellYMax;
 var cellXMax;
 
+var gameWidth;
+var gameHeight;
+var gameHalfWidth;
+var gameHalfHeight;
+
 export class Game extends Scene
 {
     constructor ()
@@ -17,26 +22,27 @@ export class Game extends Scene
 
     create ()
     {
+        gameWidth = this.cameras.main.width;
+        gameHeight = this.cameras.main.height;
+        gameHalfWidth = gameWidth / 2;
+        gameHalfHeight = gameHeight / 2;
+        
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys()
-            //grid cell is 32 x 32 on desktop
             cellSize = 32;
             cellXMax = 32;
             cellYMax = 24;
+            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
         } else {
-            this.buildMobileControls()
-            //grid cell is 64 x 64 on mobile
             cellSize = 64;
             cellXMax = 16;
             cellYMax = 12;
+            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
+            this.buildMobileControls()
         }
         
-        this.add.grid(1024/2, 768/2, 1024, 768, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
-
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        // this.pointer = this.input.pointer1;
-       
           food = new Food(this, 3, 4);
           snake = new Snake(this, 8, 8, cellSize);
     
@@ -111,15 +117,12 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 64
-        const HEIGHT = 64
-        const GAME_HEIGHT = 768
-        const GAME_WIDTH = 1024
+        const WIDTH = 100
+        const HEIGHT = 100
 
         // gutter width between buttons
         const GUTTER = 12
         
-
         // Create a button helper
         const createBtn = (key, x, y) => {
             this.add.image(x, y, key)
@@ -132,13 +135,13 @@ export class Game extends Scene
         }
         
         // Y coordinate to place buttons
-        const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
+        const BTN_Y = gameHeight - HEIGHT - GUTTER
 
         // create player control buttons
-        createBtn('left', GAME_WIDTH - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
-        createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
-        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
-        createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        createBtn('left', gameWidth - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
+        createBtn('right', gameWidth - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
+        createBtn('up', gameWidth - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
+        createBtn('down', gameWidth - 2*(WIDTH + GUTTER), BTN_Y)
     }
 
     /**
@@ -157,12 +160,11 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < cellYMax; y++)
-        //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
+    for (var y = 0; y < cellYMax - 1; y++)
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < cellXMax; x++)
+        for (var x = 0; x < cellXMax - 1; x++)
         {
             testGrid[y][x] = true;
         }
@@ -171,17 +173,17 @@ export class Game extends Scene
     snake.updateGrid(testGrid);
 
     //  Purge out false positions
-    // x & y is based on the base size 32, and how many times it can fit within the game area
     var validLocations = [];
 
-    for (var y = 0; y < cellYMax; y++)
+    for (var y = 0; y < cellYMax - 1; y++)
     {
-        for (var x = 0; x < cellXMax; x++)
+        for (var x = 0; x < cellXMax - 1; x++)
         {
             if (testGrid[y][x] === true)
             {
                 //  Is this position valid for food? If so, add it here ...
                 validLocations.push({ x: x, y: y });
+                console.log(validLocations)
             }
         }
     }
@@ -193,7 +195,6 @@ export class Game extends Scene
 
         //  And place it
         food.setPosition(pos.x * cellSize, pos.y * cellSize);
-
         return true;
     }
     else
