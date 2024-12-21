@@ -160,11 +160,11 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < cellYMax - 1; y++)
+    for (var y = 0; y < cellYMax; y++)
     {
         testGrid[y] = [];
 
-        for (var x = 0; x < cellXMax - 1; x++)
+        for (var x = 0; x < cellXMax; x++)
         {
             testGrid[y][x] = true;
         }
@@ -175,15 +175,14 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < cellYMax - 1; y++)
+    for (var y = 0; y < cellYMax; y++)
     {
-        for (var x = 0; x < cellXMax - 1; x++)
+        for (var x = 0; x < cellXMax; x++)
         {
             if (testGrid[y][x] === true)
             {
                 //  Is this position valid for food? If so, add it here ...
                 validLocations.push({ x: x, y: y });
-                console.log(validLocations)
             }
         }
     }

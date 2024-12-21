@@ -22,6 +22,8 @@ var Snake = new Phaser.Class({
 
       this.head = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 1);
       this.head.setOrigin(0);
+      this.head.displayHeight = this.cellSize;
+      this.head.displayWidth = this.cellSize;
 
       this.alive = true;
 
@@ -29,7 +31,7 @@ var Snake = new Phaser.Class({
 
       this.moveTime = 0;
 
-      this.tail = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
+      this.tail = new Phaser.Geom.Point(x, y);
     //   this.tail = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 4)
 
       this.heading = RIGHT;
@@ -112,7 +114,6 @@ var Snake = new Phaser.Class({
 
       this.direction = this.heading;
 
-      console.log(`x: ${this.headPosition.x}. y: ${this.headPosition.y}. ${this.direction}, ${this.heading}`)
       //  Update the body segments and place the last coordinate into this.tail
       Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tail);
 
@@ -148,8 +149,8 @@ var Snake = new Phaser.Class({
 
   collideWithFood: function (food)
   {
-      if (this.head.x >= food.x - (this.cellSize) && this.head.x <= food.x + (this.cellSize) && 
-          this.head.y >= food.y - (this.cellSize) && this.head.y <= food.y + (this.cellSize) )
+      if (this.head.x >= food.x - (this.cellSize / 1) && this.head.x <= food.x + (this.cellSize / 1) && 
+          this.head.y >= food.y - (this.cellSize / 1) && this.head.y <= food.y + (this.cellSize / 1) )
       {
           this.grow();
 
@@ -172,20 +173,19 @@ var Snake = new Phaser.Class({
   updateGrid: function (grid)
   {
       //  Remove all body pieces from valid positions list
-      var baseSize = this.cellSize;
       this.body.children.each(function (segment) {
 
-          var by = segment.y / baseSize;
-          var bx = segment.x / baseSize;
-        //   var bx = Phaser.Math.Snap.Floor(segment.x, baseSize);
-        //IDK what is happening here. the validity of positions arent working
+          var by = Math.floor(segment.y / this.cellSize);
+          var bx = Math.floor(segment.x / this.cellSize);
           console.log(segment)
           console.log(`segment.x: ${segment.x}`)
           console.log(`segment.y: ${segment.y}`)
 
-          grid[by][bx] = false;
+          if (by >= 0 && by < grid.length && bx >= 0 && bx < grid[0].length) {
+            grid[by][bx] = false;
+        }
 
-      });
+      }, this);
       return grid;
   }
 
