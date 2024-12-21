@@ -24,15 +24,12 @@ var Snake = new Phaser.Class({
       this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
+      this.head.enableBody = true;
 
       this.alive = true;
-
       this.speed = 100;
-
       this.moveTime = 0;
-
-      this.tail = new Phaser.Geom.Point(x, y);
-    //   this.tail = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 4)
+      this.tailPoint = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
 
       this.heading = RIGHT;
       this.direction = RIGHT;
@@ -54,6 +51,10 @@ var Snake = new Phaser.Class({
       {
           this.head.angle = 180;
           this.heading = LEFT;
+        //   console.log(this.body)
+          this.body.children.each(function (segment) {
+            segment.angle = 180;
+          })
       }
   },
 
@@ -63,6 +64,9 @@ var Snake = new Phaser.Class({
       {
           this.head.angle = 0
           this.heading = RIGHT;
+          this.body.children.each(function (segment) {
+            segment.angle = 0;
+          })
       }
   },
 
@@ -72,6 +76,9 @@ var Snake = new Phaser.Class({
       {
           this.head.angle = 270;
           this.heading = UP;
+          this.body.children.each(function (segment) {
+            segment.angle = 270;
+          })
       }
   },
 
@@ -81,6 +88,10 @@ var Snake = new Phaser.Class({
       {
           this.head.angle = 90;
           this.heading = DOWN;
+
+          this.body.children.each(function (segment) {
+            segment.angle = 90;
+          })
       }
   },
 
@@ -115,7 +126,7 @@ var Snake = new Phaser.Class({
       this.direction = this.heading;
 
       //  Update the body segments and place the last coordinate into this.tail
-      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tail);
+      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tailPoint);
 
       //  Check to see if any of the body pieces have the same x/y as the head
       //  If they do, the head ran into the body
@@ -125,47 +136,50 @@ var Snake = new Phaser.Class({
       if (hitBody)
       {
           console.log('dead');
-
           this.alive = false;
-
           return false;
       }
       else
       {
           //  Update the timer ready for the next movement
           this.moveTime = time + this.speed;
-
           return true;
       }
   },
 
   grow: function ()
   {
-      var newPart = this.body.create(this.tail.x * this.cellSize, this.tail.y * this.cellSize, 'snake1', 3);
-    //   var newPart = this.body.create(this.tail.x * this.cellSize, this.tail.y * this.cellSize, 'snake1', 6);
-
+      var newPart = this.body.create(this.tailPoint.x * this.cellSize, this.tailPoint.y * this.cellSize, 'snake1', 4);
       newPart.setOrigin(0);
+      newPart.displayHeight = this.cellSize;
+      newPart.displayWidth = this.cellSize;
+      newPart.width = this.cellSize;
+      newPart.height = this.cellSize;
+
+      //error change last part, need to do in new formula?
+      if (this.body.children >= 1) {
+          var endTail = Phaser.Actions.GetLast(this.body.getChildren());
+          endTail.setTexture('snake1', 3)
+      }
+    //   var newPart = this.body.create(this.tailPoint.x * this.cellSize, this.tailPoint.y * this.cellSize, 'snake1', 6);
+
   },
 
   collideWithFood: function (food)
   {
-      if (this.head.x >= food.x - (this.cellSize / 1) && this.head.x <= food.x + (this.cellSize / 1) && 
+    //error not eating when heading down
+      if ( this.head.x >= food.x - (this.cellSize / 2) && this.head.x <= food.x + (this.cellSize / 2) && 
           this.head.y >= food.y - (this.cellSize / 1) && this.head.y <= food.y + (this.cellSize / 1) )
       {
           this.grow();
-
           food.eat();
-
           //  For every 5 items of food eaten we'll increase the snake speed a little
           if (this.speed > 20 && food.total % 5 === 0)
           {
               this.speed -= 5;
           }
-
           return true;
-      }
-      else
-      {
+      } else {
           return false;
       }
   },
@@ -177,9 +191,6 @@ var Snake = new Phaser.Class({
 
           var by = Math.floor(segment.y / this.cellSize);
           var bx = Math.floor(segment.x / this.cellSize);
-          console.log(segment)
-          console.log(`segment.x: ${segment.x}`)
-          console.log(`segment.y: ${segment.y}`)
 
           if (by >= 0 && by < grid.length && bx >= 0 && bx < grid[0].length) {
             grid[by][bx] = false;

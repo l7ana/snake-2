@@ -21,8 +21,6 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.setTexture(this.textures[this.textureKey]);
     this.setPosition(x * this.cellSize + 1, y * this.cellSize + 2);
     this.setOrigin(0);
-    this.onCollide = true;
-    this.onOverlap = true;
     this.enableBody = true;
 
     this.width = this.cellSize;

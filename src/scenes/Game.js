@@ -56,6 +56,7 @@ export class Game extends Scene
               this.physics.world.debugGraphic.clear();
               console.log(snake)
               console.log(food)
+              console.log(snake.body)
             }
             else {
               this.physics.world.drawDebug = true;
