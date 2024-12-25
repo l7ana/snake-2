@@ -166,16 +166,37 @@ var Snake = new Phaser.Class({
 
   },
 
-  // In Snake.js, modify the collideWithFood method:
-collideWithFood: function (food)
-{
-    // Get the grid positions instead of pixel positions
-    const snakeGridX = Math.floor(this.head.x / this.cellSize);
-    const snakeGridY = Math.floor(this.head.y / this.cellSize);
+  collideWithFood: function (food)
+  {
+    let snakeX = this.head.x;
+    let snakeY = this.head.y;
+    // const snakeGridX = Math.floor(this.headPosition.x);
+    // const snakeGridY = Math.floor(this.headPosition.y);
+
+    switch (this.heading) {
+        case DOWN:
+            snakeY -= (this.cellSize);
+            snakeX -= (this.cellSize)
+            break;
+        case LEFT:
+            snakeX += (this.cellSize);
+            snakeY -= (this.cellSize);
+            break;
+        // No adjustment needed for RIGHT and UP
+    }
+
+    const snakeGridX = Math.floor(snakeX / this.cellSize);
+    const snakeGridY = Math.floor(snakeY / this.cellSize);
+    
+    // Get grid position for food
     const foodGridX = Math.floor(food.x / this.cellSize);
     const foodGridY = Math.floor(food.y / this.cellSize);
+    
+    // Debug logs
+    console.log('Head Position:', this.headPosition.x, this.headPosition.y);
+    console.log('Snake Grid:', snakeGridX, snakeGridY);
+    console.log('Food Grid:', foodGridX, foodGridY);
 
-    // Compare grid positions instead of pixel positions
     if (snakeGridX === foodGridX && snakeGridY === foodGridY)
     {
         this.grow();
@@ -189,7 +210,7 @@ collideWithFood: function (food)
     }
     
     return false;
-},
+  },
 
   updateGrid: function (grid)
   {
