@@ -29,7 +29,7 @@ var Snake = new Phaser.Class({
       this.alive = true;
       this.speed = 100;
       this.moveTime = 0;
-      this.tailPoint = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
+      this.tailPosition = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
 
       this.heading = RIGHT;
       this.direction = RIGHT;
@@ -51,7 +51,6 @@ var Snake = new Phaser.Class({
       {
           this.head.angle = 180;
           this.heading = LEFT;
-        //   console.log(this.body)
           this.body.children.each(function (segment) {
             segment.angle = 180;
           })
@@ -126,7 +125,7 @@ var Snake = new Phaser.Class({
       this.direction = this.heading;
 
       //  Update the body segments and place the last coordinate into this.tail
-      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tailPoint);
+      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tailPosition);
 
       //  Check to see if any of the body pieces have the same x/y as the head
       //  If they do, the head ran into the body
@@ -149,7 +148,7 @@ var Snake = new Phaser.Class({
 
   grow: function ()
   {
-      var newPart = this.body.create(this.tailPoint.x * this.cellSize, this.tailPoint.y * this.cellSize, 'snake1', 4);
+      var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 4);
       newPart.setOrigin(0);
       newPart.displayHeight = this.cellSize;
       newPart.displayWidth = this.cellSize;
@@ -163,28 +162,34 @@ var Snake = new Phaser.Class({
           var endTail = Phaser.Actions.GetLast(this.body.getChildren());
           endTail.setTexture('snake1', 3)
       }
-    //   var newPart = this.body.create(this.tailPoint.x * this.cellSize, this.tailPoint.y * this.cellSize, 'snake1', 6);
+    //   var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 6);
 
   },
 
-  collideWithFood: function (food)
-  {
-    //error not eating when heading down
-      if ( this.head.x >= food.x - (this.cellSize / 2) && this.head.x <= food.x + (this.cellSize / 2) && 
-          this.head.y >= food.y - (this.cellSize / 1) && this.head.y <= food.y + (this.cellSize / 1) )
-      {
-          this.grow();
-          food.eat();
-          //  For every 5 items of food eaten we'll increase the snake speed a little
-          if (this.speed > 20 && food.total % 5 === 0)
-          {
-              this.speed -= 5;
-          }
-          return true;
-      } else {
-          return false;
-      }
-  },
+  // In Snake.js, modify the collideWithFood method:
+collideWithFood: function (food)
+{
+    // Get the grid positions instead of pixel positions
+    const snakeGridX = Math.floor(this.head.x / this.cellSize);
+    const snakeGridY = Math.floor(this.head.y / this.cellSize);
+    const foodGridX = Math.floor(food.x / this.cellSize);
+    const foodGridY = Math.floor(food.y / this.cellSize);
+
+    // Compare grid positions instead of pixel positions
+    if (snakeGridX === foodGridX && snakeGridY === foodGridY)
+    {
+        this.grow();
+        food.eat();
+        
+        if (this.speed > 20 && food.total % 5 === 0)
+        {
+            this.speed -= 5;
+        }
+        return true;
+    }
+    
+    return false;
+},
 
   updateGrid: function (grid)
   {

@@ -54,9 +54,9 @@ export class Game extends Scene
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
-              console.log(snake)
-              console.log(food)
-              console.log(snake.body)
+              console.log(snake.head.x, snake.head.y)
+              console.log(food.x, food.y)
+            //   console.log(snake.body)
             }
             else {
               this.physics.world.drawDebug = true;
@@ -187,19 +187,20 @@ export class Game extends Scene
             }
         }
     }
-
     if (validLocations.length > 0)
-    {
-        //  Use the RNG to pick a random food position
-        var pos = Phaser.Math.RND.pick(validLocations);
-
-        //  And place it
-        food.setPosition(pos.x * cellSize, pos.y * cellSize);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+        {
+            var pos = Phaser.Math.RND.pick(validLocations);
+    
+            // Multiply by cellSize to get pixel position and add half cellSize to center
+            food.setPosition(
+                pos.x * cellSize, 
+                pos.y * cellSize
+            );
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
