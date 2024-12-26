@@ -14,8 +14,12 @@ var Snake = new Phaser.Class({
       
       if (!scene.sys.game.device.input.touch) {
           this.cellSize = 32;
+          this.cellXMax = 40;
+          this.cellYMax = 25;
       } else {
         this.cellSize = 64;
+        this.cellXMax = 19;
+        this.cellYMax = 13;
       }
       
       this.body = scene.add.group();
@@ -27,7 +31,7 @@ var Snake = new Phaser.Class({
       this.head.enableBody = true;
 
       this.alive = true;
-      this.speed = 100;
+      this.speed = 150;
       this.moveTime = 0;
       this.tailPosition = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
 
@@ -106,19 +110,19 @@ var Snake = new Phaser.Class({
       switch (this.heading)
       {
           case LEFT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, 40);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, this.cellXMax);
               break;
 
           case RIGHT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, 40);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax);
               break;
 
           case UP:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, 30);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, this.cellYMax);
               break;
 
           case DOWN:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, 30);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.cellYMax);
               break;
       }
 
@@ -134,7 +138,6 @@ var Snake = new Phaser.Class({
 
       if (hitBody)
       {
-          console.log('dead');
           this.alive = false;
           return false;
       }
@@ -154,15 +157,20 @@ var Snake = new Phaser.Class({
       newPart.displayWidth = this.cellSize;
       newPart.width = this.cellSize;
       newPart.height = this.cellSize;
+      this.updateSprites();
 
-      //do we create a new instance of arcade sprite here?
-
-      //error change last part, need to do in new formula?
-      if (this.body.children >= 1) {
-          var endTail = Phaser.Actions.GetLast(this.body.getChildren());
-          endTail.setTexture('snake1', 3)
-      }
-    //   var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 6);
+  },
+  updateSprites: function ()
+  {
+    //do we create a new instance of arcade sprite here?
+    var bodyChildren = this.body.getChildren();
+    var endTail = Phaser.Actions.GetLast(this.body.getChildren());
+    endTail.setTexture('snake1', 3)
+    console.log(bodyChildren);
+    bodyChildren.forEach(element => {
+        element.setTexture('snake1', 4)
+        //filter for only center children, not first and last.
+    });
 
   },
 
@@ -170,17 +178,15 @@ var Snake = new Phaser.Class({
   {
     let snakeX = this.head.x;
     let snakeY = this.head.y;
-    // const snakeGridX = Math.floor(this.headPosition.x);
-    // const snakeGridY = Math.floor(this.headPosition.y);
 
     switch (this.heading) {
         case DOWN:
-            snakeY -= (this.cellSize);
-            snakeX -= (this.cellSize)
+            snakeY -= (this.cellSize*0.5);
+            snakeX -= (this.cellSize*0.5);
             break;
         case LEFT:
-            snakeX += (this.cellSize);
-            snakeY -= (this.cellSize);
+            snakeX += (this.cellSize*0.5);
+            snakeY -= (this.cellSize*0.5);
             break;
         // No adjustment needed for RIGHT and UP
     }
@@ -193,9 +199,9 @@ var Snake = new Phaser.Class({
     const foodGridY = Math.floor(food.y / this.cellSize);
     
     // Debug logs
-    console.log('Head Position:', this.headPosition.x, this.headPosition.y);
-    console.log('Snake Grid:', snakeGridX, snakeGridY);
-    console.log('Food Grid:', foodGridX, foodGridY);
+    // console.log('Head Position:', this.headPosition.x, this.headPosition.y);
+    // console.log('Snake Grid:', snakeGridX, snakeGridY);
+    // console.log('Food Grid:', foodGridX, foodGridY);
 
     if (snakeGridX === foodGridX && snakeGridY === foodGridY)
     {
