@@ -167,10 +167,10 @@ var Snake = new Phaser.Class({
     var endTail = Phaser.Actions.GetLast(this.body.getChildren());
     endTail.setTexture('snake1', 3)
     console.log(bodyChildren);
-    bodyChildren.forEach(element => {
-        element.setTexture('snake1', 4)
-        //filter for only center children, not first and last.
-    });
+    // bodyChildren.forEach(element => {
+    //     element.setTexture('snake1', 4)
+    //     //filter for only center children, not first and last.
+    // });
 
   },
 
