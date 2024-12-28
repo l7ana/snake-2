@@ -8,32 +8,15 @@ import { Preloader } from './scenes/Preloader';
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 
-let width = 1200;
-let height = 800;
-
-function isMobile() {
-    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-    return regex.test(navigator.userAgent);
-  }
-  
-  if (isMobile()) {
-    console.log("Mobile device detected");
-    width = 800;
-    height = 1200;
-  } else {
-    console.log("Desktop device detected");
-  }
 
 const config = {
     type: Phaser.AUTO,
-    width: width,
-    height: height,
     parent: 'game-container',
-    backgroundColor: '#f4ffd4',
-    scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    },
+    mode: Phaser.Scale.FIT,
+    width: 1920,
+    height: 1080,
+    backgroundColor: '#112725',
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     scene: [
         Boot,
         Preloader,
@@ -45,8 +28,7 @@ const config = {
         default: 'arcade',
         arcade: { 
             debug: true,
-            fps: 12,
-            OVERLAP_BIAS: 50
+            fps: 12
          }
     },
 };
