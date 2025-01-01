@@ -43,15 +43,14 @@ export class MainMenu extends Scene
         story.scale = .5;
         // story.setCrop((story.displayOriginX *.2) - (story.displayOriginX * .1), 0, width*2, height*2)
 
-        this.add.text(gameCenterWidth, gameCenterHeight+50, 'Main Menu', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
+        this.add.text(50, gameHeight-50, 'Once upon one time, in one crack seed stoa, ', {
+            fontFamily: 'Open Sans', fontSize: 20, color: '#DECEB7',
+            align: 'left'
         }).setOrigin(0.75);
 
         if (!this.sys.game.device.input.touch) {
             this.add.text(gameCenterWidth, 500, 'not mobile', {
-                fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
+                fontFamily: 'Open Sans', fontSize: 20, color: '#ffffff',
                 stroke: '#000000', strokeThickness: 8,
                 align: 'center'
             }).setOrigin(0.5);

@@ -9,12 +9,29 @@ import { Preloader } from './scenes/Preloader';
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 
 
+let width = 1080;
+let height = 720;
+
+function isMobile() {
+    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+    return regex.test(navigator.userAgent);
+  }
+  
+  if (isMobile()) {
+    console.log("Mobile device detected");
+    width = 720;
+    height = 1090;
+  } else {
+    console.log("Desktop device detected");
+  }
+
+
 const config = {
     type: Phaser.AUTO,
     parent: 'game-container',
     mode: Phaser.Scale.FIT,
-    width: 1920,
-    height: 1080,
+    width: width,
+    height: height,
     backgroundColor: '#112725',
     autoCenter: Phaser.Scale.CENTER_BOTH,
     scene: [

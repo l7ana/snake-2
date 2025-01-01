@@ -2,30 +2,48 @@ body {
     margin: 0;
     padding: 0;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #9b1313;
+    background-color: #112725;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+nav {
+    width: 100%;
+    background-color: #112725;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    border-bottom: #128884 2px solid;
+    box-sizing: border-box;
+}
+
+h2 {
+    margin: 0;
 }
 
 #app {
-    display: flex;
-    width: 90%;
-    height: 100vh;
-    margin: 75px auto 0 auto;
-    /* aspect-ratio: 3/2; */
-    overflow: hidden;
+    margin: 0 auto;
+    width: 100%;
+    height: calc(100% - 75px);
+    aspect-ratio: 3/2;
     justify-content: center;
     align-items: center;
 }
 
-.game-container {
+#game-container {
     display: flex;
-    /* aspect-ratio: 3/2; */
+    margin: 0 auto;
+    aspect-ratio: 3/2;
+    max-height: 720px;
+    justify-content: center;
 }
 
-/* @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     #app {
       aspect-ratio: 2/3;
     }
-    .game-container {
+    #game-container {
         aspect-ratio: 2/3;
     }
-  } */
+  }
