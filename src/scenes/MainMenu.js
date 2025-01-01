@@ -1,22 +1,5 @@
 import { Game, Scene } from 'phaser';
 
-let width = 1200;
-let height = 800;
-
-function isMobile() {
-    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-    return regex.test(navigator.userAgent);
-  }
-  
-  if (isMobile()) {
-    console.log("Mobile device detected");
-    width = 800;
-    height = 1200;
-  } else {
-    console.log("Desktop device detected");
-  }
-
-
 export class MainMenu extends Scene
 {
     constructor ()
@@ -30,37 +13,50 @@ export class MainMenu extends Scene
         var gameHeight = this.cameras.main.height;
         var gameCenterWidth = gameWidth / 2;
         var gameCenterHeight = gameHeight / 2;
+        var sceneWidth = gameWidth * .75;
+        var sceneHeight = gameHeight * .75;
 
-        var story = this.add.image(gameCenterWidth, gameCenterHeight, 'one', 0, {
-            width: width,
-            height: height
+        const debug = this.add.graphics();
+        const parent = new Phaser.Structs.Size(sceneWidth, sceneHeight);
+
+        var story = this.add.image(gameCenterWidth, gameCenterHeight - 50, 'one', 0, {
+            width: sceneWidth,
+            height: sceneHeight
         })
+        // story.scaleX  = story.scaleY
+        
+        story.setScale(0.5).setCrop(((gameWidth - parent.width)*1.5 - 15), (parent.height*1.25) + 5, parent.width*2, parent.height*2)
 
-        console.log(story)
-        console.log(gameWidth,story.displayOriginX)
-        story.displayWidth = width;
-        // story.displayHeight= height;
-        story.scale = .5;
-        // story.setCrop((story.displayOriginX *.2) - (story.displayOriginX * .1), 0, width*2, height*2)
-
-        this.add.text(50, gameHeight-50, 'Once upon one time, in one crack seed stoa, ', {
-            fontFamily: 'Open Sans', fontSize: 20, color: '#DECEB7',
-            align: 'left'
-        }).setOrigin(0.75);
+        const draw = () => {
+            debug.lineStyle(10, 0x457E7B).strokeRect((gameWidth - parent.width) / 2, 50, parent.width, parent.height);
+        }
 
         if (!this.sys.game.device.input.touch) {
-            this.add.text(gameCenterWidth, 500, 'not mobile', {
-                fontFamily: 'Open Sans', fontSize: 20, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5);
+            story.setScale(0.5).setCrop(((gameWidth - parent.width)*1.5 - 15), (parent.height*1.25) + 5, parent.width*2, parent.height*2)
+
+            this.add.text(((gameWidth - parent.width) / 2) - 5, gameHeight-75, 'Once upon one time, in one crack seed stoa, ', {
+                fontFamily: 'Open Sans', fontSize: 20, color: '#DECEB7',
+                align: 'left'
+            }).setOrigin(0);
         } else {
-            this.add.text(gameCenterWidth, 500, 'mobile', {
-                fontFamily: 'Arial Black', fontSize: 20, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5);
+            story.setScale(0.5).setCrop(parent.width + (gameWidth - parent.width)/2 + 30, (parent.height/2)-100, parent.width*2, parent.height*2)
+            console.log(gameWidth - parent.width)
+
+            this.make.text({
+                x: ((gameWidth - parent.width) / 2) - 5,
+                y: gameHeight-150,
+                text: 'Once upon one time, in one crack seed stoa, ',
+                origin: 0,
+                style: {
+                    fontFamily: 'Open Sans',
+                    fontSize: 40,
+                    color: '#DECEB7',
+                    wordWrap: { width: gameWidth / 2, useAdvancedWrap: true }
+                }
+            })
         }
+
+        draw();
 
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;

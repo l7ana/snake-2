@@ -65,11 +65,11 @@ export class Preloader extends Scene
 
         
         //  Our player animations, turning, walking left and walking right.
-        this.anims.create({
-            key: 'head',
-            frames: this.anims.generateFrameNames('head', { prefix: '', start: 0, end: 1 }),
-            frameRate: 3,
-            repeat: -1
-        });
+        // this.anims.create({
+        //     key: 'head',
+        //     frames: this.anims.generateFrameNames('head', { prefix: '', start: 0, end: 1 }),
+        //     frameRate: 3,
+        //     repeat: -1
+        // });
     }
 }
