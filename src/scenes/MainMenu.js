@@ -1,70 +1,125 @@
 import { Game, Scene } from 'phaser';
 
-export class MainMenu extends Scene
-{
-    constructor ()
-    {
+export class MainMenu extends Scene {
+    constructor() {
         super('MainMenu');
     }
 
-    create ()
-    {
-        var gameWidth = this.cameras.main.width;
-        var gameHeight = this.cameras.main.height;
-        var gameCenterWidth = gameWidth / 2;
-        var gameCenterHeight = gameHeight / 2;
-        var sceneWidth = gameWidth * .75;
-        var sceneHeight = gameHeight * .75;
+    create() {
+        // Screen dimensions
+        const layout = this.calculateLayout();
+        
+        // Create border
+        this.createBorder(layout);
+        
+        // Create and position story image
+        this.createStoryImage(layout);
+        
+        // Add text
+        this.createText(layout);
+        
+        // Setup input
+        this.setupInput();
+    }
 
+    calculateLayout() {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const isTouchDevice = this.sys.game.device.input.touch;
+        
+        return {
+            gameWidth,
+            gameHeight,
+            centerX: gameWidth / 2,
+            centerY: gameHeight / 2,
+            sceneWidth: gameWidth * 0.75,
+            sceneHeight: gameHeight * 0.75,
+            isTouchDevice,
+            scale: isTouchDevice ? 0.5 : 0.5,
+            fontSize: isTouchDevice ? 40 : 20
+        };
+    }
+
+    createBorder({ gameWidth, sceneWidth, sceneHeight }) {
         const debug = this.add.graphics();
-        const parent = new Phaser.Structs.Size(sceneWidth, sceneHeight);
+        const borderX = (gameWidth - sceneWidth) / 2;
+        
+        debug.lineStyle(10, 0x457E7B)
+            .strokeRect(borderX, 50, sceneWidth, sceneHeight);
+            
+        return debug;
+    }
 
-        var story = this.add.image(gameCenterWidth, gameCenterHeight - 50, 'one', 0, {
+    createStoryImage(layout) {
+        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+        
+        const story = this.add.image(centerX, centerY - 50, 'one', 0, {
             width: sceneWidth,
             height: sceneHeight
-        })
-        // story.scaleX  = story.scaleY
+        });
         
-        story.setScale(0.5).setCrop(((gameWidth - parent.width)*1.5 - 15), (parent.height*1.25) + 5, parent.width*2, parent.height*2)
+        // Calculate crop values based on device type
+        const cropConfig = isTouchDevice ? {
+            x: sceneWidth + (layout.gameWidth - sceneWidth) / 2 + 30,
+            y: (sceneHeight / 2) - 100,
+            width: sceneWidth * 2,
+            height: sceneHeight * 2
+        } : {
+            x: ((layout.gameWidth - sceneWidth) * 1.5 - 15),
+            y: (sceneHeight * 1.25) + 5,
+            width: sceneWidth * 2,
+            height: sceneHeight * 2
+        };
+        
+        story.setScale(layout.scale)
+            .setCrop(
+                cropConfig.x,
+                cropConfig.y,
+                cropConfig.width,
+                cropConfig.height
+            );
+            
+        return story;
+    }
 
-        const draw = () => {
-            debug.lineStyle(10, 0x457E7B).strokeRect((gameWidth - parent.width) / 2, 50, parent.width, parent.height);
-        }
-
-        if (!this.sys.game.device.input.touch) {
-            story.setScale(0.5).setCrop(((gameWidth - parent.width)*1.5 - 15), (parent.height*1.25) + 5, parent.width*2, parent.height*2)
-
-            this.add.text(((gameWidth - parent.width) / 2) - 5, gameHeight-75, 'Once upon one time, in one crack seed stoa, ', {
-                fontFamily: 'Open Sans', fontSize: 20, color: '#DECEB7',
-                align: 'left'
-            }).setOrigin(0);
-        } else {
-            story.setScale(0.5).setCrop(parent.width + (gameWidth - parent.width)/2 + 30, (parent.height/2)-100, parent.width*2, parent.height*2)
-            console.log(gameWidth - parent.width)
-
-            this.make.text({
-                x: ((gameWidth - parent.width) / 2) - 5,
-                y: gameHeight-150,
-                text: 'Once upon one time, in one crack seed stoa, ',
+    createText(layout) {
+        const { gameWidth, gameHeight, sceneWidth, isTouchDevice, fontSize } = layout;
+        const textX = ((gameWidth - sceneWidth) / 2) - 5;
+        const textY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
+        const text = 'Once upon one time, in one crack seed stoa, ';
+        
+        if (isTouchDevice) {
+            return this.make.text({
+                x: textX,
+                y: textY,
+                text: text,
                 origin: 0,
                 style: {
                     fontFamily: 'Open Sans',
-                    fontSize: 40,
+                    fontSize: fontSize,
                     color: '#DECEB7',
-                    wordWrap: { width: gameWidth / 2, useAdvancedWrap: true }
+                    wordWrap: { 
+                        width: gameWidth / 2, 
+                        useAdvancedWrap: true 
+                    }
                 }
-            })
+            });
+        } else {
+            return this.add.text(textX, textY, text, {
+                fontFamily: 'Open Sans',
+                fontSize: fontSize,
+                color: '#DECEB7',
+                align: 'left'
+            }).setOrigin(0);
         }
+    }
 
-        draw();
-
+    setupInput() {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
-
+        
         this.input.once('pointerdown', () => {
-
             this.scene.start('Game');
-
         });
     }
 }
