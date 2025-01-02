@@ -55,7 +55,7 @@ export class MainMenu extends Scene {
             isTouchDevice,
             isMidWidth,
             scale: 0.5,
-            fontSize: this.isMobile() ? 40 : 20
+            fontSize: this.isMobile() ? 36 : 20
         };
     }
 
@@ -81,8 +81,7 @@ export class MainMenu extends Scene {
         
         // Calculate crop values based on device type
         const cropConfig = isTouchDevice && isMidWidth ? {
-            // x: (sceneWidth + (layout.gameWidth - sceneWidth) / 2 + 30),
-            x: (sceneWidth / 2) + (layout.gameWidth * 0.3) + 12,
+            x: (sceneWidth / 2) + (layout.gameWidth * 0.3) + 12.5,
             y: (sceneHeight / 2) - 100,
             width: sceneWidth * 2,
             height: sceneHeight * 2
@@ -107,9 +106,17 @@ export class MainMenu extends Scene {
     createText(layout) {
         const { gameWidth, gameHeight, sceneWidth, isTouchDevice, fontSize } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
-        const textY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
+        const textY = isTouchDevice ? gameHeight - 175 : gameHeight - 75;
         const text = 'Once upon one time, in one crack seed stoa, ';
         const textConcat = isTouchDevice ? 'MOBILE' : 'DESKTOP' ;
+        const prevX = gameWidth - 172 - 20;
+        const nextX = gameWidth - 86;
+        const prev = this.add.image(prevX, textY + 25, 'prev', 0, {
+            width: 86
+        }).setScale(1);
+        const next = this.add.image(nextX, textY + 25, 'next', 0, {
+            width: 86
+        }).setScale(1);
         
         if (isTouchDevice) {
             return this.make.text({
@@ -122,11 +129,12 @@ export class MainMenu extends Scene {
                     fontSize: fontSize,
                     color: '#DECEB7',
                     wordWrap: { 
-                        width: gameWidth / 2, 
+                        width: gameWidth * 0.75, 
                         useAdvancedWrap: true 
                     }
                 }
-            });
+            }),
+            prev, next;
         } else {
             return this.add.text(textX, textY, text + textConcat, {
                 fontFamily: 'Open Sans',

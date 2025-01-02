@@ -53,6 +53,9 @@ export class Preloader extends Scene
         this.load.image('right', '/buttons/KeyboardButtonsDir_right.png')
         this.load.image('up', '/buttons/KeyboardButtonsDir_up.png')
         this.load.image('down', '/buttons/KeyboardButtonsDir_down.png')
+
+        this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
+        this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
     }
 
     create ()
