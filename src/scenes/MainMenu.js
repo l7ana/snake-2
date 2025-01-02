@@ -54,7 +54,7 @@ export class MainMenu extends Scene {
             sceneHeight: gameHeight * 0.75,
             isTouchDevice,
             isMidWidth,
-            scale: this.isMobile() ? 0.5 : 0.5,
+            scale: 0.5,
             fontSize: this.isMobile() ? 40 : 20
         };
     }
@@ -109,12 +109,13 @@ export class MainMenu extends Scene {
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
         const text = 'Once upon one time, in one crack seed stoa, ';
+        const textConcat = isTouchDevice ? 'MOBILE' : 'DESKTOP' ;
         
         if (isTouchDevice) {
             return this.make.text({
                 x: textX,
                 y: textY,
-                text: text,
+                text: text + textConcat,
                 origin: 0,
                 style: {
                     fontFamily: 'Open Sans',
@@ -127,7 +128,7 @@ export class MainMenu extends Scene {
                 }
             });
         } else {
-            return this.add.text(textX, textY, text, {
+            return this.add.text(textX, textY, text + textConcat, {
                 fontFamily: 'Open Sans',
                 fontSize: fontSize,
                 color: '#DECEB7',

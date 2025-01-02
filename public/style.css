@@ -25,25 +25,32 @@ h2 {
 #app {
     margin: 0 auto;
     width: 100%;
-    height: calc(100vh - 75px);
-    aspect-ratio: 3/2;
+    height: 100%;
+    max-height: calc(100vh - 100px);
+    aspect-ratio: 2/3;
     justify-content: center;
     align-items: center;
 }
 
 #game-container {
     display: flex;
+    width: 90%;
     margin: 0 auto;
-    aspect-ratio: 3/2;
+    aspect-ratio: 2/3;
     max-height: calc(100vh - 75px);
     justify-content: center;
 }
 
-@media only screen and (min-device-width: 320px) and (max-device-width: 1024px) {
+#game-container canvas {
+    margin: 0 auto;
+}
+
+@media only screen and (orientation: landscape) {
     #app {
-      aspect-ratio: 2/3;
+      aspect-ratio: 3/2;
     }
     #game-container {
-        aspect-ratio: 2/3;
+        aspect-ratio: 3/2;
+        width: 100%;
     }
   }
