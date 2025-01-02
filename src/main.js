@@ -13,8 +13,9 @@ let width = 1080;
 let height = 720;
 
 function isMobile() {
-    const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-    return regex.test(navigator.userAgent);
+  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  const deviceWidthSmall = window.innerWidth <= 1024;
+  return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
   }
   
   if (isMobile()) {

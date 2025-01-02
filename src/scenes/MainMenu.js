@@ -6,6 +6,8 @@ export class MainMenu extends Scene {
     }
 
     create() {
+        this.isMobile();
+
         // Screen dimensions
         const layout = this.calculateLayout();
         
@@ -22,21 +24,38 @@ export class MainMenu extends Scene {
         this.setupInput();
     }
 
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = this.cameras.main.width <= 1024;
+        const isTouchDevice = this.sys.game.device.input.touch;
+    
+        return regex.test(navigator.userAgent) || deviceWidthSmall || isTouchDevice ? true : false;
+    }
+
     calculateLayout() {
+      
+        if (this.isMobile()) {
+            console.log("Mobile device detected");
+        } else {
+            console.log("Desktop device detected");
+        }
+
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.sys.game.device.input.touch;
+        const isTouchDevice = this.isMobile();
+        const isMidWidth = this.cameras.main.width >= 600 && this.cameras.main.width <= 768;
         
         return {
             gameWidth,
             gameHeight,
             centerX: gameWidth / 2,
             centerY: gameHeight / 2,
-            sceneWidth: gameWidth * 0.75,
+            sceneWidth: isMidWidth ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: gameHeight * 0.75,
             isTouchDevice,
-            scale: isTouchDevice ? 0.5 : 0.5,
-            fontSize: isTouchDevice ? 40 : 20
+            isMidWidth,
+            scale: this.isMobile() ? 0.5 : 0.5,
+            fontSize: this.isMobile() ? 40 : 20
         };
     }
 
@@ -51,16 +70,19 @@ export class MainMenu extends Scene {
     }
 
     createStoryImage(layout) {
-        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice, isMidWidth } = layout;
         
         const story = this.add.image(centerX, centerY - 50, 'one', 0, {
             width: sceneWidth,
             height: sceneHeight
         });
+
+        console.log(layout.gameWidth, sceneWidth, ((layout.gameWidth - sceneWidth)), (layout.gameWidth - sceneWidth) + ((layout.gameWidth - sceneWidth) / 2))
         
         // Calculate crop values based on device type
-        const cropConfig = isTouchDevice ? {
-            x: sceneWidth + (layout.gameWidth - sceneWidth) / 2 + 30,
+        const cropConfig = isTouchDevice && isMidWidth ? {
+            // x: (sceneWidth + (layout.gameWidth - sceneWidth) / 2 + 30),
+            x: (sceneWidth / 2) + (layout.gameWidth * 0.3) + 12,
             y: (sceneHeight / 2) - 100,
             width: sceneWidth * 2,
             height: sceneHeight * 2
