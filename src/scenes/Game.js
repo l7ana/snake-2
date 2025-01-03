@@ -8,6 +8,13 @@ var cellSize;
 var cellXMax;
 var cellYMax;
 
+//NOTES
+//TODO
+// Game: buildMobileControls, import new buttons, position relative to Game Area
+// Snake: wraparound the sceneWidth
+// !low imporance todo
+// Panel.js: See if can create reusable component so that all the Intro Scenes and transformations can go in one file
+
 export class Game extends Scene
 {
     constructor ()
@@ -17,12 +24,16 @@ export class Game extends Scene
 
     create ()
     {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const gameHalfWidth = gameWidth / 2;
+        const gameHalfHeight = gameHeight / 2;
+        const isTouchDevice = this.isMobile();
+
         this.isMobile();
 
         // Screen dimensions
         const layout = this.calculateLayout();
-        this.createBorder(layout);
-
 
         if (!this.sys.game.device.input.touch) {
             this.cursors = this.input.keyboard.createCursorKeys();
@@ -35,6 +46,9 @@ export class Game extends Scene
             cellYMax = 12;
             this.buildMobileControls(layout);
         }
+        
+        this.add.grid(gameHalfWidth, (layout.sceneHeight / 2) + 50, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
+        this.createBorder(layout);
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
@@ -55,8 +69,9 @@ export class Game extends Scene
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const isTouchDevice = this.isMobile();
-        const gameHalfWidth = gameWidth / 2;
-        const gameHalfHeight = gameHeight / 2;
+        const cellSize = 32;
+        const cellXMax = 32;
+        const cellYMax = 24;
         
         return {
             gameWidth,
@@ -66,17 +81,21 @@ export class Game extends Scene
             sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
             isTouchDevice,
+            cellSize: isTouchDevice ? 64 : 32,
+            cellXMax: isTouchDevice ? 16 : 32,
+            cellYMax: isTouchDevice ? 12 : 32,
             scale: 0.5,
             fontSize: this.isMobile() ? 36 : 20
         };
     }
 
-    createBorder({ gameWidth, sceneWidth, sceneHeight }) {
+    createBorder({ gameWidth, gameHalfWidth, gameHalfHeight, sceneWidth, sceneHeight, cellSize }) {
         const graphics = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
+        //Consolidate createBorder function here so that the grid and rectangle can both be added to graphics, borrowing the same properties from layout.
         
         graphics.lineStyle(10, 0x457E7B)
-            .strokeRect(borderX, 50, sceneWidth, sceneHeight);
+        .strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
         return graphics;
     }
