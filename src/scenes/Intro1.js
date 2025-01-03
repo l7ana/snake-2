@@ -46,14 +46,6 @@ export class Intro1 extends Scene {
     }
 
     calculateLayout() {
-      
-        if (this.isMobile()) {
-            console.log("Mobile device detected");
-            console.log("Aspect ratio of story image needs to be square.")
-        } else {
-            console.log("Desktop device detected");
-        }
-
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const isTouchDevice = this.isMobile();

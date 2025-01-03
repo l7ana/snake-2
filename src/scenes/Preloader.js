@@ -17,10 +17,9 @@ export class Preloader extends Scene
 
         //  A simple progress bar. This is the outline of the bar.
         const rectangle = this.add.rectangle(gameCenterX, gameCenterY - 50, ((gameWidth*0.9) + 2), 32).setStrokeStyle(1, 0xffffff);
-        console.log(rectangle)
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(gameCenterX - ((gameWidth*0.9) / 2) + 1, gameCenterY - 50, 2, 28, 0xffffff);
+        const bar = this.add.rectangle(gameCenterX - (rectangle.width / 2) + 1, gameCenterY - 50, 2, 28, 0xffffff);
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {

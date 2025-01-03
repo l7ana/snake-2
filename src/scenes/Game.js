@@ -5,13 +5,8 @@ import Food from '../components/Food.js';
 var snake;
 var food;
 var cellSize;
-var cellYMax;
 var cellXMax;
-
-var gameWidth;
-var gameHeight;
-var gameHalfWidth;
-var gameHalfHeight;
+var cellYMax;
 
 export class Game extends Scene
 {
@@ -22,32 +17,69 @@ export class Game extends Scene
 
     create ()
     {
-        gameWidth = this.cameras.main.width;
-        gameHeight = this.cameras.main.height;
-        gameHalfWidth = gameWidth / 2;
-        gameHalfHeight = gameHeight / 2;
-        
+        this.isMobile();
+
+        // Screen dimensions
+        const layout = this.calculateLayout();
+        this.createBorder(layout);
+
+
         if (!this.sys.game.device.input.touch) {
-            this.cursors = this.input.keyboard.createCursorKeys()
+            this.cursors = this.input.keyboard.createCursorKeys();
             cellSize = 32;
             cellXMax = 32;
             cellYMax = 24;
-            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
         } else {
             cellSize = 64;
             cellXMax = 16;
             cellYMax = 12;
-            this.add.grid(gameHalfWidth, gameHalfHeight, gameWidth, gameHeight, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
-            this.buildMobileControls()
+            this.buildMobileControls(layout);
         }
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-          food = new Food(this, 3, 4);
-          snake = new Snake(this, 8, 8, cellSize);
+        food = new Food(this, 3, 4);
+        snake = new Snake(this, 8, 8, cellSize);
     
     }
+
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+        const isTouchDevice = this.sys.game.device.input.touch;
     
+        return isTouchDevice && regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+    }
+
+    calculateLayout() {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const isTouchDevice = this.isMobile();
+        const gameHalfWidth = gameWidth / 2;
+        const gameHalfHeight = gameHeight / 2;
+        
+        return {
+            gameWidth,
+            gameHeight,
+            centerX: gameWidth / 2,
+            centerY: gameHeight / 2,
+            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
+            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
+            isTouchDevice,
+            scale: 0.5,
+            fontSize: this.isMobile() ? 36 : 20
+        };
+    }
+
+    createBorder({ gameWidth, sceneWidth, sceneHeight }) {
+        const graphics = this.add.graphics();
+        const borderX = (gameWidth - sceneWidth) / 2;
+        
+        graphics.lineStyle(10, 0x457E7B)
+            .strokeRect(borderX, 50, sceneWidth, sceneHeight);
+            
+        return graphics;
+    }
 
     update (time, delta) {
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
@@ -56,7 +88,6 @@ export class Game extends Scene
               this.physics.world.debugGraphic.clear();
               console.log(snake.head.x, snake.head.y)
               console.log(food.x, food.y)
-            //   console.log(snake.body)
             }
             else {
               this.physics.world.drawDebug = true;
@@ -98,7 +129,10 @@ export class Game extends Scene
           }
     }
 
-    buildMobileControls () {
+    buildMobileControls (layout) {
+
+        const { gameHeight, gameWidth, centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+
         this.input.addPointer(2);
         this.input.topOnly = true;
 

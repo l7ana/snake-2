@@ -20,11 +20,11 @@ function isMobile() {
   }
   
   if (isMobile()) {
-    console.log("Mobile device detected");
     width = 720;
     height = 1080;
   } else {
-    console.log("Desktop device detected");
+    width = 1080;
+    height = 720;
   }
 
 
