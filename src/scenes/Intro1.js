@@ -140,12 +140,24 @@ export class Intro1 extends Scene {
         const buttonWidth = isTouchDevice ? 86 : 43;
         const buttonY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*0.45) : sceneWidth + (buttonWidth*2);
+        const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, {
+            width: buttonWidth
+        });
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, {
             width: buttonWidth
         });
+        prev.setInteractive().setTint(0x128884),
         next.setInteractive().setTint(0x128884);
+
+        prev.on('pointerover', function () {
+            prev.clearTint();
+        })
         next.on('pointerover', function () {
             next.clearTint();
+        })
+        prev.on('pointerout', function () {
+            prev.setTint(0x128884);
         })
         next.on('pointerout', function () {
             next.setTint(0x128884);
@@ -160,9 +172,9 @@ export class Intro1 extends Scene {
         });
         
         if (isTouchDevice) {
-            return next.setScale(0.75);
+            return prev.setScale(0.75), next.setScale(0.75);
         } else {
-            return next.setScale(0.5);
+            return prev.setScale(0.5), next.setScale(0.5);
         }
     }
 }
