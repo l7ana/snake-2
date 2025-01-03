@@ -1,8 +1,8 @@
 import { Game, Scene } from 'phaser';
 
-export class MainMenu extends Scene {
+export class Intro2 extends Scene {
     constructor() {
-        super('MainMenu');
+        super('Intro2');
     }
 
     create() {
@@ -71,7 +71,7 @@ export class MainMenu extends Scene {
     createStoryImage(layout) {
         const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
         
-        const story = this.add.image(centerX, centerY - 50, 'one', 0, {
+        const story = this.add.image(centerX, centerY - 50, 'two', 0, {
             width: sceneWidth,
             height: sceneHeight
         });
@@ -163,9 +163,9 @@ export class MainMenu extends Scene {
             next.setTint(0x128884);
         })
 
-        // prev.once('pointerdown', () => {
-        //     this.scene.start('Game');
-        // });
+        prev.once('pointerdown', () => {
+            this.scene.start('Intro1');
+        });
         
         next.once('pointerdown', () => {
             this.scene.start('Game');
