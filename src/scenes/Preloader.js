@@ -28,6 +28,12 @@ export class Preloader extends Scene
             bar.width = 4 + (100 * progress);
 
         });
+        this.add.text(gameCenterWidth, gameCenterHeight, 'Click to Start', {
+            fontFamily: 'Open Sans',
+            fontSize: 40,
+            color: '#DECEB7',
+            align: 'center'
+        }).setOrigin(0);
     }
 
     preload ()
@@ -64,7 +70,19 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the Intro. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Intro1');
+        // this.scene.start('Intro1');
+        this.input.addPointer(2);
+        this.pointer = this.input.activePointer;
+
+        this.input.once('pointerup', () => {
+            // this.scene.start('Intro1');
+            this.scene.transition({
+                target: 'Intro1',
+                ease: 'linear',
+                duration: 1000,
+                moveAbove: true,
+            })
+        });
 
     }
 }

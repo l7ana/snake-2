@@ -13,12 +13,23 @@ export class Intro2 extends Scene {
         
         // Create border
         this.createBorder(layout);
-        
+
         // Create and position story image
-        this.createStoryImage(layout);
+        const image = this.createStoryImage(layout).setAlpha(0);
         
         // Add text
-        this.createText(layout);
+        const words = this.createText(layout).setAlpha(0);
+        
+        this.events.on('transitionstart', function (fromScene, duration)
+        {
+          this.tweens.add({
+            targets: [ words, image ],
+            ease: 'linear',
+            alpha: 1,
+            duration: duration
+        });
+
+        }, this);
         
         // Setup input
         this.setupInput(layout);
@@ -33,14 +44,6 @@ export class Intro2 extends Scene {
     }
 
     calculateLayout() {
-      
-        if (this.isMobile()) {
-            console.log("Mobile device detected");
-            console.log("Aspect ratio of story image needs to be square.")
-        } else {
-            console.log("Desktop device detected");
-        }
-
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const isTouchDevice = this.isMobile();
@@ -104,7 +107,7 @@ export class Intro2 extends Scene {
         const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice, fontSize } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 75;
-        const text = 'Once upon one time, in one crack seed stoa, ';
+        const text = 'Had small kine magic in da li hing mui, cuz one night, next ting you know ';
         
         if (isTouchDevice) {
             return this.make.text({
@@ -163,11 +166,16 @@ export class Intro2 extends Scene {
             next.setTint(0x128884);
         })
 
-        prev.once('pointerdown', () => {
-            this.scene.start('Intro1');
+        prev.once('pointerup', () => {
+          this.scene.transition({
+              target: 'Intro1',
+              ease: 'linear',
+              duration: 1000,
+              moveAbove: true,
+          })
         });
         
-        next.once('pointerdown', () => {
+        next.once('pointerup', () => {
             this.scene.start('Game');
         });
         
