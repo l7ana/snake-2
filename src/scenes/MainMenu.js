@@ -21,21 +21,22 @@ export class MainMenu extends Scene {
         this.createText(layout);
         
         // Setup input
-        this.setupInput();
+        this.setupInput(layout);
     }
 
     isMobile() {
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = this.cameras.main.width <= 1024;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
         const isTouchDevice = this.sys.game.device.input.touch;
     
-        return regex.test(navigator.userAgent) || deviceWidthSmall || isTouchDevice ? true : false;
+        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
     }
 
     calculateLayout() {
       
         if (this.isMobile()) {
             console.log("Mobile device detected");
+            console.log("Aspect ratio of story image needs to be square.")
         } else {
             console.log("Desktop device detected");
         }
@@ -43,17 +44,15 @@ export class MainMenu extends Scene {
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const isTouchDevice = this.isMobile();
-        const isMidWidth = this.cameras.main.width >= 600 && this.cameras.main.width <= 768;
         
         return {
             gameWidth,
             gameHeight,
             centerX: gameWidth / 2,
             centerY: gameHeight / 2,
-            sceneWidth: isMidWidth ? gameWidth * 0.9 : gameWidth * 0.75,
-            sceneHeight: gameHeight * 0.75,
+            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
+            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
             isTouchDevice,
-            isMidWidth,
             scale: 0.5,
             fontSize: this.isMobile() ? 36 : 20
         };
@@ -70,23 +69,22 @@ export class MainMenu extends Scene {
     }
 
     createStoryImage(layout) {
-        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice, isMidWidth } = layout;
+        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
         
         const story = this.add.image(centerX, centerY - 50, 'one', 0, {
             width: sceneWidth,
             height: sceneHeight
         });
 
-        console.log(layout.gameWidth, sceneWidth, ((layout.gameWidth - sceneWidth)), (layout.gameWidth - sceneWidth) + ((layout.gameWidth - sceneWidth) / 2))
-        
         // Calculate crop values based on device type
-        const cropConfig = isTouchDevice && isMidWidth ? {
-            x: (sceneWidth / 2) + (layout.gameWidth * 0.3) + 12.5,
-            y: (sceneHeight / 2) - 100,
+        const cropConfig = isTouchDevice ? {
+            x: (sceneWidth / 2) + (layout.gameWidth * 0.25) + 47.5,
+            // x: (sceneWidth / 2) + (layout.gameWidth * 0.25) + 47.5,
+            y: (sceneHeight / 2) - 5,
             width: sceneWidth * 2,
             height: sceneHeight * 2
         } : {
-            x: ((layout.gameWidth - sceneWidth) * 1.5 - 15),
+            x: (sceneWidth / 2) - 15,
             y: (sceneHeight * 1.25) + 5,
             width: sceneWidth * 2,
             height: sceneHeight * 2
@@ -99,30 +97,20 @@ export class MainMenu extends Scene {
                 cropConfig.width,
                 cropConfig.height
             );
-            
         return story;
     }
 
     createText(layout) {
-        const { gameWidth, gameHeight, sceneWidth, isTouchDevice, fontSize } = layout;
+        const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice, fontSize } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
-        const textY = isTouchDevice ? gameHeight - 175 : gameHeight - 75;
+        const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 75;
         const text = 'Once upon one time, in one crack seed stoa, ';
-        const textConcat = isTouchDevice ? 'MOBILE' : 'DESKTOP' ;
-        const prevX = gameWidth - 172 - 20;
-        const nextX = gameWidth - 86;
-        const prev = this.add.image(prevX, textY + 25, 'prev', 0, {
-            width: 86
-        }).setScale(1);
-        const next = this.add.image(nextX, textY + 25, 'next', 0, {
-            width: 86
-        }).setScale(1);
         
         if (isTouchDevice) {
             return this.make.text({
                 x: textX,
                 y: textY,
-                text: text + textConcat,
+                text: text,
                 origin: 0,
                 style: {
                     fontFamily: 'Open Sans',
@@ -133,10 +121,9 @@ export class MainMenu extends Scene {
                         useAdvancedWrap: true 
                     }
                 }
-            }),
-            prev, next;
+            });
         } else {
-            return this.add.text(textX, textY, text + textConcat, {
+            return this.add.text(textX, textY, text, {
                 fontFamily: 'Open Sans',
                 fontSize: fontSize,
                 color: '#DECEB7',
@@ -145,12 +132,49 @@ export class MainMenu extends Scene {
         }
     }
 
-    setupInput() {
+    setupInput(layout) {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
+
+        const { gameHeight, sceneWidth, isTouchDevice, fontSize } = layout;
+        const buttonWidth = isTouchDevice ? 86 : 43;
+        const buttonY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
+        const nextX = isTouchDevice ? sceneWidth - (buttonWidth*0.45) : sceneWidth + (buttonWidth*2);
+        const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, {
+            width: buttonWidth
+        });
+        const next = this.add.image(nextX, buttonY + 25, 'next', 0, {
+            width: buttonWidth
+        });
+        prev.setInteractive().setTint(0x128884),
+        next.setInteractive().setTint(0x128884);
+
+        prev.on('pointerover', function () {
+            prev.clearTint();
+        })
+        next.on('pointerover', function () {
+            next.clearTint();
+        })
+        prev.on('pointerout', function () {
+            prev.setTint(0x128884);
+        })
+        next.on('pointerout', function () {
+            next.setTint(0x128884);
+        })
+
+        // prev.once('pointerdown', () => {
+        //     this.scene.start('Game');
+        // });
         
-        this.input.once('pointerdown', () => {
+        next.once('pointerdown', () => {
             this.scene.start('Game');
         });
+        
+        if (isTouchDevice) {
+            return prev.setScale(0.75), next.setScale(0.75);
+        } else {
+            return prev.setScale(0.5), next.setScale(0.5);
+        }
     }
 }

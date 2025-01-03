@@ -14,14 +14,14 @@ let height = 720;
 
 function isMobile() {
   const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-  const deviceWidthSmall = window.innerWidth < 1024;
+  const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
   return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
   }
   
   if (isMobile()) {
     console.log("Mobile device detected");
     width = 720;
-    height = 1090;
+    height = 1080;
   } else {
     console.log("Desktop device detected");
   }
