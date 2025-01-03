@@ -9,31 +9,26 @@ export class Preloader extends Scene
 
     init ()
     {
-        var gameWidth = window.innerWidth;
-        var gameCenterWidth = window.innerWidth / 2;
-        var gameCenterHeight = window.innerHeight / 2;
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const gameCenterX = gameWidth / 2;
+        const gameCenterY = gameHeight / 2;
         //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(gameCenterWidth, gameCenterHeight, 'background');
 
         //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(gameCenterWidth, gameCenterHeight, gameWidth - 100, 32).setStrokeStyle(1, 0xffffff);
+        const rectangle = this.add.rectangle(gameCenterX, gameCenterY - 50, ((gameWidth*0.9) + 2), 32).setStrokeStyle(1, 0xffffff);
+        console.log(rectangle)
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(gameCenterWidth-230, gameCenterHeight, 4, 28, 0xffffff);
+        const bar = this.add.rectangle(gameCenterX - ((gameWidth*0.9) / 2) + 1, gameCenterY - 50, 2, 28, 0xffffff);
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (100 * progress);
+            bar.width = 2 + (((gameWidth*0.9) - 2) * progress);
 
         });
-        this.add.text(gameCenterWidth, gameCenterHeight, 'Click to Start', {
-            fontFamily: 'Open Sans',
-            fontSize: 40,
-            color: '#DECEB7',
-            align: 'center'
-        }).setOrigin(0);
     }
 
     preload ()
@@ -66,8 +61,24 @@ export class Preloader extends Scene
 
     create ()
     {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const gameCenterX = gameWidth / 2;
+        const gameCenterY = gameHeight / 2;
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
+
+        const beginText = this.add.text(gameCenterX, gameCenterY, 'Click to Start', {
+            fontFamily: 'Open Sans',
+            fontSize: 40,
+            color: '#DECEB7',
+            align: 'center'
+        }).setOrigin(0.5);
+
+        // this.load.on('complete', function () {
+        //     beginText.visible = true;
+        //     beginText.setAlpha(1);
+        // })
 
         //  Move to the Intro. You could also swap this for a Scene Transition, such as a camera fade.
         // this.scene.start('Intro1');
