@@ -10,8 +10,8 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.cellSize = layout.cellSize;
     this.cellXMax = layout.cellXMax;
     this.cellYMax = layout.cellYMax;
-    this.xAdjustment = (layout.sceneWidth / 2);
-    this.yAdjustment = layout.yPos;
+    this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+    this.yAdjustment = layout.yPos - this.cellSize;
     
     Phaser.Physics.Arcade.Image.call(this, scene)
 
@@ -50,7 +50,7 @@ export default class Food extends Phaser.Physics.Arcade.Image
     var y = Phaser.Math.Between(0, this.cellYMax - 1);
     console.log(x, y)
 
-    this.setPosition(x * this.cellSize - (this.cellSize/2), (y * this.cellSize) + this.yAdjustment);
+    this.setPosition((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment);
   }
 
   change () {
