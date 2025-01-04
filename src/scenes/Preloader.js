@@ -13,6 +13,7 @@ export class Preloader extends Scene
         const gameHeight = this.cameras.main.height;
         const gameCenterX = gameWidth / 2;
         const gameCenterY = gameHeight / 2;
+        this.cursors = this.input.keyboard.createCursorKeys();
         //  We loaded this image in our Boot Scene, so we can display it here
 
         //  A simple progress bar. This is the outline of the bar.
@@ -83,6 +84,15 @@ export class Preloader extends Scene
         // this.scene.start('Intro1');
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
+    }
+
+    update () {
+        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+
+        if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
+            this.scene.start('Game');
+            return;
+          }
 
         this.input.once('pointerup', () => {
             // this.scene.start('Intro1');
@@ -93,6 +103,5 @@ export class Preloader extends Scene
                 moveAbove: true,
             })
         });
-
     }
 }

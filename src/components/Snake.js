@@ -158,6 +158,7 @@ var Snake = new Phaser.Class({
       newPart.width = this.cellSize;
       newPart.height = this.cellSize;
       this.updateSprites();
+      //Fallback if updateSprites() is too complex, is to use 1 sprite for every body segment with an increasing RGB filter
 
   },
   updateSprites: function ()
@@ -171,6 +172,7 @@ var Snake = new Phaser.Class({
     //     element.setTexture('snake1', 4)
     //     //filter for only center children, not first and last.
     // });
+
 
   },
 

@@ -17,6 +17,12 @@ export default class Food extends Phaser.Physics.Arcade.Image
 
     this.textures = ['food1','food2','food3','food4','food5','food6','food7','food8',];
     this.textureKey = 0
+    // this.data ['candy']
+    // //Enhancement: counter for each type of texture consumed
+
+    //Randomize order of textures OR
+
+    //Add new instances of Food with a fadeout if not eaten in xyz time (it melts or something)
 
     this.setTexture(this.textures[this.textureKey]);
     this.setPosition(x * this.cellSize , y * this.cellSize );

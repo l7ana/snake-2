@@ -10,10 +10,14 @@ var cellYMax;
 
 //NOTES
 //TODO
-// Game: buildMobileControls, import new buttons, position relative to Game Area
+// Game & Snake: increase scale of artwork, less game tiles
 // Snake: wraparound the sceneWidth
+// Game: buildMobileControls, import new buttons, position relative to Game Area
+
 // !low imporance todo
 // Panel.js: See if can create reusable component so that all the Intro Scenes and transformations can go in one file
+// Enhancement: show point total, increase difficulty in larger increments (like instead of 5, 10)
+// Enhancement: reciept total of things eaten
 
 export class Game extends Scene
 {
@@ -52,6 +56,7 @@ export class Game extends Scene
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 3, 4);
         snake = new Snake(this, 8, 8, cellSize);
     
@@ -145,6 +150,11 @@ export class Game extends Scene
                   this.repositionFood();
                   food.change();
               }
+          }
+
+          if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
+            this.scene.start('GameOver');
+            return;
           }
     }
 
