@@ -39,26 +39,20 @@ export class Game extends Scene
         // Screen dimensions
         const layout = this.calculateLayout();
 
-        if (!this.sys.game.device.input.touch) {
+        if (!isTouchDevice) {
             this.cursors = this.input.keyboard.createCursorKeys();
-            cellSize = 32;
-            cellXMax = 32;
-            cellYMax = 24;
         } else {
-            cellSize = 64;
-            cellXMax = 16;
-            cellYMax = 12;
             this.buildMobileControls(layout);
         }
-        
-        this.add.grid(gameHalfWidth, (layout.sceneHeight / 2) + 50, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
+
+        this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
         this.createBorder(layout);
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 3, 4);
-        snake = new Snake(this, 8, 8, cellSize);
+        snake = new Snake(this, 8, 8, layout.cellSize);
     
     }
 
@@ -71,10 +65,11 @@ export class Game extends Scene
     }
 
     calculateLayout() {
+        const isTouchDevice = this.isMobile();
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.isMobile();
-        const cellSize = 32;
+        const sceneWidth = isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75;
+        const sceneHeight = isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75;
         const cellXMax = 32;
         const cellYMax = 24;
         
@@ -85,11 +80,12 @@ export class Game extends Scene
             centerY: gameHeight / 2,
             sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
+            sceneHalfY: (sceneHeight / 2) + 50,
             isTouchDevice,
-            cellSize: isTouchDevice ? 64 : 32,
-            cellXMax: isTouchDevice ? 16 : 32,
-            cellYMax: isTouchDevice ? 12 : 32,
-            scale: 0.5,
+            cellSize: isTouchDevice ? sceneWidth / 10 : sceneWidth / 18,
+            cellXMax: isTouchDevice ? 10 : 18,
+            cellYMax: isTouchDevice ? 10 : 12,
+            scale: 1,
             fontSize: this.isMobile() ? 36 : 20
         };
     }
