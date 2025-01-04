@@ -1,11 +1,7 @@
-import { isMobile } from "../components/Helpers.js";
-
 export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y, layout) {
     super(scene, x , y, layout);
-
-    // const layout = this.calculateLayout();
 
     this.cellSize = layout.cellSize;
     this.cellXMax = layout.cellXMax;

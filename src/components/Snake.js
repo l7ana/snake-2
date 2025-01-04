@@ -8,23 +8,19 @@ var Snake = new Phaser.Class({
 
   initialize:
 
-  function Snake (scene, x, y)
+  function Snake (scene, x, y, layout)
   {
       this.headPosition = new Phaser.Geom.Point(x, y);
-      
-      if (!scene.sys.game.device.input.touch) {
-          this.cellSize = 32;
-          this.cellXMax = 40;
-          this.cellYMax = 25;
-      } else {
-        this.cellSize = 64;
-        this.cellXMax = 19;
-        this.cellYMax = 13;
-      }
+
+      this.cellSize = layout.cellSize;
+      this.cellXMax = layout.cellXMax;
+      this.cellYMax = layout.cellYMax;
+      this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+      this.yAdjustment = layout.yPos - this.cellSize;
       
       this.body = scene.add.group();
 
-      this.head = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 1);
+      this.head = this.body.create((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1);
       this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
@@ -45,6 +41,7 @@ var Snake = new Phaser.Class({
   {
       if (time >= this.moveTime)
       {
+            // console.log('hold it!')
           return this.move(time);
       }
   },
@@ -110,7 +107,7 @@ var Snake = new Phaser.Class({
       switch (this.heading)
       {
           case LEFT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, this.cellXMax);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 1, this.cellXMax);
               break;
 
           case RIGHT:
@@ -129,7 +126,13 @@ var Snake = new Phaser.Class({
       this.direction = this.heading;
 
       //  Update the body segments and place the last coordinate into this.tail
-      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * this.cellSize, this.headPosition.y * this.cellSize, 1, this.tailPosition);
+      Phaser.Actions.ShiftPosition(
+        this.body.getChildren(), 
+        (this.headPosition.x * this.cellSize) + this.xAdjustment, 
+        (this.headPosition.y * this.cellSize) + 50, 
+        1, 
+        this.tailPosition
+        );
 
       //  Check to see if any of the body pieces have the same x/y as the head
       //  If they do, the head ran into the body

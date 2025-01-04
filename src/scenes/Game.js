@@ -54,7 +54,7 @@ export class Game extends Scene
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 2, 4, layout);
-        snake = new Snake(this, 8, 8, layout.cellSize);
+        snake = new Snake(this, 8, 8, layout);
     
     }
 
