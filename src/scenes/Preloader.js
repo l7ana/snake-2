@@ -57,6 +57,7 @@ export class Preloader extends Scene
 
         this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
         this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
+        this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')
     }
 
     create ()

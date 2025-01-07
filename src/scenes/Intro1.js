@@ -146,7 +146,7 @@ export class Intro1 extends Scene {
                     fontSize: fontSize,
                     color: '#DECEB7',
                     wordWrap: { 
-                        width: gameWidth * 0.75, 
+                        width: gameWidth * 0.99, 
                         useAdvancedWrap: true 
                     }
                 }
@@ -156,7 +156,11 @@ export class Intro1 extends Scene {
                 fontFamily: 'Open Sans',
                 fontSize: fontSize,
                 color: '#DECEB7',
-                align: 'left'
+                align: 'left',
+                wordWrap: { 
+                    width: gameWidth * 0.5, 
+                    useAdvancedWrap: true 
+                }
             }).setOrigin(0);
         }
     }
@@ -165,28 +169,28 @@ export class Intro1 extends Scene {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
 
-        const { gameHeight, sceneWidth, isTouchDevice, fontSize } = layout;
+        const { gameHeight, sceneWidth, isTouchDevice } = layout;
         const buttonWidth = isTouchDevice ? 86 : 43;
         const buttonY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
-        const nextX = isTouchDevice ? sceneWidth - (buttonWidth*0.45) : sceneWidth + (buttonWidth*2);
-        const next = this.add.image(nextX, buttonY + 25, 'next', 0, {
-            width: buttonWidth
-        });
+
+        const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
-        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, {
-            width: buttonWidth
-        });
+        
+        const startButtonWidth = isTouchDevice ? 180 : 90;
+        const startButtonX = isTouchDevice ? sceneWidth - (startButtonWidth) : sceneWidth - (startButtonWidth/2) + 5;
+        
+        const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(0, 0.5);
 
         if (isTouchDevice) {
-            next.setScale(0.75),
-            prev.setScale(0.75)
+            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(0.75)
         } else {
-            next.setScale(0.5),
-            prev.setScale(0.5)
+            next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
-        // const allButtons = new Phaser.GameObjects.Group(this, [next, prev]);
 
-        prev.setVisible(false)
+        prev.setVisible(false);
+        startButton.setVisible(false);
 
         next.setInteractive().setTint(0x128884)
         .on('pointerover', function () {
@@ -195,17 +199,13 @@ export class Intro1 extends Scene {
             next.setTint(0x128884);
         }).on('pointerup', () => {
             this.currentContentIndex++;
-            prev.setVisible(true)
+            prev.setVisible(true);
             
-            // If we've reached the end of the content, move to next scene
-            if (this.currentContentIndex >= this.storyContent.length) {
-                this.scene.start('Game');
-                this.scene.transition({
-                    target: 'Game',
-                    ease: 'linear',
-                    duration: 1000,
-                    moveAbove: true,
-                });
+            // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
+            if (this.currentContentIndex >= this.storyContent.length - 1) {
+                next.setVisible(false);
+                startButton.setVisible(true);
+                prev.setX(prevX - startButtonWidth + 10)
             } else {
                 // Otherwise, update the content
                 this.updateContent();
@@ -219,6 +219,10 @@ export class Intro1 extends Scene {
             prev.setTint(0x128884);
         }).on('pointerup', () => {
             this.currentContentIndex--;
+            console.log(this.currentContentIndex)
+            startButton.setVisible(false);
+            next.setVisible(true);
+            prev.setX(prevX);
 
             if (this.currentContentIndex === 0) {
                 prev.setVisible(false);
@@ -229,6 +233,23 @@ export class Intro1 extends Scene {
             this.updateContent();
         });
 
-        
+        startButton.setInteractive().setTint(0x128884)
+        .on('pointerover', function () {
+            next.clearTint();
+        }).on('pointerout', function () {
+            next.setTint(0x128884);
+        }).on('pointerup', () => {
+            
+            // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
+            if (this.currentContentIndex >= this.storyContent.length) {
+                this.scene.start('Game');
+                this.scene.transition({
+                    target: 'Game',
+                    ease: 'linear',
+                    duration: 1000,
+                    moveAbove: true,
+                });
+            }
+        });
     }
 }
