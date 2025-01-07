@@ -11,8 +11,16 @@ export class Intro1 extends Scene {
             },
             {
                 imageKey: 'two', // Make sure this image is loaded in your preload
-                text: 'Your second story text goes here...'
+                text: 'Had small kine magic in da li hing mui, cuz one night, next ting you know '
             },
+            {
+                imageKey: 'three', // Make sure this image is loaded in your preload
+                text: 'One litto gummy worm came alive! Buggah was hungry, so he went break loose!'
+            },
+            {
+                imageKey: 'four',
+                text: 'He landed on da floa and saw one big juicy candy good enough fo’ eat. Help him eat all da goodies befoa Uncle Kimo finds out!'
+            }
             // Add more content objects as needed
         ];
         this.currentContentIndex = 0;
@@ -42,12 +50,6 @@ export class Intro1 extends Scene {
         });
 
         }, this);
-
-        // const testImage = this.add.image(layout.centerX, layout.centerY - 50, this.storyContent[0].imageKey, 0, {
-        //     width: layout.sceneWidth,
-        //     height: layout.sceneHeight
-        // })
-        // console.log(testImage)
         
         // Setup input
         this.setupInput(layout);
@@ -74,7 +76,7 @@ export class Intro1 extends Scene {
             sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
             isTouchDevice,
-            scale: 1,
+            scale: isTouchDevice ? 2 : 1,
             fontSize: this.isMobile() ? 36 : 20
         };
     }
@@ -115,38 +117,14 @@ export class Intro1 extends Scene {
     }
 
     createStoryImage(layout) {
-        const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+        const { centerX, centerY, sceneWidth, sceneHeight, scale, isTouchDevice } = layout;
+        const storyYCenter = isTouchDevice ? (centerY/2) + (50*scale) : centerY - 50 + 5;
+        //The Y of Border is 50, the border width is 10
         
-        const story = this.add.image(centerX, centerY - 50, this.storyContent[0].imageKey, 0, {
+        const story = this.add.image(centerX, storyYCenter, this.storyContent[0].imageKey, 0, {
             width: sceneWidth,
             height: sceneHeight
-        });
-
-        // Calculate crop values based on device type
-        const cropConfig = isTouchDevice ? {
-            x: 5,
-            y: 0,
-            // x: (sceneWidth / 2) + (layout.gameWidth * 0.25) + 47.5,
-            // y: (sceneHeight / 2) - 5,
-            width: sceneWidth,
-            height: sceneHeight
-        } : {
-            // x: (sceneWidth / 2) - 15,
-            // y: (sceneHeight * 1.25) + 5,
-            x: 0,
-            y: 0,
-            width: sceneWidth * 2,
-            height: sceneHeight * 2
-        };
-        
-        story.setScale(layout.scale)
-            .setCrop(
-                cropConfig.x,
-                cropConfig.y,
-                cropConfig.width,
-                cropConfig.height
-            );
-        console.log(story)
+        }).setScale(scale).setDisplaySize(sceneWidth, sceneHeight);
         return story;
     }
 
@@ -192,23 +170,36 @@ export class Intro1 extends Scene {
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, {
             width: buttonWidth
         });
-        next.setInteractive().setTint(0x128884);
+        const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, {
+            width: buttonWidth
+        });
 
-        next.on('pointerover', function () {
+        if (isTouchDevice) {
+            next.setScale(0.75),
+            prev.setScale(0.75)
+        } else {
+            next.setScale(0.5),
+            prev.setScale(0.5)
+        }
+        // const allButtons = new Phaser.GameObjects.Group(this, [next, prev]);
+
+        prev.setVisible(false)
+
+        next.setInteractive().setTint(0x128884)
+        .on('pointerover', function () {
             next.clearTint();
-        })
-        next.on('pointerout', function () {
+        }).on('pointerout', function () {
             next.setTint(0x128884);
-        })
-        
-        next.on('pointerup', () => {
+        }).on('pointerup', () => {
             this.currentContentIndex++;
+            prev.setVisible(true)
             
             // If we've reached the end of the content, move to next scene
             if (this.currentContentIndex >= this.storyContent.length) {
-                this.scene.start('Intro2');
+                this.scene.start('Game');
                 this.scene.transition({
-                    target: 'Intro2',
+                    target: 'Game',
                     ease: 'linear',
                     duration: 1000,
                     moveAbove: true,
@@ -218,11 +209,24 @@ export class Intro1 extends Scene {
                 this.updateContent();
             }
         });
+
+        prev.setInteractive().setTint(0x128884)
+        .on('pointerover', function () {
+            prev.clearTint();
+        }).on('pointerout', function () {
+            prev.setTint(0x128884);
+        }).on('pointerup', () => {
+            this.currentContentIndex--;
+
+            if (this.currentContentIndex === 0) {
+                prev.setVisible(false);
+            } else {
+                prev.setVisible(true);
+            }
+            
+            this.updateContent();
+        });
+
         
-        if (isTouchDevice) {
-            return next.setScale(0.75);
-        } else {
-            return next.setScale(0.5);
-        }
     }
 }

@@ -2,7 +2,6 @@ import { Boot } from './scenes/Boot';
 import { Game } from './scenes/Game';
 import { GameOver } from './scenes/GameOver';
 import { Intro1 } from './scenes/Intro1';
-import { Intro2 } from './scenes/Intro2';
 import { Preloader } from './scenes/Preloader';
 // import { GridEngine, GridEngineHeadless } from "grid-engine";
 
@@ -40,7 +39,6 @@ const config = {
         Boot,
         Preloader,
         Intro1,
-        Intro2,
         Game,
         GameOver
     ],

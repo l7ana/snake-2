@@ -15,7 +15,6 @@ var cellYMax;
 // Game: buildMobileControls, import new buttons, position relative to Game Area
 
 // !low imporance todo
-// Panel.js: See if can create reusable component so that all the Intro Scenes and transformations can go in one file
 // Enhancement: show point total, increase difficulty in larger increments (like instead of 5, 10)
 // Enhancement: reciept total of things eaten
 
