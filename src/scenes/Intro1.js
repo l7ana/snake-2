@@ -3,6 +3,19 @@ import { Game, Scene } from 'phaser';
 export class Intro1 extends Scene {
     constructor() {
         super('Intro1');
+        // Add content arrays to store multiple images and texts
+        this.storyContent = [
+            {
+                imageKey: 'one',
+                text: 'Once upon one time, in one crack seed stoa, '
+            },
+            {
+                imageKey: 'two', // Make sure this image is loaded in your preload
+                text: 'Your second story text goes here...'
+            },
+            // Add more content objects as needed
+        ];
+        this.currentContentIndex = 0;
     }
 
     create() {
@@ -10,28 +23,31 @@ export class Intro1 extends Scene {
 
         // Screen dimensions
         const layout = this.calculateLayout();
+        console.log(layout.sceneWidth, layout.sceneHeight)
+        
+        // Store references to image and text as class properties
+        this.storyImage = this.createStoryImage(layout).setAlpha(0);
+        this.storyText = this.createText(layout).setAlpha(0);
         
         // Create border
         this.createBorder(layout);
-        
-        // Create and position story image
-        const image = this.createStoryImage(layout).setAlpha(0);
-        
-        // Add text
-        const words = this.createText(layout).setAlpha(0);
-
-        // this.scene.start();
 
         this.events.on('transitionstart', function (fromScene, duration)
         {
           this.tweens.add({
-            targets: [ words, image ],
+            targets: [ this.storyText, this.storyImage ],
             ease: 'linear',
             alpha: 1,
             duration: duration
         });
 
         }, this);
+
+        // const testImage = this.add.image(layout.centerX, layout.centerY - 50, this.storyContent[0].imageKey, 0, {
+        //     width: layout.sceneWidth,
+        //     height: layout.sceneHeight
+        // })
+        // console.log(testImage)
         
         // Setup input
         this.setupInput(layout);
@@ -58,7 +74,7 @@ export class Intro1 extends Scene {
             sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
             isTouchDevice,
-            scale: 0.5,
+            scale: 1,
             fontSize: this.isMobile() ? 36 : 20
         };
     }
@@ -73,24 +89,52 @@ export class Intro1 extends Scene {
         return debug;
     }
 
+    updateContent() {
+        const content = this.storyContent[this.currentContentIndex];
+        
+        // Fade out current content
+        this.tweens.add({
+            targets: [this.storyImage, this.storyText],
+            alpha: 0,
+            duration: 500,
+            onComplete: () => {
+                // Update image
+                this.storyImage.setTexture(content.imageKey);
+                
+                // Update text
+                this.storyText.setText(content.text);
+                
+                // Fade in new content
+                this.tweens.add({
+                    targets: [this.storyImage, this.storyText],
+                    alpha: 1,
+                    duration: 500
+                });
+            }
+        });
+    }
+
     createStoryImage(layout) {
         const { centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
         
-        const story = this.add.image(centerX, centerY - 50, 'one', 0, {
+        const story = this.add.image(centerX, centerY - 50, this.storyContent[0].imageKey, 0, {
             width: sceneWidth,
             height: sceneHeight
         });
 
         // Calculate crop values based on device type
         const cropConfig = isTouchDevice ? {
-            x: (sceneWidth / 2) + (layout.gameWidth * 0.25) + 47.5,
+            x: 5,
+            y: 0,
             // x: (sceneWidth / 2) + (layout.gameWidth * 0.25) + 47.5,
-            y: (sceneHeight / 2) - 5,
-            width: sceneWidth * 2,
-            height: sceneHeight * 2
+            // y: (sceneHeight / 2) - 5,
+            width: sceneWidth,
+            height: sceneHeight
         } : {
-            x: (sceneWidth / 2) - 15,
-            y: (sceneHeight * 1.25) + 5,
+            // x: (sceneWidth / 2) - 15,
+            // y: (sceneHeight * 1.25) + 5,
+            x: 0,
+            y: 0,
             width: sceneWidth * 2,
             height: sceneHeight * 2
         };
@@ -102,6 +146,7 @@ export class Intro1 extends Scene {
                 cropConfig.width,
                 cropConfig.height
             );
+        console.log(story)
         return story;
     }
 
@@ -109,13 +154,12 @@ export class Intro1 extends Scene {
         const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice, fontSize } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 75;
-        const text = 'Once upon one time, in one crack seed stoa, ';
         
         if (isTouchDevice) {
             return this.make.text({
                 x: textX,
                 y: textY,
-                text: text,
+                text: this.storyContent[0].text,
                 origin: 0,
                 style: {
                     fontFamily: 'Open Sans',
@@ -128,7 +172,7 @@ export class Intro1 extends Scene {
                 }
             });
         } else {
-            return this.add.text(textX, textY, text, {
+            return this.add.text(textX, textY, this.storyContent[0].text, {
                 fontFamily: 'Open Sans',
                 fontSize: fontSize,
                 color: '#DECEB7',
@@ -156,19 +200,23 @@ export class Intro1 extends Scene {
         next.on('pointerout', function () {
             next.setTint(0x128884);
         })
-
-        // prev.once('pointerdown', () => {
-        //     this.scene.start('Game');
-        // });
         
-        next.once('pointerup', () => {
-            this.scene.start('Intro2');
-            this.scene.transition({
-                target: 'Intro2',
-                ease: 'linear',
-                duration: 1000,
-                moveAbove: true,
-            })
+        next.on('pointerup', () => {
+            this.currentContentIndex++;
+            
+            // If we've reached the end of the content, move to next scene
+            if (this.currentContentIndex >= this.storyContent.length) {
+                this.scene.start('Intro2');
+                this.scene.transition({
+                    target: 'Intro2',
+                    ease: 'linear',
+                    duration: 1000,
+                    moveAbove: true,
+                });
+            } else {
+                // Otherwise, update the content
+                this.updateContent();
+            }
         });
         
         if (isTouchDevice) {
