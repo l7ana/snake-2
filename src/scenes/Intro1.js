@@ -53,6 +53,8 @@ export class Intro1 extends Scene {
         
         // Setup input
         this.setupInput(layout);
+        // add 'Start' Button inside the setupInput function
+        // add correct webfont, add tween to animate on last frame, imageKey 4
     }
 
     isMobile() {

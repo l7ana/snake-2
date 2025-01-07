@@ -8,8 +8,7 @@ var cellSize;
 var cellXMax;
 var cellYMax;
 
-//NOTES
-//TODO
+//NOTES todo
 // Game & Snake: increase scale of artwork, less game tiles
 // Snake: wraparound the sceneWidth
 // Game: buildMobileControls, import new buttons, position relative to Game Area
