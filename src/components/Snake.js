@@ -111,7 +111,7 @@ var Snake = new Phaser.Class({
               break;
 
           case RIGHT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax + 1);
               break;
 
           case UP:
@@ -119,7 +119,7 @@ var Snake = new Phaser.Class({
               break;
 
           case DOWN:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.cellYMax);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 1, this.cellYMax);
               break;
       }
 

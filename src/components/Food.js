@@ -42,8 +42,8 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
-    var x = Phaser.Math.Between(0, this.cellXMax - 1);
-    var y = Phaser.Math.Between(0, this.cellYMax - 1);
+    var x = Phaser.Math.Between(0, this.cellXMax);
+    var y = Phaser.Math.Between(1, this.cellYMax);
     console.log(x, y)
 
     this.setPosition((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment);

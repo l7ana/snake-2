@@ -53,7 +53,7 @@ export class Game extends Scene
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        food = new Food(this, 2, 4, layout);
+        food = new Food(this, layout.cellXMax, 4, layout);
         snake = new Snake(this, 8, 8, layout);
     
     }
@@ -84,8 +84,8 @@ export class Game extends Scene
             yPos: 50,
             isTouchDevice,
             cellSize: isTouchDevice ? sceneWidth / 10 : sceneWidth / 21,
-            cellXMax: isTouchDevice ? 10 : 21,
-            cellYMax: isTouchDevice ? 10 : 14,
+            cellXMax: isTouchDevice ? 9 : 20,
+            cellYMax: isTouchDevice ? 9: 14,
             scale: 1,
             fontSize: this.isMobile() ? 36 : 20
         };
