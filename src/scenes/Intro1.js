@@ -50,9 +50,25 @@ export class Intro1 extends Scene {
         }, this);
         
         // Setup input
-        this.setupInput(layout);
-        // add 'Start' Button inside the setupInput function
-        // add correct webfont, add tween to animate on last frame, imageKey 4
+        this.input = this.setupInput(layout);
+
+        this.gameText = this.add.text(layout.centerX, layout.centerY, 'Click Start to Begin Game', {
+            fontFamily: 'Price Check',
+            fontSize: 40,
+            color: '#FF593F',
+            align: 'center',
+            scale: 0.5
+        }).setOrigin(0.5);
+
+        //TO DO:
+        // Position this.gameText for last panel, have it appear on last panel only.
+
+        // this.tweens.add({
+        //     targets: [ this.input.startButton, this.gameText ],
+        //     ease: 'linear',
+        //     scale: 1,
+        //     duration: 1000
+        // })
     }
 
     isMobile() {
@@ -233,5 +249,7 @@ export class Intro1 extends Scene {
                 });
             }
         });
+
+        return next, prev, startButton;
     }
 }

@@ -77,14 +77,7 @@ export class Preloader extends Scene
             color: '#FF593F',
             align: 'center'
         }).setOrigin(0.5);
-
-        // this.load.on('complete', function () {
-        //     beginText.visible = true;
-        //     beginText.setAlpha(1);
-        // })
-
-        //  Move to the Intro. You could also swap this for a Scene Transition, such as a camera fade.
-        // this.scene.start('Intro1');
+        
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
     }
