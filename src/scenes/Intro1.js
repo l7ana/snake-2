@@ -3,25 +3,23 @@ import { Game, Scene } from 'phaser';
 export class Intro1 extends Scene {
     constructor() {
         super('Intro1');
-        // Add content arrays to store multiple images and texts
         this.storyContent = [
             {
                 imageKey: 'one',
                 text: 'Once upon one time, in one crack seed stoa, '
             },
             {
-                imageKey: 'two', // Make sure this image is loaded in your preload
+                imageKey: 'two', 
                 text: 'Had small kine magic in da li hing mui, cuz one night, next ting you know '
             },
             {
-                imageKey: 'three', // Make sure this image is loaded in your preload
+                imageKey: 'three',
                 text: 'One litto gummy worm came alive! Buggah was hungry, so he went break loose!'
             },
             {
                 imageKey: 'four',
                 text: 'He landed on da floa and saw one big juicy candy good enough fo’ eat. Help him eat all da goodies befoa Uncle Kimo finds out!'
             }
-            // Add more content objects as needed
         ];
         this.currentContentIndex = 0;
     }
@@ -78,8 +76,7 @@ export class Intro1 extends Scene {
             sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
             sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
             isTouchDevice,
-            scale: isTouchDevice ? 2 : 1,
-            fontSize: this.isMobile() ? 36 : 20
+            scale: isTouchDevice ? 2 : 1
         };
     }
 
@@ -87,8 +84,7 @@ export class Intro1 extends Scene {
         const debug = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
         
-        debug.lineStyle(10, 0x457E7B)
-            .strokeRect(borderX, 50, sceneWidth, sceneHeight);
+        debug.lineStyle(10, 0x457E7B).strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
         return debug;
     }
@@ -131,38 +127,23 @@ export class Intro1 extends Scene {
     }
 
     createText(layout) {
-        const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice, fontSize } = layout;
+        const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
-        const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 75;
+        const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 100;
+        const fontSize = isTouchDevice ? 26 : 20;
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.5;
         
-        if (isTouchDevice) {
-            return this.make.text({
-                x: textX,
-                y: textY,
-                text: this.storyContent[0].text,
-                origin: 0,
-                style: {
-                    fontFamily: 'Open Sans',
-                    fontSize: fontSize,
-                    color: '#DECEB7',
-                    wordWrap: { 
-                        width: gameWidth * 0.99, 
-                        useAdvancedWrap: true 
-                    }
-                }
-            });
-        } else {
-            return this.add.text(textX, textY, this.storyContent[0].text, {
-                fontFamily: 'Open Sans',
-                fontSize: fontSize,
-                color: '#DECEB7',
-                align: 'left',
-                wordWrap: { 
-                    width: gameWidth * 0.5, 
-                    useAdvancedWrap: true 
-                }
-            }).setOrigin(0);
-        }
+        return this.add.text(textX, textY, this.storyContent[0].text, {
+            fontFamily: 'Open Sans',
+            fontSize: fontSize,
+            color: '#DECEB7',
+            lineSpacing: fontSize/4,
+            align: 'left',
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0);
     }
 
     setupInput(layout) {
@@ -171,20 +152,20 @@ export class Intro1 extends Scene {
 
         const { gameHeight, sceneWidth, isTouchDevice } = layout;
         const buttonWidth = isTouchDevice ? 86 : 43;
-        const buttonY = isTouchDevice ? gameHeight - 150 : gameHeight - 75;
+        const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90;
 
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
         const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth - (startButtonWidth) : sceneWidth - (startButtonWidth/2) + 5;
+        const startButtonX = isTouchDevice ? sceneWidth - (startButtonWidth*1.5) : sceneWidth - (startButtonWidth/2) + 5;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
         const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(0, 0.5);
 
         if (isTouchDevice) {
-            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(0.75)
+            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
         } else {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
@@ -203,6 +184,7 @@ export class Intro1 extends Scene {
             
             // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
             if (this.currentContentIndex >= this.storyContent.length - 1) {
+                this.updateContent();
                 next.setVisible(false);
                 startButton.setVisible(true);
                 prev.setX(prevX - startButtonWidth + 10)

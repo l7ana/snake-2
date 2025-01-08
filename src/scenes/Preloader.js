@@ -36,6 +36,8 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
+        this.load.font('Price Check', 'pricecheck-webfont.woff', 'otf');
+
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
             // this.load.spritesheet('body', 'body.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('food', 'food.png')
@@ -70,9 +72,9 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         const beginText = this.add.text(gameCenterX, gameCenterY, 'Click to Start', {
-            fontFamily: 'Open Sans',
+            fontFamily: 'Price Check',
             fontSize: 40,
-            color: '#DECEB7',
+            color: '#FF593F',
             align: 'center'
         }).setOrigin(0.5);
 

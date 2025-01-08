@@ -5,6 +5,12 @@ body {
     background-color: #112725;
     display: flex;
     flex-flow: column nowrap;
+    font-family: "Open Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
 }
 
 nav {
@@ -39,6 +45,7 @@ h2 {
     aspect-ratio: 2/3;
     max-height: calc(100vh - 75px);
     justify-content: center;
+    font-family: 'PriceCheck';
 }
 
 #game-container canvas {
@@ -54,3 +61,7 @@ h2 {
         width: 70%;
     }
   }
+
+  .open-sans {
+  }
+  
