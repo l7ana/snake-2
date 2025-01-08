@@ -1,28 +1,29 @@
 export default class Food extends Phaser.Physics.Arcade.Image
 {
-  constructor (scene, x, y) {
-    super(scene, x*64 + 1, y*64 + 2);
+  constructor (scene, x, y, layout) {
+    super(scene, x , y, layout);
 
-    if (!scene.sys.game.device.input.touch) {
-      this.cellSize = 32;
-      this.cellXMax = 32;
-      this.cellYMax = 24;
-    } else {
-      this.cellSize = 64;
-      this.cellXMax = 16;
-      this.cellYMax = 12;
-    }
+    this.cellSize = layout.cellSize;
+    this.cellXMax = layout.cellXMax;
+    this.cellYMax = layout.cellYMax;
+    this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+    this.yAdjustment = layout.yPos - this.cellSize;
     
     Phaser.Physics.Arcade.Image.call(this, scene)
 
     this.textures = ['food1','food2','food3','food4','food5','food6','food7','food8',];
     this.textureKey = 0
+    // this.data ['candy']
+    // //Enhancement: counter for each type of texture consumed
+
+    //Randomize order of textures OR
+
+    //Add new instances of Food with a fadeout if not eaten in xyz time (it melts or something)
 
     this.setTexture(this.textures[this.textureKey]);
-    this.setPosition(x*64 + 1, y*64 + 2);
+    // this.setPosition((x * this.cellSize) - ((layout.gameWidth - layout.sceneWidth) / 2) , (y * this.cellSize) + layout.yPos );
+    this.setPosition((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment );
     this.setOrigin(0);
-    this.onCollide = true;
-    this.onOverlap = true;
     this.enableBody = true;
 
     this.width = this.cellSize;
@@ -41,16 +42,17 @@ export default class Food extends Phaser.Physics.Arcade.Image
   eat () {
     this.total++;
 
-    // x & y is based on the base size 32, and how many times it can fit within the game area
-    var x = Phaser.Math.Between(0, this.cellXMax - 1);
-    var y = Phaser.Math.Between(0, this.cellYMax - 1);
+    var x = Phaser.Math.Between(0, this.cellXMax);
+    var y = Phaser.Math.Between(1, this.cellYMax);
+    console.log(x, y)
 
-    this.setPosition(x * this.cellSize, y * this.cellSize);
+    this.setPosition((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment);
   }
 
   change () {
     //cycle through the food textures
     //7 total items (8, but index 0 is 1)
+    console.log(this.x, this.y)
     if (this.textureKey === 7){
       this.textureKey = 0;
     } else {

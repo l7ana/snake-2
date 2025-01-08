@@ -5,6 +5,15 @@ export class Boot extends Scene
     constructor ()
     {
         super('Boot');
+        this.isMobile();
+    }
+
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+        const isTouchDevice = Phaser.Input.Touch;
+    
+        return isTouchDevice && regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
     }
 
     preload ()
@@ -13,6 +22,13 @@ export class Boot extends Scene
         //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
 
         this.load.image('background', 'assets/bg.png');
+
+        const isTouchDevice = this.isMobile();
+        this.load.image('one', isTouchDevice ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
+        this.load.image('two', isTouchDevice ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
+        this.load.image('three', isTouchDevice ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
+        this.load.image('four', isTouchDevice ? 'assets/scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
+        this.load.image('five', isTouchDevice ? 'assets/scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
     }
 
     create ()

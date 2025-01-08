@@ -8,30 +8,28 @@ var Snake = new Phaser.Class({
 
   initialize:
 
-  function Snake (scene, x, y)
+  function Snake (scene, x, y, layout)
   {
       this.headPosition = new Phaser.Geom.Point(x, y);
-      
-      this.cellSize = 32;
-      
-      if (!scene.sys.game.device.input.touch) {
-          this.cellSize = 32;
-      } else {
-        this.cellSize = 64;
-      }
+
+      this.cellSize = layout.cellSize;
+      this.cellXMax = layout.cellXMax;
+      this.cellYMax = layout.cellYMax;
+      this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+      this.yAdjustment = layout.yPos - this.cellSize;
       
       this.body = scene.add.group();
 
-      this.head = this.body.create(x * this.cellSize, y * this.cellSize, 'snake1', 1);
+      this.head = this.body.create((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1);
       this.head.setOrigin(0);
+      this.head.displayHeight = this.cellSize;
+      this.head.displayWidth = this.cellSize;
+      this.head.enableBody = true;
 
       this.alive = true;
-
-      this.speed = 100;
-
+      this.speed = 150;
       this.moveTime = 0;
-
-      this.tail = new Phaser.Geom.Point(x, y);
+      this.tailPosition = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
 
       this.heading = RIGHT;
       this.direction = RIGHT;
@@ -43,6 +41,7 @@ var Snake = new Phaser.Class({
   {
       if (time >= this.moveTime)
       {
+            // console.log('hold it!')
           return this.move(time);
       }
   },
@@ -51,7 +50,11 @@ var Snake = new Phaser.Class({
   {
       if (this.direction === UP || this.direction === DOWN)
       {
+          this.head.angle = 180;
           this.heading = LEFT;
+          this.body.children.each(function (segment) {
+            segment.angle = 180;
+          })
       }
   },
 
@@ -59,7 +62,11 @@ var Snake = new Phaser.Class({
   {
       if (this.direction === UP || this.direction === DOWN)
       {
+          this.head.angle = 0
           this.heading = RIGHT;
+          this.body.children.each(function (segment) {
+            segment.angle = 0;
+          })
       }
   },
 
@@ -67,7 +74,11 @@ var Snake = new Phaser.Class({
   {
       if (this.direction === LEFT || this.direction === RIGHT)
       {
+          this.head.angle = 270;
           this.heading = UP;
+          this.body.children.each(function (segment) {
+            segment.angle = 270;
+          })
       }
   },
 
@@ -75,7 +86,12 @@ var Snake = new Phaser.Class({
   {
       if (this.direction === LEFT || this.direction === RIGHT)
       {
+          this.head.angle = 90;
           this.heading = DOWN;
+
+          this.body.children.each(function (segment) {
+            segment.angle = 90;
+          })
       }
   },
 
@@ -91,26 +107,32 @@ var Snake = new Phaser.Class({
       switch (this.heading)
       {
           case LEFT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, 40);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 1, this.cellXMax);
               break;
 
           case RIGHT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, 40);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax + 1);
               break;
 
           case UP:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, 30);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 1, this.cellYMax);
               break;
 
           case DOWN:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, 30);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 1, this.cellYMax);
               break;
       }
 
       this.direction = this.heading;
 
       //  Update the body segments and place the last coordinate into this.tail
-      Phaser.Actions.ShiftPosition(this.body.getChildren(), this.headPosition.x * 32, this.headPosition.y * 32, 1, this.tail);
+      Phaser.Actions.ShiftPosition(
+        this.body.getChildren(), 
+        (this.headPosition.x * this.cellSize) + this.xAdjustment, 
+        (this.headPosition.y * this.cellSize) + 50, 
+        1, 
+        this.tailPosition
+        );
 
       //  Check to see if any of the body pieces have the same x/y as the head
       //  If they do, the head ran into the body
@@ -119,65 +141,101 @@ var Snake = new Phaser.Class({
 
       if (hitBody)
       {
-          console.log('dead');
-
           this.alive = false;
-
           return false;
       }
       else
       {
           //  Update the timer ready for the next movement
           this.moveTime = time + this.speed;
-
           return true;
       }
   },
 
   grow: function ()
   {
-      var newPart = this.body.create(this.tail.x, this.tail.y, 'body');
-
+      var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 4);
       newPart.setOrigin(0);
+      newPart.displayHeight = this.cellSize;
+      newPart.displayWidth = this.cellSize;
+      newPart.width = this.cellSize;
+      newPart.height = this.cellSize;
+      this.updateSprites();
+      //Fallback if updateSprites() is too complex, is to use 1 sprite for every body segment with an increasing RGB filter
+
+  },
+  updateSprites: function ()
+  {
+    //do we create a new instance of arcade sprite here?
+    var bodyChildren = this.body.getChildren();
+    var endTail = Phaser.Actions.GetLast(this.body.getChildren());
+    endTail.setTexture('snake1', 3)
+    console.log(bodyChildren);
+    // bodyChildren.forEach(element => {
+    //     element.setTexture('snake1', 4)
+    //     //filter for only center children, not first and last.
+    // });
+
+
   },
 
   collideWithFood: function (food)
   {
-      if (this.head.x >= food.x - (this.cellSize / 2) && this.head.x <= food.x + (this.cellSize / 2) && 
-          this.head.y >= food.y - (this.cellSize / 2) && this.head.y <= food.y + (this.cellSize / 2) )
-      {
-          this.grow();
+    let snakeX = this.head.x;
+    let snakeY = this.head.y;
 
-          food.eat();
+    switch (this.heading) {
+        case DOWN:
+            snakeY -= (this.cellSize*0.5);
+            snakeX -= (this.cellSize*0.5);
+            break;
+        case LEFT:
+            snakeX += (this.cellSize*0.5);
+            snakeY -= (this.cellSize*0.5);
+            break;
+        // No adjustment needed for RIGHT and UP
+    }
 
-          //  For every 5 items of food eaten we'll increase the snake speed a little
-          if (this.speed > 20 && food.total % 5 === 0)
-          {
-              this.speed -= 5;
-          }
+    const snakeGridX = Math.floor(snakeX / this.cellSize);
+    const snakeGridY = Math.floor(snakeY / this.cellSize);
+    
+    // Get grid position for food
+    const foodGridX = Math.floor(food.x / this.cellSize);
+    const foodGridY = Math.floor(food.y / this.cellSize);
+    
+    // Debug logs
+    // console.log('Head Position:', this.headPosition.x, this.headPosition.y);
+    // console.log('Snake Grid:', snakeGridX, snakeGridY);
+    // console.log('Food Grid:', foodGridX, foodGridY);
 
-          return true;
-      }
-      else
-      {
-          return false;
-      }
+    if (snakeGridX === foodGridX && snakeGridY === foodGridY)
+    {
+        this.grow();
+        food.eat();
+        
+        if (this.speed > 20 && food.total % 5 === 0)
+        {
+            this.speed -= 5;
+        }
+        return true;
+    }
+    
+    return false;
   },
 
   updateGrid: function (grid)
   {
       //  Remove all body pieces from valid positions list
-      var baseSize = this.cellSize;
       this.body.children.each(function (segment) {
 
-          var bx = segment.x / baseSize;
-        //   var bx = Phaser.Math.Snap.Floor(segment.x, baseSize);
-          var by = segment.y / baseSize;
+          var by = Math.floor(segment.y / this.cellSize);
+          var bx = Math.floor(segment.x / this.cellSize);
 
-          grid[by][bx] = false;
+          if (by >= 0 && by < grid.length && bx >= 0 && bx < grid[0].length) {
+            grid[by][bx] = false;
+        }
 
-      });
-
+      }, this);
       return grid;
   }
 

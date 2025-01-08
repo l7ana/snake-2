@@ -5,8 +5,17 @@ import Food from '../components/Food.js';
 var snake;
 var food;
 var cellSize;
-var cellYMax;
 var cellXMax;
+var cellYMax;
+
+//NOTES todo
+// Game & Snake: increase scale of artwork, less game tiles
+// Snake: wraparound the sceneWidth
+// Game: buildMobileControls, import new buttons, position relative to Game Area
+
+// !low imporance todo
+// Enhancement: show point total, increase difficulty in larger increments (like instead of 5, 10)
+// Enhancement: reciept total of things eaten
 
 export class Game extends Scene
 {
@@ -17,38 +26,87 @@ export class Game extends Scene
 
     create ()
     {
-        if (!this.sys.game.device.input.touch) {
-            this.cursors = this.input.keyboard.createCursorKeys()
-            //grid cell is 32 x 32 on desktop
-            cellSize = 32;
-            cellXMax = 32;
-            cellYMax = 24;
-        } else {
-            this.buildMobileControls()
-            //grid cell is 64 x 64 on mobile
-            cellSize = 64;
-            cellXMax = 16;
-            cellYMax = 12;
-        }
-        
-        this.add.grid(1024/2, 768/2, 1024, 768, cellSize, cellSize, 0xffffff, .25, 0xffffff, 1).setAltFillStyle(0xe2f7c1).setOutlineStyle();
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const gameHalfWidth = gameWidth / 2;
+        const gameHalfHeight = gameHeight / 2;
+        const isTouchDevice = this.isMobile();
 
+        // Screen dimensions
+        const layout = this.calculateLayout();
+
+        if (!isTouchDevice) {
+            this.cursors = this.input.keyboard.createCursorKeys();
+        } else {
+            this.buildMobileControls(layout);
+        }
+        console.log(layout.sceneWidth,layout.sceneHeight)
+        console.log(layout.cellSize)
+        console.log(layout.sceneWidth / layout.cellSize)
+        console.log(layout.sceneHeight / layout.cellSize)
+
+        this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
+        this.createBorder(layout);
+        
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        // this.pointer = this.input.pointer1;
-       
-          food = new Food(this, 3, 4);
-          snake = new Snake(this, 8, 8, cellSize);
+        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        food = new Food(this, 2, 4, layout);
+        snake = new Snake(this, 8, 8, layout);
     
     }
+
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+        const isTouchDevice = this.sys.game.device.input.touch;
     
+        return isTouchDevice && regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+    }
+
+    calculateLayout() {
+        const isTouchDevice = this.isMobile();
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const sceneWidth = isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75;
+        const sceneHeight = isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75;
+        
+        return {
+            gameWidth,
+            gameHeight,
+            centerX: gameWidth / 2,
+            centerY: gameHeight / 2,
+            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
+            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
+            sceneHalfY: (sceneHeight / 2) + 50,
+            yPos: 50,
+            isTouchDevice,
+            cellSize: isTouchDevice ? sceneWidth / 10 : sceneWidth / 21,
+            cellXMax: isTouchDevice ? 9 : 20,
+            cellYMax: isTouchDevice ? 9: 14,
+            scale: 1,
+            fontSize: this.isMobile() ? 36 : 20
+        };
+    }
+
+    createBorder({ gameWidth, gameHalfWidth, gameHalfHeight, sceneWidth, sceneHeight, cellSize }) {
+        const graphics = this.add.graphics();
+        const borderX = (gameWidth - sceneWidth) / 2;
+        //Consolidate createBorder function here so that the grid and rectangle can both be added to graphics, borrowing the same properties from layout.
+        
+        graphics.lineStyle(10, 0x457E7B)
+        .strokeRect(borderX, 50, sceneWidth, sceneHeight);
+            
+        return graphics;
+    }
 
     update (time, delta) {
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
-              console.log(snake)
+              console.log(snake.head.x, snake.head.y)
+              console.log(food.x, food.y)
               console.log(food)
             }
             else {
@@ -89,9 +147,17 @@ export class Game extends Scene
                   food.change();
               }
           }
+
+          if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
+            this.scene.start('GameOver');
+            return;
+          }
     }
 
-    buildMobileControls () {
+    buildMobileControls (layout) {
+
+        const { gameHeight, gameWidth, centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+
         this.input.addPointer(2);
         this.input.topOnly = true;
 
@@ -111,34 +177,32 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 64
-        const HEIGHT = 64
-        const GAME_HEIGHT = 768
-        const GAME_WIDTH = 1024
-
-        // gutter width between buttons
-        const GUTTER = 12
+        const WIDTH = 172*0.75
+        const HEIGHT = 172*0.75
+        const GUTTER = 50
         
-
         // Create a button helper
         const createBtn = (key, x, y) => {
             this.add.image(x, y, key)
                 .setOrigin(0,0)
                 .setScrollFactor(0)
                 .setInteractive()
+                .setScale(0.75)
                 .on('pointerdown', () => pointerDown(key))
                 .on('pointerup', () => pointerUp(key))
             //key is same for button direction and calling image texture
         }
         
         // Y coordinate to place buttons
-        const BTN_Y = GAME_HEIGHT - HEIGHT - GUTTER
+        const UP_Y = sceneHeight + HEIGHT/2 + GUTTER;
+        const DOWN_Y = gameHeight - HEIGHT + 5;
+        const BTN_Y = (UP_Y + DOWN_Y)/2;
 
         // create player control buttons
-        createBtn('left', GAME_WIDTH - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
-        createBtn('right', GAME_WIDTH - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
-        createBtn('up', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
-        createBtn('down', GAME_WIDTH - 2*(WIDTH + GUTTER), BTN_Y)
+        createBtn('left', centerX - WIDTH*1.5 + (GUTTER/2), BTN_Y)
+        createBtn('right', centerX + (WIDTH/2) - (GUTTER/2), BTN_Y)
+        createBtn('up', centerX - WIDTH/2, UP_Y)
+        createBtn('down', centerX - WIDTH/2, DOWN_Y)
     }
 
     /**
@@ -158,7 +222,6 @@ export class Game extends Scene
     var testGrid = [];
 
     for (var y = 0; y < cellYMax; y++)
-        //update y < 40 condition to be the length of game area and how many times a segment of 16 can fit
     {
         testGrid[y] = [];
 
@@ -171,7 +234,6 @@ export class Game extends Scene
     snake.updateGrid(testGrid);
 
     //  Purge out false positions
-    // x & y is based on the base size 32, and how many times it can fit within the game area
     var validLocations = [];
 
     for (var y = 0; y < cellYMax; y++)
@@ -185,20 +247,20 @@ export class Game extends Scene
             }
         }
     }
-
     if (validLocations.length > 0)
-    {
-        //  Use the RNG to pick a random food position
-        var pos = Phaser.Math.RND.pick(validLocations);
-
-        //  And place it
-        food.setPosition(pos.x * cellSize, pos.y * cellSize);
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+        {
+            var pos = Phaser.Math.RND.pick(validLocations);
+    
+            // Multiply by cellSize to get pixel position and add half cellSize to center
+            food.setPosition(
+                pos.x * cellSize, 
+                pos.y * cellSize
+            );
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
