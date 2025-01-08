@@ -52,10 +52,10 @@ export class Preloader extends Scene
         this.load.image('food8', '/treat/ice_cream_sandwich_02.png')
 
         //load key buttons
-        this.load.image('left', '/buttons/KeyboardButtonsDir_left.png')
-        this.load.image('right', '/buttons/KeyboardButtonsDir_right.png')
-        this.load.image('up', '/buttons/KeyboardButtonsDir_up.png')
-        this.load.image('down', '/buttons/KeyboardButtonsDir_down.png')
+        this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')
+        this.load.image('right', '/buttons/SDG_LNY2025_Right.svg')
+        this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
+        this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
 
         this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
         this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')

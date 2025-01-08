@@ -177,11 +177,9 @@ export class Game extends Scene
         }
 
         // button sizing
-        const WIDTH = 100
-        const HEIGHT = 100
-
-        // gutter width between buttons
-        const GUTTER = 12
+        const WIDTH = 172*0.75
+        const HEIGHT = 172*0.75
+        const GUTTER = 50
         
         // Create a button helper
         const createBtn = (key, x, y) => {
@@ -189,19 +187,22 @@ export class Game extends Scene
                 .setOrigin(0,0)
                 .setScrollFactor(0)
                 .setInteractive()
+                .setScale(0.75)
                 .on('pointerdown', () => pointerDown(key))
                 .on('pointerup', () => pointerUp(key))
             //key is same for button direction and calling image texture
         }
         
         // Y coordinate to place buttons
-        const BTN_Y = gameHeight - HEIGHT - GUTTER
+        const UP_Y = sceneHeight + HEIGHT/2 + GUTTER;
+        const DOWN_Y = gameHeight - HEIGHT + 5;
+        const BTN_Y = (UP_Y + DOWN_Y)/2;
 
         // create player control buttons
-        createBtn('left', gameWidth - 3*(WIDTH + GUTTER), BTN_Y - (HEIGHT / 1.5))
-        createBtn('right', gameWidth - WIDTH - GUTTER, BTN_Y - (HEIGHT / 1.5))
-        createBtn('up', gameWidth - 2*(WIDTH + GUTTER), BTN_Y - HEIGHT - GUTTER)
-        createBtn('down', gameWidth - 2*(WIDTH + GUTTER), BTN_Y)
+        createBtn('left', centerX - WIDTH*1.5 + (GUTTER/2), BTN_Y)
+        createBtn('right', centerX + (WIDTH/2) - (GUTTER/2), BTN_Y)
+        createBtn('up', centerX - WIDTH/2, UP_Y)
+        createBtn('down', centerX - WIDTH/2, DOWN_Y)
     }
 
     /**
