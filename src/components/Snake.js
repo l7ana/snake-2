@@ -29,9 +29,12 @@ var Snake = new Phaser.Class({
         'snake1', 
         1
       );
+      // Set up physics body size for the head
       this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
+    //   this.head.body.setSize(this.cellSize, this.cellSize);
+    //   this.head.body.setOffset(0, 0);
     
       // Add head to body group
       this.body.add(this.head);
@@ -65,8 +68,6 @@ var Snake = new Phaser.Class({
       this.direction = RIGHT;
 
 
-        // Set up physics body size for the head
-        this.head.body.setSize(this.cellSize, this.cellSize);
       
       scene.add.existing(this);
       scene.physics.add.existing(this.body);
@@ -158,8 +159,22 @@ var Snake = new Phaser.Class({
       }
 
       this.direction = this.heading;
+      // Calculate new position
+        const newX = (this.headPosition.x * this.cellSize) + this.xAdjustment;
+        const newY = (this.headPosition.y * this.cellSize) + this.yAdjustment;
+        // Update head position and physics body
+    // this.head.setPosition(newX, newY);
 
-      //  Update the body segments and place the last coordinate into this.tail
+    //   //  Update the body segments and place the last coordinate into this.tail
+    //   Phaser.Actions.ShiftPosition(
+    //     this.body.getChildren(), 
+    //     newX, 
+    //     newY, 
+    //     1, 
+    //     this.tailPosition
+    //     );
+
+        //  Update the body segments and place the last coordinate into this.tail
       Phaser.Actions.ShiftPosition(
         this.body.getChildren(), 
         (this.headPosition.x * this.cellSize) + this.xAdjustment, 
@@ -173,13 +188,11 @@ var Snake = new Phaser.Class({
 
       var hitBody = Phaser.Actions.GetFirst(this.body.getChildren(), { x: this.head.x, y: this.head.y }, 1);
 
-      if (hitBody)
-      {
+      if (hitBody) {
           this.alive = false;
           return false;
       }
-      else
-      {
+      else {
           //  Update the timer ready for the next movement
           this.moveTime = time + this.speed;
           return true;

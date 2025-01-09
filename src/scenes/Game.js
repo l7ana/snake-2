@@ -8,15 +8,6 @@ var cellSize;
 var cellXMax;
 var cellYMax;
 
-//NOTES todo
-// Game & Snake: increase scale of artwork, less game tiles
-// Snake: wraparound the sceneWidth
-// Game: buildMobileControls, import new buttons, position relative to Game Area
-
-// !low imporance todo
-// Enhancement: show point total, increase difficulty in larger increments (like instead of 5, 10)
-// Enhancement: reciept total of things eaten
-
 export class Game extends Scene
 {
     constructor ()
@@ -49,12 +40,30 @@ export class Game extends Scene
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        // this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
 
+
+    // Add debug logging
+    console.log('Food physics body:', food.body);
+    console.log('Snake head physics body:', snake.head.body);
+
+
         // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
-        this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
+        // this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
+        this.physics.add.overlap(
+            snake.head, 
+            food, 
+            (head, food) => {
+                console.log('Collision detected!');
+                console.log('Snake head position:', head.x, head.y);
+                console.log('Food position:', food.x, food.y);
+                this.handleFoodCollision(head, food);
+            }, 
+            null, 
+            this
+        );
 
         // snake = new Snake1(this.physics.world, this, layout);
         this.createBorder(layout);
@@ -155,10 +164,10 @@ export class Game extends Scene
               
           }
 
-          if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
-            this.scene.start('GameOver');
-            return;
-          }
+        //   if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
+        //     this.scene.start('GameOver');
+        //     return;
+        //   }
     }
 
     buildMobileControls (layout) {
