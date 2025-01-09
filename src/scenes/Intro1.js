@@ -190,16 +190,16 @@ export class Intro1 extends Scene {
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
-        this.startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
 
         if (isTouchDevice) {
-            next.setScale(0.75), prev.setScale(0.75), this.startButton.setScale(1)
+            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
         } else {
-            next.setScale(0.5), prev.setScale(0.5), this.startButton.setScale(0.6)
+            next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
 
         prev.setVisible(false);
-        this.startButton.setVisible(false);
+        startButton.setVisible(false);
 
         next.setInteractive().setTint(0x128884)
         .on('pointerover', function () {
@@ -216,17 +216,17 @@ export class Intro1 extends Scene {
                 next.setVisible(false);
                 prev.setX(prevX - startButtonWidth + 10)
 
-                this.startButton.setVisible(true);
+                startButton.setVisible(true);
                 this.gameText.setVisible(true);
                 this.tweens.add({
-                    targets: this.startButton,
+                    targets: startButton,
                     ease: 'Power3',
                     alpha: 1,
-                    delay: 750,
+                    delay: 500,
                     duration: 1000,
                     onComplete: () =>{
                         this.tweens.add({
-                            targets: this.startButton,
+                            targets: startButton,
                             scale: startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
@@ -252,7 +252,7 @@ export class Intro1 extends Scene {
             this.currentContentIndex--;
             console.log(this.currentContentIndex)
             this.gameText.setVisible(false);
-            this.startButton.setVisible(false);
+            startButton.setVisible(false);
             next.setVisible(true);
             prev.setX(prevX);
 
@@ -265,7 +265,7 @@ export class Intro1 extends Scene {
             this.updateContent();
         });
 
-        this.startButton.setInteractive()
+        startButton.setInteractive()
         .on('pointerover', function () {
             next.clearTint();
         }).on('pointerout', function () {
@@ -273,17 +273,15 @@ export class Intro1 extends Scene {
         }).on('pointerup', () => {
             
             // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
-            if (this.currentContentIndex >= this.storyContent.length) {
-                this.scene.start('Game');
-                this.scene.transition({
-                    target: 'Game',
-                    ease: 'linear',
-                    duration: 1000,
-                    moveAbove: true,
-                });
-            }
+            this.scene.start('Game');
+            this.scene.transition({
+                target: 'Game',
+                ease: 'linear',
+                duration: 1000,
+                moveAbove: true,
+            });
         });
 
-        return next, prev, this.startButton;
+        return next, prev, startButton;
     }
 }
