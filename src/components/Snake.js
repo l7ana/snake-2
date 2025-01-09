@@ -22,14 +22,19 @@ var Snake = new Phaser.Class({
       this.body.enableBody = true;
       this.enableBody = true;
 
-      console.log(this.body)
-
-    //   this.head =  this.body.create( new Phaser.Physics.Arcade.Image(scene, (x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1) ) ;
-      this.head = this.body.create((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1);
-
+      // Create head with frame 1 and enable physics
+      this.head = scene.physics.add.sprite(
+        (x * this.cellSize) + this.xAdjustment, 
+        (y * this.cellSize) + this.yAdjustment, 
+        'snake1', 
+        1
+      );
       this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
+    
+      // Add head to body group
+      this.body.add(this.head);
 
       const middleSegment = this.body.create(
             ((x - 1) * this.cellSize) + this.xAdjustment,
@@ -58,6 +63,10 @@ var Snake = new Phaser.Class({
 
       this.heading = RIGHT;
       this.direction = RIGHT;
+
+
+        // Set up physics body size for the head
+        this.head.body.setSize(this.cellSize, this.cellSize);
       
       scene.add.existing(this);
       scene.physics.add.existing(this.body);

@@ -54,7 +54,7 @@ export class Game extends Scene
         snake = new Snake(this, 8, 8, layout);
 
         // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
-        this.physics.add.overlap(snake, food, this.repositionFood, null, this)
+        this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
 
         // snake = new Snake1(this.physics.world, this, layout);
         this.createBorder(layout);
@@ -104,6 +104,14 @@ export class Game extends Scene
         return graphics;
     }
 
+    // Add new collision handler method
+    handleFoodCollision(snakeHead, food) {
+        snake.grow();
+        food.eat();
+        food.change();
+        this.repositionFood();
+    }
+
     update (time, delta) {
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
@@ -144,11 +152,7 @@ export class Game extends Scene
           if (snake.update(time))
           {
               //  If the snake updated, we need to check for collision against food
-              if (snake.collideWithFood(food))
-              {
-                  this.repositionFood();
-                  food.change();
-              }
+              
           }
 
           if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
