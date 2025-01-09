@@ -4,30 +4,28 @@ var DOWN = 1;
 var LEFT = 2;
 var RIGHT = 3;
 
-var Snake = new Phaser.Class({
+import { calculateLayout, isMobile } from "./Helpers";
 
-  initialize:
+export default class Snake1 extends Phaser.Physics.Arcade.Image
+{
+  constructor (scene, x, y, layout) {
+    super(scene, x, y, layout);
 
-  function Snake (scene, x, y, layout)
-  {
-      this.headPosition = new Phaser.Geom.Point(x, y);
+    this.headPosition = new Phaser.Geom.Point(x, y);
+    this.collideWorldBounds = false;
+    // this.debugShowBody = true;
 
-      this.cellSize = layout.cellSize;
-      this.cellXMax = layout.cellXMax;
-      this.cellYMax = layout.cellYMax;
-      this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
-      this.yAdjustment = layout.yPos - this.cellSize;
-      
-      this.body = scene.add.group();
-      this.body.enableBody = true;
-      this.enableBody = true;
+    this.cellSize = layout.cellSize;
+    this.cellXMax = layout.cellXMax;
+    this.cellYMax = layout.cellYMax;
+    this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+    this.yAdjustment = layout.yPos - this.cellSize;
 
-      console.log(this.body)
+    this.body = scene.add.group();
+    console.log(this.body)
 
-    //   this.head =  this.body.create( new Phaser.Physics.Arcade.Image(scene, (x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1) ) ;
-      this.head = this.body.create((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1);
-
-      this.head.setOrigin(0);
+    this.head = this.body.create((x * this.cellSize) + this.xAdjustment, (y * this.cellSize) + this.yAdjustment, 'snake1', 1);
+    this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
 
@@ -59,20 +57,21 @@ var Snake = new Phaser.Class({
       this.heading = RIGHT;
       this.direction = RIGHT;
       
-      scene.add.existing(this);
-      scene.physics.add.existing(this.body);
-  },
+      this.enableBody();
+      scene.children.add(this);
+      scene.physics.add.body(this, 0)
+      scene.physics.add.existing(this, 0);
 
-  update: function (time)
-  {
-      if (time >= this.moveTime)
-      {
-          return this.move(time);
-      }
-  },
+  }
 
-  faceLeft: function ()
-  {
+  update (time) {
+    if (time >= this.moveTime)
+    {
+        return this.move(time);
+    }
+  }
+
+  faceLeft ()  {
       if (this.direction === UP || this.direction === DOWN)
       {
           this.head.angle = 180;
@@ -81,10 +80,9 @@ var Snake = new Phaser.Class({
             segment.angle = 180;
           })
       }
-  },
+  }
 
-  faceRight: function ()
-  {
+  faceRight ()  {
       if (this.direction === UP || this.direction === DOWN)
       {
           this.head.angle = 0
@@ -93,10 +91,9 @@ var Snake = new Phaser.Class({
             segment.angle = 0;
           })
       }
-  },
+  }
 
-  faceUp: function ()
-  {
+  faceUp ()  {
       if (this.direction === LEFT || this.direction === RIGHT)
       {
           this.head.angle = 270;
@@ -105,10 +102,9 @@ var Snake = new Phaser.Class({
             segment.angle = 270;
           })
       }
-  },
+  }
 
-  faceDown: function ()
-  {
+  faceDown ()  {
       if (this.direction === LEFT || this.direction === RIGHT)
       {
           this.head.angle = 90;
@@ -118,10 +114,9 @@ var Snake = new Phaser.Class({
             segment.angle = 90;
           })
       }
-  },
+  }
 
-  move: function (time)
-  {
+  move (time)  {
       /**
       * Based on the heading property (which is the direction the pgroup pressed)
       * we update the headPosition value accordingly.
@@ -175,10 +170,9 @@ var Snake = new Phaser.Class({
           this.moveTime = time + this.speed;
           return true;
       }
-  },
+  }
 
-  grow: function ()
-  {
+  grow ()  {
       var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 4);
       newPart.setOrigin(0);
       newPart.displayHeight = this.cellSize;
@@ -188,9 +182,8 @@ var Snake = new Phaser.Class({
       this.updateSprites();
       //Fallback if updateSprites() is too complex, is to use 1 sprite for every body segment with an increasing RGB filter
 
-  },
-  updateSprites: function ()
-  {
+  }
+  updateSprites () {
     //do we create a new instance of arcade sprite here?
     var bodyChildren = this.body.getChildren();
     var endTail = Phaser.Actions.GetLast(this.body.getChildren());
@@ -200,12 +193,9 @@ var Snake = new Phaser.Class({
     //     element.setTexture('snake1', 4)
     //     //filter for only center children, not first and last.
     // });
+  }
 
-
-  },
-
-  collideWithFood: function (food)
-  {
+  collideWithFood (food)  {
     let snakeX = this.head.x;
     let snakeY = this.head.y;
 
@@ -246,10 +236,9 @@ var Snake = new Phaser.Class({
     }
     
     return false;
-  },
+  }
 
-  updateGrid: function (grid)
-  {
+  updateGrid (grid)  {
       //  Remove all body pieces from valid positions list
       this.body.children.each(function (segment) {
 
@@ -264,6 +253,4 @@ var Snake = new Phaser.Class({
       return grid;
   }
 
-});    
-
-export default Snake;
+}

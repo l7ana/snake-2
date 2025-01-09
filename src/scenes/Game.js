@@ -52,7 +52,11 @@ export class Game extends Scene
         this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
-        
+
+        // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
+        this.physics.add.overlap(snake, food, this.repositionFood, null, this)
+
+        // snake = new Snake1(this.physics.world, this, layout);
         this.createBorder(layout);
     }
 
@@ -140,7 +144,6 @@ export class Game extends Scene
           if (snake.update(time))
           {
               //  If the snake updated, we need to check for collision against food
-      
               if (snake.collideWithFood(food))
               {
                   this.repositionFood();
