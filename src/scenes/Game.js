@@ -46,14 +46,14 @@ export class Game extends Scene
         console.log(layout.sceneHeight / layout.cellSize)
 
         this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
-        this.createBorder(layout);
         
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
         this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
-    
+        
+        this.createBorder(layout);
     }
 
     isMobile() {
