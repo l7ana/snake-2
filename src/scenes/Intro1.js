@@ -52,23 +52,13 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
 
-        this.gameText = this.add.text(layout.centerX, layout.centerY, 'Click Start to Begin Game', {
+        this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'Click Start Game to Begin', {
             fontFamily: 'Price Check',
-            fontSize: 40,
+            fontSize: 50,
             color: '#FF593F',
             align: 'center',
             scale: 0.5
-        }).setOrigin(0.5);
-
-        //TO DO:
-        // Position this.gameText for last panel, have it appear on last panel only.
-
-        // this.tweens.add({
-        //     targets: [ this.input.startButton, this.gameText ],
-        //     ease: 'linear',
-        //     scale: 1,
-        //     duration: 1000
-        // })
+        }).setOrigin(0.5).setAlpha(0).setScale(1);
     }
 
     isMobile() {
@@ -162,6 +152,27 @@ export class Intro1 extends Scene {
         }).setOrigin(0);
     }
 
+    animateGameText() {
+         this.tweens.add({
+            targets: this.gameText,
+            ease: 'Power3',
+            alpha: 1,
+            delay: 750,
+            duration: 1000,
+            onComplete: () => {
+                
+                this.tweens.add({
+                    targets:  this.gameText,
+                    scale: 1.1,
+                    ease: 'Power1',
+                    yoyo: true,
+                    loop: 100,
+                    duration: 1000
+                });
+            }
+        });
+    }
+
     setupInput(layout) {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
@@ -174,20 +185,21 @@ export class Intro1 extends Scene {
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
         const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth - (startButtonWidth*1.5) : sceneWidth - (startButtonWidth/2) + 5;
+        const startButtonX = isTouchDevice ? sceneWidth - startButtonWidth/2  : sceneWidth + startButtonWidth*1.5 + 5;
+        const startButtonTween = isTouchDevice ? 1.05 : 0.65;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
-        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(0, 0.5);
+        this.startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
 
         if (isTouchDevice) {
-            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
+            next.setScale(0.75), prev.setScale(0.75), this.startButton.setScale(1)
         } else {
-            next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
+            next.setScale(0.5), prev.setScale(0.5), this.startButton.setScale(0.6)
         }
 
         prev.setVisible(false);
-        startButton.setVisible(false);
+        this.startButton.setVisible(false);
 
         next.setInteractive().setTint(0x128884)
         .on('pointerover', function () {
@@ -202,8 +214,29 @@ export class Intro1 extends Scene {
             if (this.currentContentIndex >= this.storyContent.length - 1) {
                 this.updateContent();
                 next.setVisible(false);
-                startButton.setVisible(true);
                 prev.setX(prevX - startButtonWidth + 10)
+
+                this.startButton.setVisible(true);
+                this.gameText.setVisible(true);
+                this.tweens.add({
+                    targets: this.startButton,
+                    ease: 'Power3',
+                    alpha: 1,
+                    delay: 750,
+                    duration: 1000,
+                    onComplete: () =>{
+                        this.tweens.add({
+                            targets: this.startButton,
+                            scale: startButtonTween,
+                            ease: 'Power1',
+                            yoyo: true,
+                            loop: 100,
+                            duration: 2000
+                        });
+                    }
+                });
+                this.animateGameText();
+
             } else {
                 // Otherwise, update the content
                 this.updateContent();
@@ -218,7 +251,8 @@ export class Intro1 extends Scene {
         }).on('pointerup', () => {
             this.currentContentIndex--;
             console.log(this.currentContentIndex)
-            startButton.setVisible(false);
+            this.gameText.setVisible(false);
+            this.startButton.setVisible(false);
             next.setVisible(true);
             prev.setX(prevX);
 
@@ -231,7 +265,7 @@ export class Intro1 extends Scene {
             this.updateContent();
         });
 
-        startButton.setInteractive().setTint(0x128884)
+        this.startButton.setInteractive()
         .on('pointerover', function () {
             next.clearTint();
         }).on('pointerout', function () {
@@ -250,6 +284,6 @@ export class Intro1 extends Scene {
             }
         });
 
-        return next, prev, startButton;
+        return next, prev, this.startButton;
     }
 }
