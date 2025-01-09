@@ -24,7 +24,26 @@ var Snake = new Phaser.Class({
       this.head.setOrigin(0);
       this.head.displayHeight = this.cellSize;
       this.head.displayWidth = this.cellSize;
-      this.head.enableBody = true;
+
+      const middleSegment = this.body.create(
+            ((x - 1) * this.cellSize) + this.xAdjustment,
+            (y * this.cellSize) + this.yAdjustment,
+            'snake1',
+            6
+      );
+        middleSegment.setOrigin(0);
+        middleSegment.displayHeight = this.cellSize;
+        middleSegment.displayWidth = this.cellSize;
+
+        const tailSegment = this.body.create(
+            ((x - 2) * this.cellSize) + this.xAdjustment,
+            (y * this.cellSize) + this.yAdjustment,
+            'snake1',
+            3
+        );
+        tailSegment.setOrigin(0);
+        tailSegment.displayHeight = this.cellSize;
+        tailSegment.displayWidth = this.cellSize;
 
       this.alive = true;
       this.speed = 150;
@@ -41,7 +60,6 @@ var Snake = new Phaser.Class({
   {
       if (time >= this.moveTime)
       {
-            // console.log('hold it!')
           return this.move(time);
       }
   },
