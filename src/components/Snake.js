@@ -171,7 +171,9 @@ var Snake = new Phaser.Class({
 
   grow: function () {
     var bodyChildren = this.body.getChildren();
-    var bodyChildrenLength = bodyChildren.length;
+    var half = Math.ceil(bodyChildren.length / 2)
+    var frontHalf = bodyChildren.slice(1, half);
+    var backHalf = bodyChildren.slice(half);
     var bodyMiddleIndex = Phaser.Math.FloorTo((bodyChildren.length) / 2);
     //Update textures of form Middle Segment and Tail Segment
     this.middleSegment.setTexture('snake1', 4);
@@ -183,9 +185,13 @@ var Snake = new Phaser.Class({
     for (let i = 0; i++; i >= this.body.length) {
       console.log(this.body[i])
     }
-    bodyChildren.forEach((part) => {
+    frontHalf.forEach((part) => {
       console.log(part)
       part.setTexture('snake1', 4)
+    })
+    backHalf.forEach((part) => {
+      console.log(part)
+      part.setTexture('snake1', 8)
     })
     // bodyChildren[3].anims.play('middle', true);
     // this.head.anims.play('left', true);
