@@ -52,18 +52,7 @@ export class Game extends Scene
 
         // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
         // this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
-        this.physics.add.overlap(
-            snake.head, 
-            food, 
-            (head, food) => {
-                console.log('Collision detected!');
-                console.log('Snake head position:', head.x, head.y);
-                console.log('Food position:', food.x, food.y);
-                this.handleFoodCollision(head, food);
-            }, 
-            null, 
-            this
-        );
+        this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
 
         // snake = new Snake1(this.physics.world, this, layout);
         this.createBorder(layout);

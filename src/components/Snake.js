@@ -32,75 +32,57 @@ var Snake = new Phaser.Class({
     this.head.anims.create({
       key: 'right',
       frames: scene.anims.generateFrameNumbers('sHead', { start: 0, end: 2 }),
-      frameRate: 12,
+      frameRate: 6,
       repeat: -1
     });
     this.head.anims.create({
       key: 'up',
       frames: scene.anims.generateFrameNumbers('sHead', { start: 4, end: 6 }),
-      frameRate: 12,
+      frameRate: 6,
       repeat: -1
     });
     this.head.anims.create({
       key: 'left',
       frames: scene.anims.generateFrameNumbers('sHead', { start: 8, end: 10 }),
-      frameRate: 12,
+      frameRate: 6,
       repeat: -1
     });
     this.head.anims.create({
       key: 'down',
       frames: scene.anims.generateFrameNumbers('sHead', { start: 12, end: 14 }),
-      frameRate: 12,
+      frameRate: 6,
       repeat: -1
     });
-    // this.head = scene.physics.add.sprite(
-    //   (x * this.cellSize) + this.xAdjustment, 
-    //   (y * this.cellSize) + this.yAdjustment, 
-    //   'snake1', 
-    //   1
-    // );
-    // Set up physics body size for the head
+
     this.head.setOrigin(0);
     this.head.displayHeight = this.cellSize;
     this.head.displayWidth = this.cellSize;
-    // Set up physics body size and offset
-    // this.head.body.setSize(this.cellSize, this.cellSize);
-    // this.head.body.setOffset(0, 0);
-    //   this.head.body.setSize(this.cellSize, this.cellSize);
-    //   this.head.body.setOffset(0, 0);
-    
-    const middleSegment = scene.physics.add.sprite(
-      ((x - 1) * this.cellSize) + this.xAdjustment,
-      (y * this.cellSize) + this.yAdjustment,
-      'snake1', 6
-    )
-      middleSegment.setOrigin(0);
-      middleSegment.displayHeight = this.cellSize;
-      middleSegment.displayWidth = this.cellSize;
-
-    const tailSegment = scene.physics.add.sprite(
-        ((x - 2) * this.cellSize) + this.xAdjustment,
-        (y * this.cellSize) + this.yAdjustment,
-        'snake1',
-        3
-    );
-    tailSegment.setOrigin(0);
-    tailSegment.displayHeight = this.cellSize;
-    tailSegment.displayWidth = this.cellSize;
-      
     // Add head to body group
-    this.body.add(this.head, middleSegment, tailSegment);
+    this.body.add(this.head, this.middleSegment);
+    this.heading = RIGHT;
+    this.direction = RIGHT;
+    
+    this.alive = true;
+    this.speed = 150;
+    this.moveTime = 0;
+    this.tailPosition = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
 
-      this.alive = true;
-      this.speed = 150;
-      this.moveTime = 0;
-      this.tailPosition = new Phaser.Geom.Point(x * this.cellSize, y * this.cellSize);
+    scene.add.existing(this);
+    scene.physics.add.existing(this.body);
 
-      this.heading = RIGHT;
-      this.direction = RIGHT;
-      
-      scene.add.existing(this);
-      scene.physics.add.existing(this.body);
+    //Create Middle
+    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 6 );
+    this.middleSegment.setOrigin(0);
+    this.middleSegment.displayHeight = this.cellSize;
+    this.middleSegment.displayWidth = this.cellSize;
+    this.body.add(this.middleSegment);
+
+    // Create Tail
+    this.tailSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3 );
+    this.tailSegment.setOrigin(0);
+    this.tailSegment.displayHeight = this.cellSize;
+    this.tailSegment.displayWidth = this.cellSize;
+    this.body.add(this.tailSegment);
   },
 
   update: function (time) {
@@ -111,16 +93,13 @@ var Snake = new Phaser.Class({
 
   faceLeft: function () {
       if (this.direction === UP || this.direction === DOWN) {
-          console.log(this.head)
           this.head.anims.play('left', true);
-          // this.head.setTexture
           this.heading = LEFT;
       }
   },
 
   faceRight: function () {
       if (this.direction === UP || this.direction === DOWN) {
-          console.log(this.head)
           this.head.anims.play('right', true);
           this.heading = RIGHT;
       }
@@ -128,7 +107,6 @@ var Snake = new Phaser.Class({
 
   faceUp: function () {
       if (this.direction === LEFT || this.direction === RIGHT) {
-        console.log(this.head)
         this.heading = UP;
         this.head.anims.play('up', true);
       }
@@ -136,7 +114,6 @@ var Snake = new Phaser.Class({
 
   faceDown: function () {
       if (this.direction === LEFT || this.direction === RIGHT) {
-        console.log(this.head)
         this.head.anims.play('down', true);
         this.heading = DOWN;
       }
@@ -198,29 +175,43 @@ var Snake = new Phaser.Class({
 
   grow: function ()
   {
-      var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 4);
-      newPart.setOrigin(0);
-      newPart.displayHeight = this.cellSize;
-      newPart.displayWidth = this.cellSize;
-      newPart.width = this.cellSize;
-      newPart.height = this.cellSize;
-      this.updateSprites();
+    var bodyChildren = this.body.getChildren();
+    var bodyMiddleIndex = Phaser.Math.FloorTo((bodyChildren.length) / 2);
+    //Update textures of form Middle Segment and Tail Segment
+    this.middleSegment.setTexture('snake1', 4);
+    if (bodyChildren.length > 2) {
+      this.tailSegment.setTexture('snake1', 4);
+    }
+
+    var newPart = this.body.create(this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3);
+    newPart.setOrigin(0);
+    newPart.displayHeight = this.cellSize;
+    newPart.displayWidth = this.cellSize;
+    newPart.width = this.cellSize;
+    newPart.height = this.cellSize;
+
+    this.body.runChildUpdate;
+
+    // I want to run all the body children through a function to update the sprite textures
+
+    // bodyChildren.forEach(i => {
+    //   bodyChildren[i].setTexture('snake1', 4);
+    // });
       //Fallback if updateSprites() is too complex, is to use 1 sprite for every body segment with an increasing RGB filter
 
   },
   updateSprites: function ()
   {
-    //do we create a new instance of arcade sprite here?
-    var bodyChildren = this.body.getChildren();
-    var endTail = Phaser.Actions.GetLast(this.body.getChildren());
-    endTail.setTexture('snake1', 3)
-    console.log(bodyChildren);
-    // bodyChildren.forEach(element => {
-    //     element.setTexture('snake1', 4)
-    //     //filter for only center children, not first and last.
-    // });
+    // var bodyChildren = this.body.getChildren();
+    var bodyMiddleIndex = Phaser.Math.FloorTo((bodyChildren.length) / 2);
 
-
+    console.log(bodyChildren, bodyMiddleIndex)
+    bodyChildren.forEach(i => {
+      if (i > bodyChildren.length || i < bodyMiddleIndex) {
+        i.setTexture('snake1', 4);
+        console.log(i)
+      }
+    });
   },
 
   collideWithFood: function (food)
