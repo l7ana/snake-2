@@ -10,54 +10,86 @@ var Snake = new Phaser.Class({
 
   function Snake (scene, x, y, layout)
   {
-      this.headPosition = new Phaser.Geom.Point(x, y);
+    this.cellSize = layout.cellSize;
+    this.cellXMax = layout.cellXMax;
+    this.cellYMax = layout.cellYMax;
+    this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
+    this.yAdjustment = layout.yPos - (this.cellSize*1.5);
+    
+    this.body = scene.add.group();
+    this.x = (x * this.cellSize) + this.xAdjustment;
+    this.y = (y * this.cellSize) + this.yAdjustment;
+    this.headPosition = new Phaser.Geom.Point(x, y);
 
-      this.cellSize = layout.cellSize;
-      this.cellXMax = layout.cellXMax;
-      this.cellYMax = layout.cellYMax;
-      this.xAdjustment = ((layout.gameWidth - layout.sceneWidth) / 2);
-      this.yAdjustment = layout.yPos - this.cellSize;
-      
-      this.body = scene.add.group();
-      this.body.enableBody = true;
-      this.enableBody = true;
+    // Create head with frame 1 and enable physics
+    this.head = scene.physics.add.sprite(
+      this.headPosition.x, 
+      this.headPosition.y, 
+      'sHead', 
+      0
+    );
 
-      // Create head with frame 1 and enable physics
-      this.head = scene.physics.add.sprite(
-        (x * this.cellSize) + this.xAdjustment, 
-        (y * this.cellSize) + this.yAdjustment, 
-        'snake1', 
-        1
-      );
-      // Set up physics body size for the head
-      this.head.setOrigin(0);
-      this.head.displayHeight = this.cellSize;
-      this.head.displayWidth = this.cellSize;
+    this.head.anims.create({
+      key: 'right',
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 0, end: 2 }),
+      frameRate: 12,
+      repeat: -1
+    });
+    this.head.anims.create({
+      key: 'up',
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 4, end: 6 }),
+      frameRate: 12,
+      repeat: -1
+    });
+    this.head.anims.create({
+      key: 'left',
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 8, end: 10 }),
+      frameRate: 12,
+      repeat: -1
+    });
+    this.head.anims.create({
+      key: 'down',
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 12, end: 14 }),
+      frameRate: 12,
+      repeat: -1
+    });
+    // this.head = scene.physics.add.sprite(
+    //   (x * this.cellSize) + this.xAdjustment, 
+    //   (y * this.cellSize) + this.yAdjustment, 
+    //   'snake1', 
+    //   1
+    // );
+    // Set up physics body size for the head
+    this.head.setOrigin(0);
+    this.head.displayHeight = this.cellSize;
+    this.head.displayWidth = this.cellSize;
+    // Set up physics body size and offset
+    // this.head.body.setSize(this.cellSize, this.cellSize);
+    // this.head.body.setOffset(0, 0);
     //   this.head.body.setSize(this.cellSize, this.cellSize);
     //   this.head.body.setOffset(0, 0);
     
-      // Add head to body group
-      this.body.add(this.head);
+    const middleSegment = scene.physics.add.sprite(
+      ((x - 1) * this.cellSize) + this.xAdjustment,
+      (y * this.cellSize) + this.yAdjustment,
+      'snake1', 6
+    )
+      middleSegment.setOrigin(0);
+      middleSegment.displayHeight = this.cellSize;
+      middleSegment.displayWidth = this.cellSize;
 
-      const middleSegment = this.body.create(
-            ((x - 1) * this.cellSize) + this.xAdjustment,
-            (y * this.cellSize) + this.yAdjustment,
-            'snake1',
-            6
-      );
-        middleSegment.setOrigin(0);
-        middleSegment.displayHeight = this.cellSize;
-        middleSegment.displayWidth = this.cellSize;
-
-        const tailSegment = this.body.create(
-            ((x - 2) * this.cellSize) + this.xAdjustment,
-            (y * this.cellSize) + this.yAdjustment,
-            'snake1',
-            3
-        );
-        tailSegment.setOrigin(0);
-        tailSegment.displayHeight = this.cellSize;
-        tailSegment.displayWidth = this.cellSize;
+    const tailSegment = scene.physics.add.sprite(
+        ((x - 2) * this.cellSize) + this.xAdjustment,
+        (y * this.cellSize) + this.yAdjustment,
+        'snake1',
+        3
+    );
+    tailSegment.setOrigin(0);
+    tailSegment.displayHeight = this.cellSize;
+    tailSegment.displayWidth = this.cellSize;
+      
+    // Add head to body group
+    this.body.add(this.head, middleSegment, tailSegment);
 
       this.alive = true;
       this.speed = 150;
@@ -66,67 +98,47 @@ var Snake = new Phaser.Class({
 
       this.heading = RIGHT;
       this.direction = RIGHT;
-
-
       
       scene.add.existing(this);
       scene.physics.add.existing(this.body);
   },
 
-  update: function (time)
-  {
-      if (time >= this.moveTime)
-      {
+  update: function (time) {
+      if (time >= this.moveTime) {
           return this.move(time);
       }
   },
 
-  faceLeft: function ()
-  {
-      if (this.direction === UP || this.direction === DOWN)
-      {
-          this.head.angle = 180;
+  faceLeft: function () {
+      if (this.direction === UP || this.direction === DOWN) {
+          console.log(this.head)
+          this.head.anims.play('left', true);
+          // this.head.setTexture
           this.heading = LEFT;
-          this.body.children.each(function (segment) {
-            segment.angle = 180;
-          })
       }
   },
 
-  faceRight: function ()
-  {
-      if (this.direction === UP || this.direction === DOWN)
-      {
-          this.head.angle = 0
+  faceRight: function () {
+      if (this.direction === UP || this.direction === DOWN) {
+          console.log(this.head)
+          this.head.anims.play('right', true);
           this.heading = RIGHT;
-          this.body.children.each(function (segment) {
-            segment.angle = 0;
-          })
       }
   },
 
-  faceUp: function ()
-  {
-      if (this.direction === LEFT || this.direction === RIGHT)
-      {
-          this.head.angle = 270;
-          this.heading = UP;
-          this.body.children.each(function (segment) {
-            segment.angle = 270;
-          })
+  faceUp: function () {
+      if (this.direction === LEFT || this.direction === RIGHT) {
+        console.log(this.head)
+        this.heading = UP;
+        this.head.anims.play('up', true);
       }
   },
 
-  faceDown: function ()
-  {
-      if (this.direction === LEFT || this.direction === RIGHT)
-      {
-          this.head.angle = 90;
-          this.heading = DOWN;
-
-          this.body.children.each(function (segment) {
-            segment.angle = 90;
-          })
+  faceDown: function () {
+      if (this.direction === LEFT || this.direction === RIGHT) {
+        console.log(this.head)
+        this.head.anims.play('down', true);
+        this.heading = DOWN;
       }
   },
 
@@ -142,7 +154,7 @@ var Snake = new Phaser.Class({
       switch (this.heading)
       {
           case LEFT:
-              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 1, this.cellXMax);
+              this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, this.cellXMax);
               break;
 
           case RIGHT:
@@ -150,7 +162,7 @@ var Snake = new Phaser.Class({
               break;
 
           case UP:
-              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 1, this.cellYMax);
+              this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, this.cellYMax);
               break;
 
           case DOWN:
@@ -159,21 +171,6 @@ var Snake = new Phaser.Class({
       }
 
       this.direction = this.heading;
-      // Calculate new position
-        const newX = (this.headPosition.x * this.cellSize) + this.xAdjustment;
-        const newY = (this.headPosition.y * this.cellSize) + this.yAdjustment;
-        // Update head position and physics body
-    // this.head.setPosition(newX, newY);
-
-    //   //  Update the body segments and place the last coordinate into this.tail
-    //   Phaser.Actions.ShiftPosition(
-    //     this.body.getChildren(), 
-    //     newX, 
-    //     newY, 
-    //     1, 
-    //     this.tailPosition
-    //     );
-
         //  Update the body segments and place the last coordinate into this.tail
       Phaser.Actions.ShiftPosition(
         this.body.getChildren(), 

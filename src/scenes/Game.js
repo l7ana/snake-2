@@ -135,11 +135,11 @@ export class Game extends Scene
             }
           }
 
-          if (!snake.alive)
-          { 
-            this.scene.start('GameOver');
-            return;
-          }
+        //   if (!snake.alive)
+        //   { 
+        //     this.scene.start('GameOver');
+        //     return;
+        //   }
       
           if (this.cursors.left.isDown)
           {

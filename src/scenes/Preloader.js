@@ -39,6 +39,7 @@ export class Preloader extends Scene
         this.load.font('Price Check', 'pricecheck-webfont.woff', 'otf');
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sHead', './sprites/snakehead-spritesheet-01.png', {frameWidth: 64, frameHeight: 64})
             // this.load.spritesheet('body', 'body.png', {frameWidth: 50, frameHeight: 50});
         this.load.image('food', 'food.png')
         //load treats
