@@ -31,10 +31,10 @@ export class Game extends Scene
         } else {
             this.buildMobileControls(layout);
         }
-        console.log(layout.sceneWidth,layout.sceneHeight)
-        console.log(layout.cellSize)
-        console.log(layout.sceneWidth / layout.cellSize)
-        console.log(layout.sceneHeight / layout.cellSize)
+        // console.log(layout.sceneWidth,layout.sceneHeight)
+        // console.log(layout.cellSize)
+        // console.log(layout.sceneWidth / layout.cellSize)
+        // console.log(layout.sceneHeight / layout.cellSize)
 
         this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
         
@@ -45,10 +45,9 @@ export class Game extends Scene
         snake = new Snake(this, 8, 8, layout);
 
 
-    // Add debug logging
-    console.log('Food physics body:', food.body);
-    console.log('Snake head physics body:', snake.head.body);
-
+        // Add debug logging
+        // console.log('Food physics body:', food.body);
+        // console.log('Snake head physics body:', snake.head.body);
 
         // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
         // this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
