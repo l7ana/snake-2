@@ -17,10 +17,15 @@ export class Game extends Scene
 
     create ()
     {
+        this.scene.setVisible(false);
+        this.events.on('create',
+            () => {
+                this.cameras.main.fadeIn(1000,17, 39, 37);
+                this.scene.setVisible(true);
+            }, this)
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const gameHalfWidth = gameWidth / 2;
-        const gameHalfHeight = gameHeight / 2;
         const isTouchDevice = this.isMobile();
 
         // Screen dimensions
@@ -31,25 +36,25 @@ export class Game extends Scene
         } else {
             this.buildMobileControls(layout);
         }
+
+        this.physics.world.drawDebug = false;
+        this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+        // this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+
         // console.log(layout.sceneWidth,layout.sceneHeight)
         // console.log(layout.cellSize)
         // console.log(layout.sceneWidth / layout.cellSize)
         // console.log(layout.sceneHeight / layout.cellSize)
 
-        this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
-        
-        this.physics.world.drawDebug = false;
-        this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        // this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
-
         // Add debug logging
         // console.log('Food physics body:', food.body);
         // console.log('Snake head physics body:', snake.head.body);
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
-
         this.createBorder(layout);
+        
     }
 
     isMobile() {

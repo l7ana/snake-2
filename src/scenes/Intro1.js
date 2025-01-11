@@ -157,9 +157,9 @@ export class Intro1 extends Scene {
             targets: this.gameText,
             ease: 'Power3',
             alpha: 1,
-            delay: 750,
+            delay: 500,
             duration: 1000,
-            onComplete: () => {
+            onActive: () => {
                 
                 this.tweens.add({
                     targets:  this.gameText,
@@ -222,16 +222,16 @@ export class Intro1 extends Scene {
                     targets: startButton,
                     ease: 'Power3',
                     alpha: 1,
-                    delay: 500,
+                    delay: 250,
                     duration: 1000,
-                    onComplete: () =>{
+                    onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
                             scale: startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,
-                            duration: 2000
+                            duration: 1000
                         });
                     }
                 });
@@ -271,14 +271,11 @@ export class Intro1 extends Scene {
         }).on('pointerout', function () {
             next.setTint(0x128884);
         }).on('pointerup', () => {
-            
             // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
-            this.scene.start('Game');
-            this.scene.transition({
-                target: 'Game',
-                ease: 'linear',
-                duration: 1000,
-                moveAbove: true,
+            this.cameras.main.fadeOut(1000,17, 39, 37, (camera, progress) => {
+                if (progress === 1) {
+                    this.scene.start('Game');
+                }
             });
         });
 

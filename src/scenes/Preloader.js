@@ -16,16 +16,16 @@ export class Preloader extends Scene
         //  We loaded this image in our Boot Scene, so we can display it here
 
         //  A simple progress bar. This is the outline of the bar.
-        const rectangle = this.add.rectangle(layout.centerX, layout.centerY - 50, layout.sceneWidth + 2, 32).setStrokeStyle(1, 0xffffff);
+        this.rectangle = this.add.rectangle(layout.centerX, layout.centerY - 50, layout.sceneWidth + 2, 32).setStrokeStyle(1, 0xffffff);
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(layout.centerX - (rectangle.width / 2) + 1, layout.centerY - 50, 2, 28, 0xffffff);
+        this.bar = this.add.rectangle(layout.centerX - (this.rectangle.width / 2) + 1, layout.centerY - 50, 2, 28, 0xffffff);
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 2 + (layout.sceneWidth - 2 * progress);
+            this.bar.width = 2 + (layout.sceneWidth - 2 * progress);
 
         });
 
@@ -131,12 +131,20 @@ export class Preloader extends Scene
           }
 
         this.input.once('pointerup', () => {
-            this.scene.transition({
-                target: 'Intro1',
-                ease: 'linear',
+            this.tweens.add({
+                targets: [this.beginText, this.bar, this.rectangle],
+                ease: 'Power3',
+                alpha: 0,
                 duration: 1000,
-                moveAbove: true,
-            })
+                onComplete: () =>{
+                    this.scene.transition({
+                        target: 'Intro1',
+                        ease: 'linear',
+                        duration: 1000,
+                        moveBelow: true,
+                    })
+                }
+            });
         });
     }
 }
