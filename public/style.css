@@ -13,6 +13,19 @@ body {
       "wdth" 100;
 }
 
+@font-face {
+    font-family: 'PriceCheck';
+    src:  url('assets/pricecheck-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+.fontload{
+    visibility:hidden;
+    position: absolute;
+    left: -9999px;
+  }
+
 nav {
     width: 100%;
     background-color: #112725;
