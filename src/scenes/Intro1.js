@@ -185,7 +185,7 @@ export class Intro1 extends Scene {
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
         const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth - startButtonWidth/2  : sceneWidth + startButtonWidth*1.5 + 5;
+        const startButtonX = isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
         const startButtonTween = isTouchDevice ? 1.05 : 0.65;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
