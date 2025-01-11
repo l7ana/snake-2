@@ -44,16 +44,11 @@ export class Game extends Scene
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
 
-
         // Add debug logging
         // console.log('Food physics body:', food.body);
         // console.log('Snake head physics body:', snake.head.body);
-
-        // this.collider = new Collider(this.physics.world, !overlapOnly, food, snake, food.eat(), this.repositionFood(), )
-        // this.physics.add.overlap(snake.head, food, this.handleFoodCollision, null, this)
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
 
-        // snake = new Snake1(this.physics.world, this, layout);
         this.createBorder(layout);
     }
 
@@ -103,6 +98,10 @@ export class Game extends Scene
 
     // Add new collision handler method
     handleFoodCollision(snakeHead, food) {
+        if (snake.speed > 20 && food.total % 5 === 0) {
+            snake.speed -= 5;
+            console.log(`snake speed is: ${snake.speed}`)
+        }
         snake.grow();
         food.eat();
         food.change();
@@ -117,37 +116,30 @@ export class Game extends Scene
               console.log(snake.head.x, snake.head.y)
               console.log(food.x, food.y)
               console.log(food)
-            }
-            else {
+            } else {
               this.physics.world.drawDebug = true;
             }
           }
 
-        //   if (!snake.alive)
-        //   { 
-        //     this.scene.start('GameOver');
-        //     return;
-        //   }
+          if (!snake.alive) { 
+            this.scene.start('GameOver');
+            return;
+          }
       
-          if (this.cursors.left.isDown)
-          {
+          if (this.cursors.left.isDown) {
               snake.faceLeft();
           }
-          else if (this.cursors.right.isDown)
-          {
+          else if (this.cursors.right.isDown) {
               snake.faceRight();
           }
-          else if (this.cursors.up.isDown)
-          {
+          else if (this.cursors.up.isDown) {
               snake.faceUp();
           }
-          else if (this.cursors.down.isDown)
-          {
+          else if (this.cursors.down.isDown) {
               snake.faceDown();
           }
 
-          if (snake.update(time))
-          {
+          if (snake.update(time)) {
               //  If the snake updated, we need to check for collision against food
               
           }
@@ -225,12 +217,9 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < cellYMax; y++)
-    {
+    for (var y = 0; y < cellYMax; y++) {
         testGrid[y] = [];
-
-        for (var x = 0; x < cellXMax; x++)
-        {
+        for (var x = 0; x < cellXMax; x++) {
             testGrid[y][x] = true;
         }
     }
@@ -240,30 +229,21 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < cellYMax; y++)
-    {
-        for (var x = 0; x < cellXMax; x++)
-        {
-            if (testGrid[y][x] === true)
-            {
+    for (var y = 0; y < cellYMax; y++) {
+        for (var x = 0; x < cellXMax; x++) {
+            if (testGrid[y][x] === true) {
                 //  Is this position valid for food? If so, add it here ...
                 validLocations.push({ x: x, y: y });
             }
         }
     }
-    if (validLocations.length > 0)
-        {
+    if (validLocations.length > 0) {
             var pos = Phaser.Math.RND.pick(validLocations);
     
             // Multiply by cellSize to get pixel position and add half cellSize to center
-            food.setPosition(
-                pos.x * cellSize, 
-                pos.y * cellSize
-            );
+            food.setPosition( pos.x * cellSize, pos.y * cellSize);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
