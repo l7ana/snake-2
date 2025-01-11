@@ -52,7 +52,7 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
 
-        this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'Click Start Game to Begin', {
+        this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
             fontSize: 50,
             color: '#FF593F',
@@ -64,7 +64,6 @@ export class Intro1 extends Scene {
     isMobile() {
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
         const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-        const isTouchDevice = this.sys.game.device.input.touch;
     
         return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
     }
@@ -124,11 +123,14 @@ export class Intro1 extends Scene {
         const { centerX, centerY, sceneWidth, sceneHeight, scale, isTouchDevice } = layout;
         const storyYCenter = isTouchDevice ? (centerY/2) + (50*scale) : centerY - 50 + 5;
         //The Y of Border is 50, the border width is 10
-        
         const story = this.add.image(centerX, storyYCenter, this.storyContent[0].imageKey, 0, {
             width: sceneWidth,
             height: sceneHeight
         }).setScale(scale).setDisplaySize(sceneWidth, sceneHeight);
+        if (this.sys.game.device.browser.safari) {
+            story.setScale(story.scaleX, story.scaleX)
+        }
+        
         return story;
     }
 
@@ -198,6 +200,10 @@ export class Intro1 extends Scene {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
 
+        if (this.sys.game.device.browser.safari) {
+            next.setScale(1), prev.setScale(1), startButton.setScale(1);
+        }
+
         prev.setVisible(false);
         startButton.setVisible(false);
 
@@ -227,7 +233,7 @@ export class Intro1 extends Scene {
                     onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
-                            scale: startButtonTween,
+                            scale: this.sys.game.device.browser.safari ? 1.1 : startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,

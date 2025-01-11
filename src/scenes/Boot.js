@@ -21,6 +21,9 @@ export class Boot extends Scene
         //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
         //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
 
+        if (this.sys.game.device.browser.safari) {
+            this.load.font('Price Check', 'assets/pricecheck-webfont.woff', 'woff');
+        }
         const newFontFace = new FontFace('CustomFont', 'url(assets/pricecheck-webfont.woff)');
         document.fonts.add(newFontFace);
         newFontFace.load().then(() => {
