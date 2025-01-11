@@ -15,9 +15,12 @@ body {
 
 @font-face {
     font-family: 'PriceCheck';
-    src:  url('assets/pricecheck-webfont.woff') format('woff');
+    src:  
+        url('assets/pricecheck-webfont.woff') format('woff'),
+        url('assets/PriceCheck.otf') format('otf');
     font-weight: normal;
     font-style: normal;
+    font-weight: 1 1000;
   }
 
 .fontload{
