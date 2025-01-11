@@ -40,7 +40,7 @@ h2 {
 
 #game-container {
     display: flex;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     aspect-ratio: 2/3;
     max-height: calc(100vh - 75px);
