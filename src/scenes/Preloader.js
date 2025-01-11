@@ -9,26 +9,76 @@ export class Preloader extends Scene
 
     init ()
     {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const gameCenterX = gameWidth / 2;
-        const gameCenterY = gameHeight / 2;
+        const isTouchDevice = this.isMobile();
+        const layout = this.calculateLayout();
+
         this.cursors = this.input.keyboard.createCursorKeys();
         //  We loaded this image in our Boot Scene, so we can display it here
 
         //  A simple progress bar. This is the outline of the bar.
-        const rectangle = this.add.rectangle(gameCenterX, gameCenterY - 50, ((gameWidth*0.9) + 2), 32).setStrokeStyle(1, 0xffffff);
+        const rectangle = this.add.rectangle(layout.centerX, layout.centerY - 50, layout.sceneWidth + 2, 32).setStrokeStyle(1, 0xffffff);
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(gameCenterX - (rectangle.width / 2) + 1, gameCenterY - 50, 2, 28, 0xffffff);
+        const bar = this.add.rectangle(layout.centerX - (rectangle.width / 2) + 1, layout.centerY - 50, 2, 28, 0xffffff);
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 2 + (((gameWidth*0.9) - 2) * progress);
+            bar.width = 2 + (layout.sceneWidth - 2 * progress);
 
         });
+
+        this.beginText = this.add.text(layout.centerX, layout.centerY - 150, 'Click to Start', {
+            fontFamily: 'Price Check',
+            fontSize: 72,
+            color: '#FF593F',
+            align: 'center'
+        }).setOrigin(0.5).setAlpha(0).setScale(1);
+
+        this.load.on('complete', function ()
+        {
+          this.tweens.add({
+            targets: this.beginText,
+            ease: 'Power1',
+            alpha: 1,
+            duration: 1000,
+            onComplete: () => {
+                this.tweens.add({
+                    targets:  this.beginText,
+                    scale: 1.1,
+                    ease: 'Power1',
+                    yoyo: true,
+                    loop: 100,
+                    duration: 1000
+                });
+            }
+        });
+
+        }, this);
+    }
+
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+        const isTouchDevice = this.sys.game.device.input.touch;
+    
+        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+    }
+    calculateLayout() {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const isTouchDevice = this.isMobile();
+        
+        return {
+            gameWidth,
+            gameHeight,
+            centerX: gameWidth / 2,
+            centerY: gameHeight / 2,
+            sceneWidth: gameWidth * 0.75,
+            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
+            isTouchDevice
+        };
     }
 
     preload ()
@@ -65,19 +115,8 @@ export class Preloader extends Scene
 
     create ()
     {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const gameCenterX = gameWidth / 2;
-        const gameCenterY = gameHeight / 2;
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
-
-        const beginText = this.add.text(gameCenterX, gameCenterY, 'Click to Start', {
-            fontFamily: 'Price Check',
-            fontSize: 40,
-            color: '#FF593F',
-            align: 'center'
-        }).setOrigin(0.5);
         
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
@@ -92,7 +131,6 @@ export class Preloader extends Scene
           }
 
         this.input.once('pointerup', () => {
-            // this.scene.start('Intro1');
             this.scene.transition({
                 target: 'Intro1',
                 ease: 'linear',
