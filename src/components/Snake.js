@@ -197,8 +197,8 @@ var Snake = new Phaser.Class({
     })
 
     //Assign split texture to middle
-    if (bodyChildren.length >= 4) {
-      bodyChildren[half].setTexture('snake1', 6);
+    if (bodySegments.length >= 4) {
+      bodySegments[half].setTexture('snake1', 6);
     }
   },
 
