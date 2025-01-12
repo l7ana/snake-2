@@ -24,7 +24,7 @@ export class Boot extends Scene
         if (this.sys.game.device.browser.safari) {
             this.load.font('Price Check', 'assets/pricecheck-webfont.woff', 'woff');
         }
-        const newFontFace = new FontFace('CustomFont', 'url(assets/pricecheck-webfont.woff)');
+        const newFontFace = new FontFace('Price Check', 'url(assets/pricecheck-webfont.woff)');
         document.fonts.add(newFontFace);
         newFontFace.load().then(() => {
             this.scene.start("Preloader");

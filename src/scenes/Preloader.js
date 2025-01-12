@@ -89,17 +89,16 @@ export class Preloader extends Scene
             this.load.image('three', isTouchDevice ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
             this.load.image('four', isTouchDevice ? 'assets/scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
             this.load.image('five', isTouchDevice ? 'assets/scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
-        }
+        } 
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.image('one', isTouchDevice ? 'scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
-        this.load.image('two', isTouchDevice ? 'scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
-        this.load.image('three', isTouchDevice ? 'scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
-        this.load.image('four', isTouchDevice ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
-        this.load.image('five', isTouchDevice ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
+        this.load.image('one', isTouchDevice ? 'scenes/01_Window_382x382_@2x.jpg' : 'scenes/01_Window_890x593_@2x.jpg');
+        this.load.image('two', isTouchDevice ? 'scenes/02_Jars_382x283_@2x.jpg' : 'scenes/02_Jars_890x593_@2x.jpg');
+        this.load.image('three', isTouchDevice ? 'scenes/03_Wallhooks_382x282_@2x.jpg' : 'scenes/03_Wallhooks_890x593_@2x.jpg');
+        this.load.image('four', isTouchDevice ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'scenes/04_OnFloor_890x593_@2x.jpg');
+        this.load.image('five', isTouchDevice ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'scenes/05_EndScreen_890x593_@2x.jpg');
         
-        this.load.font('Price Check', 'pricecheck-webfont.woff', 'woff');
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/snakehead-spritesheet-01.png', {frameWidth: 64, frameHeight: 64})
