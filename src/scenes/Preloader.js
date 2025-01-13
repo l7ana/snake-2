@@ -106,6 +106,7 @@ export class Preloader extends Scene
         this.load.audio('button2', ['sfx/button press 2.ogg', 'sfx/button press 2.mp3'])
         this.load.audio('music1', ['sfx/likea_my_chinese.ogg', 'sfx/likea_my_chinese.mp3'])
         this.load.audio('music2', ['sfx/Beijing-Beats---31s_AdobeStock.ogg', 'sfx/Beijing-Beats---31s_AdobeStock.mp3'])
+        this.load.audio('crash', ['sfx/tr707-crash-cymbal-241376.ogg', 'sfx/tr707-crash-cymbal-241376.mp3']);
         //Add audio files to audioFiles to decode
         // this.sound.decodeAudio(audioFiles)
 

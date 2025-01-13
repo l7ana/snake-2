@@ -46,6 +46,7 @@ export class Game extends Scene
         // console.log(layout.sceneWidth / layout.cellSize)
         // console.log(layout.sceneHeight / layout.cellSize)
         
+        this.sound.stopByKey('music1');
         this.sound.unlock();
         this.sound.play('music2', {loop: true, volume: 0.5})
 
@@ -57,6 +58,30 @@ export class Game extends Scene
         // console.log('Snake head physics body:', snake.head.body);
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
         this.createBorder(layout);
+        
+        const textX = ((gameWidth - layout.sceneWidth) / 2) - 5;
+        const textY = isTouchDevice ? layout.centerY + (layout.sceneHeight/2) - 100 : gameHeight - 100;
+        const fontSize = isTouchDevice ? 26 : 20;
+        const helperText = isTouchDevice ? '' : 'Use the arrow keys to move and eat as much food as you can!';
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.4;
+        this.add.text(textX, textY, helperText, {
+            fontFamily: 'Open Sans',
+            fontSize: fontSize,
+            color: '#DECEB7',
+            lineSpacing: fontSize/4,
+            align: 'left',
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0);
+
+        this.scoreText = this.add.text(layout.sceneWidth, textY - 100, 'SCORE: ' + food.total, {
+            fontFamily: 'Price Check',
+            fontSize: isTouchDevice ? 36 : 30,
+            color: '#FF593F',
+            align: 'RIGHT'
+        }).setOrigin(0);
         
     }
 
@@ -117,6 +142,8 @@ export class Game extends Scene
     }
 
     update (time, delta) {
+        this.scoreText.setText('SCORE: ' + food.total);
+
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
@@ -130,7 +157,8 @@ export class Game extends Scene
           }
 
           if (!snake.alive) { 
-            this.scene.start('GameOver');
+              this.sound.play('crash', {loop: false})
+              this.scene.start('GameOver');
             return;
           }
       
@@ -151,11 +179,6 @@ export class Game extends Scene
               //  If the snake updated, we need to check for collision against food
               
           }
-
-        //   if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
-        //     this.scene.start('GameOver');
-        //     return;
-        //   }
     }
 
     buildMobileControls (layout) {
