@@ -52,6 +52,7 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
         this.sound.unlock();
+        this.sound.play('music1', {loop: true, volume: 0.5})
 
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
@@ -283,6 +284,7 @@ export class Intro1 extends Scene {
             this.cameras.main.fadeOut(1000,17, 39, 37, (camera, progress) => {
                 if (progress === 1) {
                     this.scene.start('Game');
+                    this.sound.stopByKey('music1')
                 }
             });
         });
