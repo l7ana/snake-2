@@ -51,6 +51,7 @@ export class Intro1 extends Scene {
         
         // Setup input
         this.input = this.setupInput(layout);
+        this.sound.unlock();
 
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
@@ -96,6 +97,7 @@ export class Intro1 extends Scene {
 
     updateContent() {
         const content = this.storyContent[this.currentContentIndex];
+        this.sound.play('bookflip', {volume: .5});
         
         // Fade out current content
         this.tweens.add({

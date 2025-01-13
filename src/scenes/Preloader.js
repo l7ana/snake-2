@@ -99,6 +99,13 @@ export class Preloader extends Scene
         this.load.image('four', isTouchDevice ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'scenes/04_OnFloor_890x593_@2x.jpg');
         this.load.image('five', isTouchDevice ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'scenes/05_EndScreen_890x593_@2x.jpg');
         
+        this.load.audio('glass3', ['sfx/glass_03.ogg', 'sfx/glass_03.mp3'])
+        this.load.audio('glass2', ['sfx/glass_02.ogg', 'sfx/glass_02.mp3'])
+        this.load.audio('bookflip', ['sfx/book_flip.1.ogg', 'sfx/book_flip.1.mp3'])
+        this.load.audio('button1', ['sfx/button press 1.ogg', 'sfx/button press 1.mp3'])
+        this.load.audio('button2', ['sfx/button press 2.ogg', 'sfx/button press 2.mp3'])
+        //Add audio files to audioFiles to decode
+        // this.sound.decodeAudio(audioFiles)
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/snakehead-spritesheet-01.png', {frameWidth: 64, frameHeight: 64})
