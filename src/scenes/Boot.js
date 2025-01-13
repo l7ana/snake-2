@@ -21,18 +21,18 @@ export class Boot extends Scene
         //  The Boot Scene is typically used to load in any assets you require for your Preloader, such as a game logo or background.
         //  The smaller the file size of the assets, the better, as the Boot Scene itself has no preloader.
 
-        this.load.image('background', 'assets/bg.png');
-
-        const isTouchDevice = this.isMobile();
-        this.load.image('one', isTouchDevice ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
-        this.load.image('two', isTouchDevice ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
-        this.load.image('three', isTouchDevice ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
-        this.load.image('four', isTouchDevice ? 'assets/scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
-        this.load.image('five', isTouchDevice ? 'assets/scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
+        if (this.sys.game.device.browser.safari) {
+            this.load.font('Price Check', 'assets/pricecheck-webfont.woff', 'woff');
+        }
+        const newFontFace = new FontFace('Price Check', 'url(assets/pricecheck-webfont.woff)');
+        document.fonts.add(newFontFace);
+        newFontFace.load().then(() => {
+            this.scene.start("Preloader");
+        });
     }
 
     create ()
     {
-        this.scene.start('Preloader');
+        // this.scene.start('Preloader');
     }
 }

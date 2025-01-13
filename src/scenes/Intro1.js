@@ -51,8 +51,10 @@ export class Intro1 extends Scene {
         
         // Setup input
         this.input = this.setupInput(layout);
+        this.sound.unlock();
+        this.sound.play('music1', {loop: true, volume: 0.5})
 
-        this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'Click Start Game to Begin', {
+        this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
             fontSize: 50,
             color: '#FF593F',
@@ -64,7 +66,6 @@ export class Intro1 extends Scene {
     isMobile() {
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
         const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-        const isTouchDevice = this.sys.game.device.input.touch;
     
         return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
     }
@@ -97,6 +98,7 @@ export class Intro1 extends Scene {
 
     updateContent() {
         const content = this.storyContent[this.currentContentIndex];
+        this.sound.play('bookflip', {volume: .5});
         
         // Fade out current content
         this.tweens.add({
@@ -124,11 +126,14 @@ export class Intro1 extends Scene {
         const { centerX, centerY, sceneWidth, sceneHeight, scale, isTouchDevice } = layout;
         const storyYCenter = isTouchDevice ? (centerY/2) + (50*scale) : centerY - 50 + 5;
         //The Y of Border is 50, the border width is 10
-        
         const story = this.add.image(centerX, storyYCenter, this.storyContent[0].imageKey, 0, {
             width: sceneWidth,
             height: sceneHeight
         }).setScale(scale).setDisplaySize(sceneWidth, sceneHeight);
+        if (this.sys.game.device.browser.safari) {
+            story.setScale(story.scaleX, story.scaleX)
+        }
+        
         return story;
     }
 
@@ -157,9 +162,9 @@ export class Intro1 extends Scene {
             targets: this.gameText,
             ease: 'Power3',
             alpha: 1,
-            delay: 750,
+            delay: 500,
             duration: 1000,
-            onComplete: () => {
+            onActive: () => {
                 
                 this.tweens.add({
                     targets:  this.gameText,
@@ -185,7 +190,7 @@ export class Intro1 extends Scene {
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
         const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth - startButtonWidth/2  : sceneWidth + startButtonWidth*1.5 + 5;
+        const startButtonX = isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
         const startButtonTween = isTouchDevice ? 1.05 : 0.65;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
@@ -196,6 +201,10 @@ export class Intro1 extends Scene {
             next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
         } else {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
+        }
+
+        if (this.sys.game.device.browser.safari) {
+            next.setScale(1), prev.setScale(1), startButton.setScale(1);
         }
 
         prev.setVisible(false);
@@ -222,16 +231,16 @@ export class Intro1 extends Scene {
                     targets: startButton,
                     ease: 'Power3',
                     alpha: 1,
-                    delay: 500,
+                    delay: 250,
                     duration: 1000,
-                    onComplete: () =>{
+                    onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
-                            scale: startButtonTween,
+                            scale: this.sys.game.device.browser.safari ? 1.1 : startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,
-                            duration: 2000
+                            duration: 1000
                         });
                     }
                 });
@@ -271,14 +280,12 @@ export class Intro1 extends Scene {
         }).on('pointerout', function () {
             next.setTint(0x128884);
         }).on('pointerup', () => {
-            
             // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
-            this.scene.start('Game');
-            this.scene.transition({
-                target: 'Game',
-                ease: 'linear',
-                duration: 1000,
-                moveAbove: true,
+            this.cameras.main.fadeOut(1000,17, 39, 37, (camera, progress) => {
+                if (progress === 1) {
+                    this.scene.start('Game');
+                    this.sound.stopByKey('music1')
+                }
             });
         });
 

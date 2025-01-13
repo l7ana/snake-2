@@ -3,7 +3,6 @@ import { Game } from './scenes/Game';
 import { GameOver } from './scenes/GameOver';
 import { Intro1 } from './scenes/Intro1';
 import { Preloader } from './scenes/Preloader';
-// import { GridEngine, GridEngineHeadless } from "grid-engine";
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -31,10 +30,10 @@ const config = {
     type: Phaser.AUTO,
     parent: 'game-container',
     mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
     width: width,
     height: height,
     backgroundColor: '#112725',
-    autoCenter: Phaser.Scale.CENTER_BOTH,
     scene: [
         Boot,
         Preloader,

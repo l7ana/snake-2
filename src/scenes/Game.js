@@ -8,15 +8,6 @@ var cellSize;
 var cellXMax;
 var cellYMax;
 
-//NOTES todo
-// Game & Snake: increase scale of artwork, less game tiles
-// Snake: wraparound the sceneWidth
-// Game: buildMobileControls, import new buttons, position relative to Game Area
-
-// !low imporance todo
-// Enhancement: show point total, increase difficulty in larger increments (like instead of 5, 10)
-// Enhancement: reciept total of things eaten
-
 export class Game extends Scene
 {
     constructor ()
@@ -26,10 +17,15 @@ export class Game extends Scene
 
     create ()
     {
+        this.scene.setVisible(false);
+        this.events.on('create',
+            () => {
+                this.cameras.main.fadeIn(1000,17, 39, 37);
+                this.scene.setVisible(true);
+            }, this)
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const gameHalfWidth = gameWidth / 2;
-        const gameHalfHeight = gameHeight / 2;
         const isTouchDevice = this.isMobile();
 
         // Screen dimensions
@@ -40,20 +36,53 @@ export class Game extends Scene
         } else {
             this.buildMobileControls(layout);
         }
-        console.log(layout.sceneWidth,layout.sceneHeight)
-        console.log(layout.cellSize)
-        console.log(layout.sceneWidth / layout.cellSize)
-        console.log(layout.sceneHeight / layout.cellSize)
 
-        this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
-        this.createBorder(layout);
-        
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        // this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+
+        // console.log(layout.sceneWidth,layout.sceneHeight)
+        // console.log(layout.cellSize)
+        // console.log(layout.sceneWidth / layout.cellSize)
+        // console.log(layout.sceneHeight / layout.cellSize)
+        
+        this.sound.stopByKey('music1');
+        this.sound.unlock();
+        this.sound.play('music2', {loop: true, volume: 0.5})
+
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8, layout);
-    
+        // Add debug logging
+        // console.log('Food physics body:', food.body);
+        // console.log('Snake head physics body:', snake.head.body);
+        this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
+        this.createBorder(layout);
+        
+        const textX = ((gameWidth - layout.sceneWidth) / 2) - 5;
+        const textY = isTouchDevice ? layout.centerY + (layout.sceneHeight/2) - 100 : gameHeight - 100;
+        const fontSize = isTouchDevice ? 26 : 20;
+        const helperText = isTouchDevice ? '' : 'Use the arrow keys to move and eat as much food as you can!';
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.4;
+        this.add.text(textX, textY, helperText, {
+            fontFamily: 'Open Sans',
+            fontSize: fontSize,
+            color: '#DECEB7',
+            lineSpacing: fontSize/4,
+            align: 'left',
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0);
+
+        this.scoreText = this.add.text(layout.sceneWidth, textY - 100, 'SCORE: ' + food.total, {
+            fontFamily: 'Price Check',
+            fontSize: isTouchDevice ? 36 : 30,
+            color: '#FF593F',
+            align: 'RIGHT'
+        }).setOrigin(0);
+        
     }
 
     isMobile() {
@@ -100,7 +129,21 @@ export class Game extends Scene
         return graphics;
     }
 
+    // Add new collision handler method
+    handleFoodCollision(snakeHead, food) {
+        if (snake.speed > 20 && food.total % 5 === 0) {
+            snake.speed -= 5;
+            console.log(`snake speed is: ${snake.speed}`)
+        }
+        snake.grow();
+        food.eat();
+        food.change();
+        this.repositionFood();
+    }
+
     update (time, delta) {
+        this.scoreText.setText('SCORE: ' + food.total);
+
         if (Phaser.Input.Keyboard.JustDown(this.toggleDebug)) {
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
@@ -108,49 +151,33 @@ export class Game extends Scene
               console.log(snake.head.x, snake.head.y)
               console.log(food.x, food.y)
               console.log(food)
-            }
-            else {
+            } else {
               this.physics.world.drawDebug = true;
             }
           }
 
-          if (!snake.alive)
-          { 
-            this.scene.start('GameOver');
+          if (!snake.alive) { 
+              this.sound.play('crash', {loop: false})
+              this.scene.start('GameOver');
             return;
           }
       
-          if (this.cursors.left.isDown)
-          {
+          if (this.cursors.left.isDown) {
               snake.faceLeft();
           }
-          else if (this.cursors.right.isDown)
-          {
+          else if (this.cursors.right.isDown) {
               snake.faceRight();
           }
-          else if (this.cursors.up.isDown)
-          {
+          else if (this.cursors.up.isDown) {
               snake.faceUp();
           }
-          else if (this.cursors.down.isDown)
-          {
+          else if (this.cursors.down.isDown) {
               snake.faceDown();
           }
 
-          if (snake.update(time))
-          {
+          if (snake.update(time)) {
               //  If the snake updated, we need to check for collision against food
-      
-              if (snake.collideWithFood(food))
-              {
-                  this.repositionFood();
-                  food.change();
-              }
-          }
-
-          if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
-            this.scene.start('GameOver');
-            return;
+              
           }
     }
 
@@ -221,12 +248,9 @@ export class Game extends Scene
     //  A Grid we'll use to reposition the food each time it's eaten
     var testGrid = [];
 
-    for (var y = 0; y < cellYMax; y++)
-    {
+    for (var y = 0; y < cellYMax; y++) {
         testGrid[y] = [];
-
-        for (var x = 0; x < cellXMax; x++)
-        {
+        for (var x = 0; x < cellXMax; x++) {
             testGrid[y][x] = true;
         }
     }
@@ -236,30 +260,21 @@ export class Game extends Scene
     //  Purge out false positions
     var validLocations = [];
 
-    for (var y = 0; y < cellYMax; y++)
-    {
-        for (var x = 0; x < cellXMax; x++)
-        {
-            if (testGrid[y][x] === true)
-            {
+    for (var y = 0; y < cellYMax; y++) {
+        for (var x = 0; x < cellXMax; x++) {
+            if (testGrid[y][x] === true) {
                 //  Is this position valid for food? If so, add it here ...
                 validLocations.push({ x: x, y: y });
             }
         }
     }
-    if (validLocations.length > 0)
-        {
+    if (validLocations.length > 0) {
             var pos = Phaser.Math.RND.pick(validLocations);
     
             // Multiply by cellSize to get pixel position and add half cellSize to center
-            food.setPosition(
-                pos.x * cellSize, 
-                pos.y * cellSize
-            );
+            food.setPosition( pos.x * cellSize, pos.y * cellSize);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
