@@ -19,6 +19,10 @@ export class GameOver extends Scene
             align: 'center'
         }).setOrigin(0.5);
 
+
+        this.sound.stopByKey('music2');
+        this.sound.removeByKey('music2');
+
         this.input.once('pointerdown', () => {
 
             this.scene.start('Game');

@@ -47,8 +47,10 @@ export class Game extends Scene
         // console.log(layout.sceneHeight / layout.cellSize)
         
         this.sound.stopByKey('music1');
+        this.sound.removeByKey('music1');
         this.sound.unlock();
-        this.sound.play('music2', {loop: true, volume: 0.5})
+        var music = this.sound.add('music2', {loop: true, volume: 0.5});
+        music.play();
 
         this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
