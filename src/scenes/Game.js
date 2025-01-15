@@ -83,7 +83,7 @@ export class Game extends Scene
             fontSize: isTouchDevice ? 36 : 30,
             color: '#FF593F',
             align: 'RIGHT'
-        }).setOrigin(0);
+        }).setOrigin(isTouchDevice ? 1 : 0);
         
     }
 
