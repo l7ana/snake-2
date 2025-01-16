@@ -258,7 +258,6 @@ export class Game extends Scene
     }
 
     snake.updateGrid(testGrid);
-    console.log(testGrid)
 
     //  Purge out false positions
     var validLocations = [];

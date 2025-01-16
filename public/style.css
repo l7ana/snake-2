@@ -24,20 +24,76 @@ body {
   }
 
 .fontload{
-    visibility:hidden;
+    visibility: hidden;
+    display: none;
     position: absolute;
     left: -9999px;
+    bottom: 0;
+    color: transparent;
   }
 
 nav {
     width: 100%;
     background-color: #112725;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     height: 75px;
-    border-bottom: #128884 2px solid;
+    border-bottom: #091716 5px solid;
     box-sizing: border-box;
+    padding-top: 10px;
+}
+
+.nav-wrapper {
+    width: 90%;
+    margin: auto 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e0a438;
+}
+
+nav .logo {
+    fill:#e0a438;
+    width: 218px;
+}
+
+.nav-links {
+    display: none;
+    visibility: hidden;
+    list-style-type: none;
+    flex-flow: row;
+    gap: 50px;
+    /* font-size: 12px; */
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.nav-links > li > a {
+    display: none;
+    visibility: hidden;
+    color: #e0a438;
+    text-decoration: none;
+}
+
+@media only screen and (min-width: 600px) {
+    .nav-wrapper {
+        width: 90%;
+        margin: auto 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .nav-links {
+        display: flex;
+        visibility: visible;
+    }
+    
+    .nav-links > li > a {
+        display: inline;
+        visibility: visible;
+    }
 }
 
 h2 {
@@ -75,6 +131,10 @@ h2 {
     #game-container {
         aspect-ratio: 3/2;
         width: 70%;
+    }
+    .nav-wrapper {
+        width: 70%;
+        margin: 0 auto;
     }
   }
 
