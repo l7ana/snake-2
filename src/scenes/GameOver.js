@@ -9,16 +9,42 @@ export class GameOver extends Scene
 
     create ()
     {
-        this.cameras.main.setBackgroundColor(0xff0000);
+        this.isMobile();
+        const layout = this.calculateLayout();
+        
+        // Create border
+        this.createStoryImage(layout);
+        this.createBorder(layout);
 
-        this.add.image(512, 384, 'background').setAlpha(0.5);
+        const firstLineTextY = 120;
+        const secondLineTextY = this.isMobile() ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 140;
+        const thirdLineTextY = this.isMobile() ? layout.centerY - (layout.centerY/2) + 75 : layout.centerY - 50;
+        console.log(secondLineTextY)
 
-        this.add.text(512, 384, 'Thanks for playing. Try again?', {
-            fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
+        this.add.text(layout.centerX, firstLineTextY, 'THANKS FOR PLAYING!', {
+            fontFamily: 'Price Check Wide', fontSize: this.isMobile() ? 30 : 20, color: '#FF593F',
             align: 'center'
         }).setOrigin(0.5);
 
+        //NEED TO LOAD CONDENSED FONT INSTEAD!!
+
+        this.add.text(layout.centerX, secondLineTextY, 'WISHING YOU A VERY LI HING LUNAR NEW YEAR', {
+            fontFamily: 'Price Check',
+            fontSize: 64,
+            color: '#FF593F',
+            align: 'center',
+            lineSpacing: .5,
+            wordWrap: { 
+                width: layout.sceneWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0.5);
+
+
+        this.add.text(layout.centerX, thirdLineTextY, 'from all of us at Sae Design', {
+            fontFamily: 'Open Sans', fontSize: this.isMobile() ? 24 : 14, color: '#DECEB7',
+            align: 'center'
+        }).setOrigin(0.5);
 
         this.sound.stopByKey('music2');
         this.sound.removeByKey('music2');
@@ -28,5 +54,53 @@ export class GameOver extends Scene
             this.scene.start('Game');
 
         });
+    }
+
+    isMobile() {
+        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+    
+        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+    }
+
+    calculateLayout() {
+        const gameWidth = this.cameras.main.width;
+        const gameHeight = this.cameras.main.height;
+        const isTouchDevice = this.isMobile();
+        
+        return {
+            gameWidth,
+            gameHeight,
+            centerX: gameWidth / 2,
+            centerY: gameHeight / 2,
+            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
+            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
+            isTouchDevice,
+            scale: isTouchDevice ? 2 : 1
+        };
+    }
+
+    createBorder({ gameWidth, sceneWidth, sceneHeight }) {
+        const debug = this.add.graphics();
+        const borderX = (gameWidth - sceneWidth) / 2;
+        
+        debug.lineStyle(10, 0x457E7B).strokeRect(borderX, 50, sceneWidth, sceneHeight);
+            
+        return debug;
+    }
+
+    createStoryImage(layout) {
+        const { centerX, centerY, sceneWidth, sceneHeight, scale, isTouchDevice } = layout;
+        const storyYCenter = isTouchDevice ? (centerY/2) + (50*scale) : centerY - 50 + 5;
+        //The Y of Border is 50, the border width is 10
+        const story = this.add.image(centerX, storyYCenter, 'five', 0, {
+            width: sceneWidth,
+            height: sceneHeight
+        }).setScale(scale).setDisplaySize(sceneWidth, sceneHeight);
+        if (this.sys.game.device.browser.safari) {
+            story.setScale(story.scaleX, story.scaleX)
+        }
+        
+        return story;
     }
 }

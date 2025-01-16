@@ -29,7 +29,6 @@ export class Intro1 extends Scene {
 
         // Screen dimensions
         const layout = this.calculateLayout();
-        console.log(layout.sceneWidth, layout.sceneHeight)
         
         // Store references to image and text as class properties
         this.storyImage = this.createStoryImage(layout).setAlpha(0);

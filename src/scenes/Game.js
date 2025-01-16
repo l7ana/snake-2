@@ -42,12 +42,7 @@ export class Game extends Scene
 
         this.physics.world.drawDebug = false;
         this.toggleDebug = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        // this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-
-        // console.log(layout.sceneWidth,layout.sceneHeight)
-        // console.log(layout.cellSize)
-        // console.log(layout.sceneWidth / layout.cellSize)
-        // console.log(layout.sceneHeight / layout.cellSize)
+        this.goNext = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         
         this.sound.stopByKey('music1');
         this.sound.removeByKey('music1');
@@ -123,7 +118,7 @@ export class Game extends Scene
         };
     }
 
-    createBorder({ gameWidth, gameHalfWidth, gameHalfHeight, sceneWidth, sceneHeight, cellSize }) {
+    createBorder({ gameWidth, sceneWidth, sceneHeight, }) {
         const graphics = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
         //Consolidate createBorder function here so that the grid and rectangle can both be added to graphics, borrowing the same properties from layout.
@@ -153,12 +148,14 @@ export class Game extends Scene
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
-            //   this.repositionFood()
-            //   console.log(food.x, food.y)
             } else {
               this.physics.world.drawDebug = true;
             }
-          }
+        }
+        if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
+            this.sound.play('crash', {loop: false})
+            this.scene.start('GameOver');
+        }
 
           snake.update(time)
 
@@ -185,7 +182,7 @@ export class Game extends Scene
 
     buildMobileControls (layout) {
 
-        const { gameHeight, gameWidth, centerX, centerY, sceneWidth, sceneHeight, isTouchDevice } = layout;
+        const { gameHeight, centerX, sceneHeight } = layout;
 
         this.input.addPointer(2);
         this.input.topOnly = true;

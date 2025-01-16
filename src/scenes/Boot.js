@@ -23,11 +23,17 @@ export class Boot extends Scene
 
         if (this.sys.game.device.browser.safari) {
             this.load.font('Price Check', 'assets/pricecheck-webfont.woff', 'woff');
+            this.load.font('Price Check Wide', 'assets/pricecheck-extended-webfont.woff', 'woff');
         }
-        const newFontFace = new FontFace('Price Check', 'url(assets/pricecheck-webfont.woff)');
-        document.fonts.add(newFontFace);
-        newFontFace.load().then(() => {
+        const newFontFace1 = new FontFace('Price Check', 'url(assets/pricecheck-webfont.woff)');
+        document.fonts.add(newFontFace1);
+
+        const newFontFace2 = new FontFace('Price Check Wide', 'url(assets/pricecheck-extended-webfont.woff)');
+        document.fonts.add(newFontFace2);
+
+        newFontFace1.load().then(() => {
             this.scene.start("Preloader");
+            newFontFace2.load();
         });
     }
 
