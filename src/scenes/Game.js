@@ -30,6 +30,9 @@ export class Game extends Scene
 
         // Screen dimensions
         const layout = this.calculateLayout();
+        cellSize = layout.cellSize;
+        cellXMax = layout.cellXMax;
+        cellYMax = layout.cellYMax;
 
         if (!isTouchDevice) {
             this.cursors = this.input.keyboard.createCursorKeys();
@@ -58,7 +61,7 @@ export class Game extends Scene
         // Add debug logging
         // console.log('Food physics body:', food.body);
         // console.log('Snake head physics body:', snake.head.body);
-        this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food), null, this );
+        this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food, layout), null, this );
         this.createBorder(layout);
         
         const textX = ((gameWidth - layout.sceneWidth) / 2) - 5;
@@ -132,7 +135,7 @@ export class Game extends Scene
     }
 
     // Add new collision handler method
-    handleFoodCollision(snakeHead, food) {
+    handleFoodCollision(snakeHead, food, layout) {
         if (snake.speed > 20 && food.total % 5 === 0) {
             snake.speed -= 5;
             console.log(`snake speed is: ${snake.speed}`)
@@ -140,7 +143,7 @@ export class Game extends Scene
         snake.grow();
         food.eat();
         food.change();
-        this.repositionFood();
+        this.repositionFood(layout);
     }
 
     update (time, delta) {
@@ -150,13 +153,14 @@ export class Game extends Scene
             if (this.physics.world.drawDebug) {
               this.physics.world.drawDebug = false;
               this.physics.world.debugGraphic.clear();
-              console.log(snake.head.x, snake.head.y)
-              console.log(food.x, food.y)
-              console.log(food)
+            //   this.repositionFood()
+            //   console.log(food.x, food.y)
             } else {
               this.physics.world.drawDebug = true;
             }
           }
+
+          snake.update(time)
 
           if (!snake.alive) { 
               this.sound.play('crash', {loop: false})
@@ -177,10 +181,6 @@ export class Game extends Scene
               snake.faceDown();
           }
 
-          if (snake.update(time)) {
-              //  If the snake updated, we need to check for collision against food
-              
-          }
     }
 
     buildMobileControls (layout) {
@@ -243,7 +243,7 @@ export class Game extends Scene
     * @method repositionFood
     * @return {boolean} true if the food was placed, otherwise false
     */
-    repositionFood () {
+    repositionFood (layout) {
         //  First create an array that assumes all positions
     //  are valid for the new piece of food
 
@@ -258,6 +258,7 @@ export class Game extends Scene
     }
 
     snake.updateGrid(testGrid);
+    console.log(testGrid)
 
     //  Purge out false positions
     var validLocations = [];
@@ -271,13 +272,16 @@ export class Game extends Scene
         }
     }
     if (validLocations.length > 0) {
-            var pos = Phaser.Math.RND.pick(validLocations);
-    
-            // Multiply by cellSize to get pixel position and add half cellSize to center
-            food.setPosition( pos.x * cellSize, pos.y * cellSize);
-            return true;
-        } else {
-            return false;
-        }
+        var pos = Phaser.Math.RND.pick(validLocations);
+        
+        // Add the adjustments to match Food class positioning
+        food.setPosition(
+            (pos.x * cellSize) + ((layout.gameWidth - layout.sceneWidth) / 2), 
+            (pos.y * cellSize) + layout.yPos
+        );
+        return true;
+    } else {
+        return false;
+    }
     }
 }
