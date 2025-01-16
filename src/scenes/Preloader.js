@@ -34,7 +34,7 @@ export class Preloader extends Scene
             fontSize: 72,
             color: '#FF593F',
             align: 'center'
-        }).setOrigin(0.5).setAlpha(0).setScale(1);
+        }).setOrigin(0.5).setAlpha(0).setScale(1).setLetterSpacing(1);
 
         this.load.on('complete', function ()
         {

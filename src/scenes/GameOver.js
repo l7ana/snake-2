@@ -17,34 +17,33 @@ export class GameOver extends Scene
         this.createBorder(layout);
 
         const firstLineTextY = 120;
-        const secondLineTextY = this.isMobile() ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 140;
-        const thirdLineTextY = this.isMobile() ? layout.centerY - (layout.centerY/2) + 75 : layout.centerY - 50;
-        console.log(secondLineTextY)
+        const secondLineTextY = this.isMobile() ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 150;
+        const thirdLineTextY = this.isMobile() ? layout.centerY - (layout.centerY/2) + 60 : layout.centerY - 60;
 
         this.add.text(layout.centerX, firstLineTextY, 'THANKS FOR PLAYING!', {
             fontFamily: 'Price Check Wide', fontSize: this.isMobile() ? 30 : 20, color: '#FF593F',
             align: 'center'
-        }).setOrigin(0.5);
+        }).setOrigin(0.5).setLetterSpacing(1.5);
 
         //NEED TO LOAD CONDENSED FONT INSTEAD!!
 
         this.add.text(layout.centerX, secondLineTextY, 'WISHING YOU A VERY LI HING LUNAR NEW YEAR', {
-            fontFamily: 'Price Check',
+            fontFamily: 'Price Check Condensed',
             fontSize: 64,
             color: '#FF593F',
             align: 'center',
-            lineSpacing: .5,
+            lineSpacing: -10,
             wordWrap: { 
-                width: layout.sceneWidth, 
+                width: this.isMobile() ? layout.sceneWidth : layout.sceneWidth*.75, 
                 useAdvancedWrap: true 
             }
-        }).setOrigin(0.5);
+        }).setOrigin(0.5).setLetterSpacing(1);
 
 
-        this.add.text(layout.centerX, thirdLineTextY, 'from all of us at Sae Design', {
-            fontFamily: 'Open Sans', fontSize: this.isMobile() ? 24 : 14, color: '#DECEB7',
+        this.add.text(layout.centerX, thirdLineTextY, 'FROM ALL OF US AT SAE DESIGN', {
+            fontFamily: 'Open Sans', fontSize: this.isMobile() ? 24 : 18, color: '#DECEB7',
             align: 'center'
-        }).setOrigin(0.5);
+        }).setOrigin(0.5).setLetterSpacing(3);
 
         this.sound.stopByKey('music2');
         this.sound.removeByKey('music2');
