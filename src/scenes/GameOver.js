@@ -47,10 +47,38 @@ export class GameOver extends Scene
         this.sound.stopByKey('music2');
         this.sound.removeByKey('music2');
 
-        this.input.once('pointerdown', () => {
+        
+        const buttonY = this.isMobile() ? layout.gameHeight - 100 : layout.gameHeight - 90;
+        const replayButtonWidth = this.isMobile() ? 180 : 90;
+        const buttonScale = this.isMobile() ? 1 : 0.6;
+        const buttonHeight = this.isMobile() ? 64 : 32;
+        const shareButtonWidth = this.isMobile() ? 116 : 116;
+        const shareButtonX = this.isMobile() ? layout.sceneWidth + 25 : layout.sceneWidth + shareButtonWidth + 25;
+        const replayButtonX = this.isMobile() ? layout.gameWidth*0.2 + replayButtonWidth + 5 : shareButtonX - replayButtonWidth - 50;
+        const shareButton = this.add.image(shareButtonX, buttonY + 25, 'share', 0).setOrigin(1, 0.5).setScale(buttonScale);
+        const replayButton = this.add.image(replayButtonX, buttonY + 25, 'replay', 0, { width: replayButtonWidth }).setOrigin(1, 0.5).setScale(buttonScale);
+        console.log(shareButton)
+        console.log(replayButton)
+        shareButton.displayHeight = replayButton.displayHeight;
+        shareButton.displayWidth = shareButtonWidth;
+        shareButton.scaleX = shareButton.scaleY;
 
+        replayButton.setInteractive();
+        replayButton.on('pointerup', () => {
             this.scene.start('Game');
+        });
 
+        shareButton.setInteractive();
+        shareButton.on('pointerup', () => {
+            var dummy = document.createElement('input'),
+            text = window.location.href;
+
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert("Link copied!")
         });
     }
 

@@ -112,7 +112,6 @@ export class Preloader extends Scene
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/snakehead-spritesheet-01.png', {frameWidth: 64, frameHeight: 64})
-        this.load.image('food', 'food.png')
         this.load.image('food1', '/treat/cookie_chocolate_chip.png')
         this.load.image('food2', '/treat/cupcake.png')
         this.load.image('food3', '/treat/doughnut.png')
@@ -131,6 +130,8 @@ export class Preloader extends Scene
         this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
         this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
         this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')
+        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg')
+        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg')
     }
 
     create ()
