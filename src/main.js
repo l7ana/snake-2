@@ -14,8 +14,8 @@ let height = 720;
 function isMobile() {
   const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
   const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-  return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
-  }
+  return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
+}
   
   if (isMobile()) {
     width = 720;
@@ -29,7 +29,7 @@ function isMobile() {
 const config = {
     type: Phaser.AUTO,
     parent: 'game-container',
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: width,
     height: height,

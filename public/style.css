@@ -63,7 +63,7 @@ nav .logo {
     visibility: hidden;
     list-style-type: none;
     flex-flow: row;
-    gap: 50px;
+    gap: 5vw;
     /* font-size: 12px; */
     text-transform: uppercase;
     font-weight: 800;
@@ -130,14 +130,19 @@ h2 {
     }
     #game-container {
         aspect-ratio: 3/2;
+    }
+    .nav-wrapper {
+        margin: 0 auto;
+    }
+  }
+
+  @media only screen and (min-width: 1040px) {
+    #game-container {
         width: 70%;
     }
     .nav-wrapper {
         width: 70%;
         margin: 0 auto;
     }
-  }
-
-  .open-sans {
   }
   

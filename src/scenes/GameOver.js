@@ -15,6 +15,7 @@ export class GameOver extends Scene
         // Create border
         this.createStoryImage(layout);
         this.createBorder(layout);
+        this.createText(layout);
 
         const firstLineTextY = 120;
         const secondLineTextY = this.isMobile() ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 150;
@@ -24,8 +25,6 @@ export class GameOver extends Scene
             fontFamily: 'Price Check Wide', fontSize: this.isMobile() ? 30 : 20, color: '#FF593F',
             align: 'center'
         }).setOrigin(0.5).setLetterSpacing(1.5);
-
-        //NEED TO LOAD CONDENSED FONT INSTEAD!!
 
         this.add.text(layout.centerX, secondLineTextY, 'WISHING YOU A VERY LI HING LUNAR NEW YEAR', {
             fontFamily: 'Price Check Condensed',
@@ -59,7 +58,7 @@ export class GameOver extends Scene
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
         const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
     
-        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
     }
 
     calculateLayout() {
@@ -101,5 +100,26 @@ export class GameOver extends Scene
         }
         
         return story;
+    }
+
+    createText(layout) {
+        const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice } = layout;
+        const textX = ((gameWidth - sceneWidth) / 2) - 5;
+        const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 100;
+        const fontSize = isTouchDevice ? 26 : 20;
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.45;
+        
+        return this.add.text(textX, textY, 'Wishing you a very yummy, sweet, li hing Lunar New Year filled with prosperity and abundance, from all of us at Sae Design Group!', {
+            fontFamily: 'Open Sans',
+            fontSize: fontSize,
+            color: '#DECEB7',
+            lineSpacing: fontSize/4,
+            align: 'left',
+            fontStyle: 'Bold',
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0);
     }
 }

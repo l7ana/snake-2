@@ -65,8 +65,9 @@ export class Intro1 extends Scene {
     isMobile() {
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
         const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
+        const isTouchDevice = this.sys.game.device.input.touch;
     
-        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
     }
 
     calculateLayout() {
@@ -129,7 +130,7 @@ export class Intro1 extends Scene {
             width: sceneWidth,
             height: sceneHeight
         }).setScale(scale).setDisplaySize(sceneWidth, sceneHeight);
-        if (this.sys.game.device.browser.safari) {
+        if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
             story.setScale(story.scaleX, story.scaleX)
         }
         
@@ -202,9 +203,9 @@ export class Intro1 extends Scene {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
 
-        if (this.sys.game.device.browser.safari) {
-            next.setScale(1), prev.setScale(1), startButton.setScale(1);
-        }
+        // if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
+        //     next.setScale(1), prev.setScale(1), startButton.setScale(1);
+        // }
 
         prev.setVisible(false);
         startButton.setVisible(false);
@@ -235,7 +236,7 @@ export class Intro1 extends Scene {
                     onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
-                            scale: this.sys.game.device.browser.safari ? 1.1 : startButtonTween,
+                            scale: this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ? 1.1 : startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,

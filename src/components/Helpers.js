@@ -5,7 +5,7 @@ function isMobile(scene) {
   const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
   const isTouchDevice = scene.sys.game.device.input.touch;
 
-  return isTouchDevice && regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+  return isTouchDevice && regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
 }
 
 function calculateLayout(isMobile, scene) {

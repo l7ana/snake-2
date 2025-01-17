@@ -62,7 +62,7 @@ export class Preloader extends Scene
         const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
         const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
     
-        return regex.test(navigator.userAgent) || deviceWidthSmall ? true : false;
+        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
     }
     calculateLayout() {
         const gameWidth = this.cameras.main.width;
@@ -83,7 +83,7 @@ export class Preloader extends Scene
     preload ()
     {
         const isTouchDevice = this.isMobile();
-        if (this.sys.game.device.browser.safari) {
+        if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ) {
             this.load.image('one', isTouchDevice ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
             this.load.image('two', isTouchDevice ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
             this.load.image('three', isTouchDevice ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
