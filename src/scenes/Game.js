@@ -131,7 +131,7 @@ export class Game extends Scene
     // Add new collision handler method
     handleFoodCollision(snakeHead, food, layout) {
         if (snake.speed > 20 && food.total % 5 === 0) {
-            snake.speed -= 5;
+            snake.speed -= layout.isTouchDevice ? 10 : 5;
             console.log(`snake speed is: ${snake.speed}`)
         }
         snake.grow();

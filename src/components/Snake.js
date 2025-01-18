@@ -286,14 +286,11 @@ var Snake = new Phaser.Class({
       [LEFT]: 0,
       [RIGHT]: 2
     };
-    // Adjust these frame numbers based on your spritesheet
-    // return (direction === LEFT || direction === RIGHT) ? 4 : 8;
     return striaghtFrames[direction] || 0;
   },
 
   // Helper function to get tail piece frame number
   getTailFrame: function(direction) {
-    // Adjust these frame numbers based on your spritesheet
     const tailFrames = {
         [UP]: 3,
         [DOWN]: 1,
