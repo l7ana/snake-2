@@ -69,14 +69,14 @@ var Snake = new Phaser.Class({
     scene.physics.add.existing(this.body);
 
     //Create Middle
-    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 6 );
+    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sLineAB', 0 );
     this.middleSegment.setOrigin(0);
     this.middleSegment.displayHeight = this.cellSize;
     this.middleSegment.displayWidth = this.cellSize;
     this.body.add(this.middleSegment);
 
     // Create Tail
-    this.tailSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3 );
+    this.tailSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sTail', 0 );
     this.tailSegment.setOrigin(0);
     this.tailSegment.displayHeight = this.cellSize;
     this.tailSegment.displayWidth = this.cellSize;
@@ -93,6 +93,8 @@ var Snake = new Phaser.Class({
   faceLeft: function () {
     if (this.direction === UP || this.direction === DOWN) {
       this.head.anims.play('left', true);
+      this.middleSegment.setTexture('sLineAB', 2);
+      this.tailSegment.setTexture('sTail', 2);
       this.heading = LEFT;
     }
   },
@@ -100,20 +102,26 @@ var Snake = new Phaser.Class({
   faceRight: function () {
     if (this.direction === UP || this.direction === DOWN) {
       this.head.anims.play('right', true);
+      this.middleSegment.setTexture('sLineAB', 0);
+      this.tailSegment.setTexture('sTail', 0);
       this.heading = RIGHT;
     }
   },
 
   faceUp: function () {
     if (this.direction === LEFT || this.direction === RIGHT) {
-      this.heading = UP;
       this.head.anims.play('up', true);
+      this.middleSegment.setTexture('sLineAB', 1);
+      this.tailSegment.setTexture('sTail', 1)
+      this.heading = UP;
     }
   },
 
   faceDown: function () {
     if (this.direction === LEFT || this.direction === RIGHT) {
       this.head.anims.play('down', true);
+      this.middleSegment.setTexture('sLineAB', 3);
+      this.tailSegment.setTexture('sTail', 3);
       this.heading = DOWN;
     }
   },
@@ -175,31 +183,124 @@ var Snake = new Phaser.Class({
   },
 
   updateSprites: function () {
-    var bodySegments = this.body.getChildren();
-    var half = Math.ceil(bodySegments.length / 2)
-    var frontHalf = bodySegments.slice(1, half);
-    var backHalf = bodySegments.slice(half);
-    //Update textures of form Middle Segment and Tail Segment
-    this.middleSegment.setTexture('snake1', 4);
-    this.tailSegment.setTexture('snake1', 4);
-    this.body.runChildUpdate;
+    const segments = this.body.getChildren();
+    // skip head which is index0
+    for (let i= 1; i < segments.length - 1; i++) {
+      const current = segments[i];
+      const previous = segments[i - 1];
+      const next = segments[i + 1];
 
-    for (let i = 0; i++; i >= this.body.length) {
-      console.log(this.body[i])
-    }
-    frontHalf.forEach((part) => {
-      // console.log(part)
-      part.setTexture('snake1', 4)
-    })
-    backHalf.forEach((part) => {
-      // console.log(part)
-      part.setTexture('snake1', 8)
-    })
+      const fromDir = this.getDirection(previous, current);
+      const toDir = this.getDirection(current, next);
 
-    //Assign split texture to middle
-    if (bodySegments.length >= 4) {
-      bodySegments[half].setTexture('snake1', 6);
+      // Update sprite based on directions
+      if (fromDir !== toDir) {
+        // This is a corner piece
+        const cornerFrame = this.getCornerFrame(fromDir, toDir);
+        current.setTexture('sBendAB', cornerFrame);
+      } else {
+        // This is a straight piece
+        const straightFrame = this.getStraightFrame(fromDir);
+        current.setTexture('sLineAB', straightFrame);
+      }
+
     }
+
+    // Always update tail piece
+    if (segments.length > 1) {
+      const tail = segments[segments.length - 1];
+      const beforeTail = segments[segments.length - 2];
+      const tailDir = this.getDirection(beforeTail, tail);
+      const tailFrame = this.getTailFrame(tailDir);
+      tail.setTexture('sButt', tailFrame);
+    }
+    // var bodySegments = this.body.getChildren();
+    // var half = Math.ceil(bodySegments.length / 2)
+    // var frontHalf = bodySegments.slice(1, half);
+    // var backHalf = bodySegments.slice(half);
+    // //Update textures of form Middle Segment and Tail Segment
+    // this.middleSegment.setTexture('snake1', 4);
+    // this.tailSegment.setTexture('snake1', 4);
+    // this.body.runChildUpdate;
+
+    // for (let i = 0; i++; i >= this.body.length) {
+    //   console.log(this.body[i])
+    // }
+    // frontHalf.forEach((part) => {
+    //   // console.log(part)
+    //   part.setTexture('snake1', 4)
+    // })
+    // backHalf.forEach((part) => {
+    //   // console.log(part)
+    //   part.setTexture('snake1', 8)
+    // })
+
+    // //Assign split texture to middle
+    // if (bodySegments.length >= 4) {
+    //   bodySegments[half].setTexture('snake1', 6);
+    // }
+  },
+
+  getDirection: function(from, to) {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    
+    // Account for screen wrapping
+    const wrappedDX = Math.abs(dx) > this.cellSize * (this.cellXMax / 2) 
+        ? -Math.sign(dx) * (this.cellSize * this.cellXMax - Math.abs(dx))
+        : dx;
+    const wrappedDY = Math.abs(dy) > this.cellSize * (this.cellYMax / 2)
+        ? -Math.sign(dy) * (this.cellSize * this.cellYMax - Math.abs(dy))
+        : dy;
+    
+    if (Math.abs(wrappedDX) > Math.abs(wrappedDY)) {
+        return wrappedDX > 0 ? RIGHT : LEFT;
+    } else {
+        return wrappedDY > 0 ? DOWN : UP;
+    }
+  },
+
+  // Helper function to get corner piece frame number
+  getCornerFrame: function(fromDir, toDir) {
+    // Assuming your spritesheet has corner pieces
+    // You'll need to adjust these frame numbers based on your spritesheet
+    const cornerFrames = {
+        [`${UP}-${RIGHT}`]: 0,    // Up to Right
+        [`${RIGHT}-${UP}`]: 1,    // Right to Up
+        [`${UP}-${LEFT}`]: 2,     // Up to Left
+        [`${LEFT}-${UP}`]: 3,     // Left to Up
+        [`${DOWN}-${RIGHT}`]: 4,  // Down to Right
+        [`${RIGHT}-${DOWN}`]: 5,  // Right to Down
+        [`${DOWN}-${LEFT}`]: 6,  // Down to Left
+        [`${LEFT}-${DOWN}`]: 7   // Left to Down
+    };
+    
+    return cornerFrames[`${fromDir}-${toDir}`] || 4; // Default to straight piece if not found
+  },
+
+  // Helper function to get straight piece frame number
+  getStraightFrame: function(direction) {
+    const striaghtFrames = {
+      [UP]: 1,
+      [DOWN]: 3,
+      [LEFT]: 2,
+      [RIGHT]: 0
+    };
+    // Adjust these frame numbers based on your spritesheet
+    // return (direction === LEFT || direction === RIGHT) ? 4 : 8;
+    return striaghtFrames[direction] || 0;
+  },
+
+  // Helper function to get tail piece frame number
+  getTailFrame: function(direction) {
+    // Adjust these frame numbers based on your spritesheet
+    const tailFrames = {
+        [UP]: 1,
+        [DOWN]: 3,
+        [LEFT]: 0,
+        [RIGHT]: 2
+    };
+    return tailFrames[direction] || 0; // Default to left-facing tail
   },
 
   updateGrid: function (grid) {

@@ -112,6 +112,9 @@ export class Preloader extends Scene
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/SDG_SnakeHead1.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sTail', './sprites/SDG_SnakeButt1.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sLineAB', './sprites/BODY SPLIT SHEET.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sBendAB', './sprites/TURN SPLIT SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.image('food1', '/treat/cookie_chocolate_chip.png')
         this.load.image('food2', '/treat/cupcake.png')
         this.load.image('food3', '/treat/doughnut.png')
