@@ -21,6 +21,7 @@ var Snake = new Phaser.Class({
     this.y = (y * this.cellSize) + this.yAdjustment;
     this.headPosition = new Phaser.Geom.Point(x, y);
     this.physics = scene.physics;
+    this.hasntEaten = true;
 
     // Create head with frame 1 and enable physics
     this.head = scene.physics.add.sprite(
@@ -69,7 +70,7 @@ var Snake = new Phaser.Class({
     scene.physics.add.existing(this.body);
 
     //Create Middle
-    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sLineAB', 0 );
+    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sBodyAB', 0 );
     this.middleSegment.setOrigin(0);
     this.middleSegment.displayHeight = this.cellSize;
     this.middleSegment.displayWidth = this.cellSize;
@@ -93,8 +94,6 @@ var Snake = new Phaser.Class({
   faceLeft: function () {
     if (this.direction === UP || this.direction === DOWN) {
       this.head.anims.play('left', true);
-      this.middleSegment.setTexture('sLineAB', 2);
-      this.tailSegment.setTexture('sTail', 2);
       this.heading = LEFT;
     }
   },
@@ -102,8 +101,6 @@ var Snake = new Phaser.Class({
   faceRight: function () {
     if (this.direction === UP || this.direction === DOWN) {
       this.head.anims.play('right', true);
-      this.middleSegment.setTexture('sLineAB', 0);
-      this.tailSegment.setTexture('sTail', 0);
       this.heading = RIGHT;
     }
   },
@@ -111,8 +108,6 @@ var Snake = new Phaser.Class({
   faceUp: function () {
     if (this.direction === LEFT || this.direction === RIGHT) {
       this.head.anims.play('up', true);
-      this.middleSegment.setTexture('sLineAB', 1);
-      this.tailSegment.setTexture('sTail', 1)
       this.heading = UP;
     }
   },
@@ -120,8 +115,6 @@ var Snake = new Phaser.Class({
   faceDown: function () {
     if (this.direction === LEFT || this.direction === RIGHT) {
       this.head.anims.play('down', true);
-      this.middleSegment.setTexture('sLineAB', 3);
-      this.tailSegment.setTexture('sTail', 3);
       this.heading = DOWN;
     }
   },
@@ -156,6 +149,8 @@ var Snake = new Phaser.Class({
       this.tailPosition
     );
 
+    this.rotateSegments();
+
     //  Check to see if any of the body pieces have the same x/y as the head. If they do, the head ran into the body
     var hitBody = Phaser.Actions.GetFirst(this.body.getChildren(), { x: this.head.x, y: this.head.y }, 1);
     if (hitBody) {
@@ -171,7 +166,11 @@ var Snake = new Phaser.Class({
   },
 
   grow: function () {
-    this.updateSprites();
+    this.hasntEaten = false;
+    this.body.runChildUpdate;
+    this.updateSegmentTextures();
+    this.rotateSegments();
+    
     var newPart = this.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sTail', 3 );
     newPart.setOrigin(0);
     newPart.displayHeight = this.cellSize;
@@ -181,88 +180,83 @@ var Snake = new Phaser.Class({
     this.body.add(newPart);
   },
 
-  updateSprites: function () {
+  updateSegmentTextures: function () {
     const segments = this.body.getChildren();
     var half = Math.ceil(segments.length / 2)
     var frontHalf = segments.slice(1, half);
-    var backHalf = segments.slice(half);
-    //Maybe this func is where we assign the body segments the texture and the frame is assigned here for when the snake initially grows
-    //maybe a different update sprites happens when moving, cycling through the body segments' frames
-
-    // //Update textures of former Middle Segment and Tail Segment
-    //middle will be Line A
-    this.middleSegment.setTexture('sBodyA', 0);
-    //tail will be Line B/ Need to figure out how to update this one's texture
-    this.tailSegment.setTexture('sBodyB', 0);
-    // console.log(this.tailSegment);
-    this.body.runChildUpdate;
-
-    segments[half].setTexture('sLineAB', 0);
+    var backHalf = segments.slice(half+1);
+    var middle = segments[half];
+    middle.setTexture('sBodyAB', 0);
 
     frontHalf.forEach((part) => {
-      // console.log(part)
       part.setTexture('sBodyA', 0)
     })
     backHalf.forEach((part) => {
-      // console.log(part)
       part.setTexture('sBodyB', 0)
     })
+  },
 
-    // skip head which is index0
-    // for (let i= 1; i < segments.length - 2; i++) {
-    //   const current = segments[i];
-    //   const previous = segments[i - 1];
-    //   const next = segments[i + 1];
+  rotateSegments: function() {
+    const segments = this.body.getChildren();
+    
+    // Skip the head (index 0) and start from first body segment
+    for (let i = 1; i < segments.length - 1; i++) {
+      const current = segments[i];
+      const previous = segments[i - 1];
+      const next = segments[i + 1];
 
-    //   const fromDir = this.getDirection(previous, current);
-    //   const toDir = this.getDirection(current, next);
+      const fromDir = this.getDirection(previous, current);
+      const toDir = this.getDirection(current, next);
 
-    //   // Update sprite based on directions
-    //   if (fromDir !== toDir) {
-    //     // This is a corner piece
-    //     const cornerFrame = this.getCornerFrame(fromDir, toDir);
-    //     current.setTexture('sBendAB', cornerFrame);
-    //   } else {
-    //     // This is a straight piece
-    //     const straightFrame = this.getStraightFrame(fromDir);
-    //     current.setTexture('sLineAB', straightFrame);
-    //   }
-
-    // }
-
-    // Always update tail piece
-    if (segments.length > 3) {
-      const tail = segments[segments.length - 1];
-      const beforeTail = segments[segments.length - 2];
-      const tailDir = this.getDirection(beforeTail, tail);
-      const tailFrame = this.getTailFrame(tailDir);
-      tail.setTexture('sButt', tailFrame);
+      // Check if this is the middle segment that bridges colors A and B
+      const isMiddleSegment = i === Math.floor(segments.length / 2);
+      
+      if (fromDir !== toDir) {
+        // This is a corner piece
+        const cornerFrame = this.getCornerFrame(fromDir, toDir);
+        if (isMiddleSegment) {
+          current.setTexture('sBendAB', cornerFrame);
+        } else if (i < Math.floor(segments.length / 2)) {
+          current.setTexture('sBendA', cornerFrame);
+        } else {
+          current.setTexture('sBendB', cornerFrame);
+        }
+      } else {
+        // This is a straight piece
+        const straightFrame = this.getStraightFrame(fromDir);
+        if (isMiddleSegment) {
+          current.setTexture('sBodyAB', straightFrame);
+        } else if (i < Math.floor(segments.length / 2)) {
+          current.setTexture('sBodyA', straightFrame);
+        } else {
+          current.setTexture('sBodyB', straightFrame);
+        }
+      }
     }
-    // var bodySegments = this.body.getChildren();
-    // var half = Math.ceil(bodySegments.length / 2)
-    // var frontHalf = bodySegments.slice(1, half);
-    // var backHalf = bodySegments.slice(half);
-    // //Update textures of form Middle Segment and Tail Segment
-    // this.middleSegment.setTexture('snake1', 4);
-    // this.tailSegment.setTexture('snake1', 4);
-    // this.body.runChildUpdate;
 
-    // for (let i = 0; i++; i >= this.body.length) {
-    //   console.log(this.body[i])
-    // }
-    // frontHalf.forEach((part) => {
-    //   // console.log(part)
-    //   part.setTexture('snake1', 4)
-    // })
-    // backHalf.forEach((part) => {
-    //   // console.log(part)
-    //   part.setTexture('snake1', 8)
-    // })
+    // Handle the tail separately
+    const tail = segments[segments.length - 1];
+    const beforeTail = segments[segments.length - 2];
+    const tailDir = this.getDirection(beforeTail, tail);
+    const tailFrame = this.getTailFrame(tailDir);
+    tail.setTexture('sTail', tailFrame);
+  },
 
-    // //Assign split texture to middle
-    // if (bodySegments.length >= 4) {
-    //   bodySegments[half].setTexture('snake1', 6);
-    // }
+  // Update corner frame calculations for more precise rotations
+  getCornerFrame: function(fromDir, toDir) {
+    const cornerMap = {
+      [`${UP}-${RIGHT}`]: 7,    // Up to Right
+      [`${RIGHT}-${UP}`]: 6,    // Right to Up
+      [`${RIGHT}-${DOWN}`]: 2,  // Right to Down
+      [`${DOWN}-${RIGHT}`]: 3,  // Down to Right
+      [`${DOWN}-${LEFT}`]: 1,   // Down to Left
+      [`${LEFT}-${DOWN}`]: 0,   // Left to Down
+      [`${LEFT}-${UP}`]: 4,     // Left to Up
+      [`${UP}-${LEFT}`]: 5      // Up to Left
+    };
+    
+    const key = `${fromDir}-${toDir}`;
+    return cornerMap[key] ?? 0; // Default to first frame if combination not found
   },
 
   getDirection: function(from, to) {
@@ -284,31 +278,13 @@ var Snake = new Phaser.Class({
     }
   },
 
-  // Helper function to get corner piece frame number
-  getCornerFrame: function(fromDir, toDir) {
-    // Assuming your spritesheet has corner pieces
-    // You'll need to adjust these frame numbers based on your spritesheet
-    const cornerFrames = {
-        [`${UP}-${RIGHT}`]: 0,    // Up to Right
-        [`${RIGHT}-${UP}`]: 1,    // Right to Up
-        [`${UP}-${LEFT}`]: 2,     // Up to Left
-        [`${LEFT}-${UP}`]: 3,     // Left to Up
-        [`${DOWN}-${RIGHT}`]: 4,  // Down to Right
-        [`${RIGHT}-${DOWN}`]: 5,  // Right to Down
-        [`${DOWN}-${LEFT}`]: 6,  // Down to Left
-        [`${LEFT}-${DOWN}`]: 7   // Left to Down
-    };
-    
-    return cornerFrames[`${fromDir}-${toDir}`] || 4; // Default to straight piece if not found
-  },
-
   // Helper function to get straight piece frame number
   getStraightFrame: function(direction) {
     const striaghtFrames = {
-      [UP]: 1,
-      [DOWN]: 3,
-      [LEFT]: 2,
-      [RIGHT]: 0
+      [UP]: 3,
+      [DOWN]: 1,
+      [LEFT]: 0,
+      [RIGHT]: 2
     };
     // Adjust these frame numbers based on your spritesheet
     // return (direction === LEFT || direction === RIGHT) ? 4 : 8;
@@ -319,10 +295,10 @@ var Snake = new Phaser.Class({
   getTailFrame: function(direction) {
     // Adjust these frame numbers based on your spritesheet
     const tailFrames = {
-        [UP]: 1,
-        [DOWN]: 3,
-        [LEFT]: 2,
-        [RIGHT]: 0
+        [UP]: 3,
+        [DOWN]: 1,
+        [LEFT]: 0,
+        [RIGHT]: 2
     };
     return tailFrames[direction] || 0; // Default to left-facing tail
   },

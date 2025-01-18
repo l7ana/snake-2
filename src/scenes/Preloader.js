@@ -107,16 +107,16 @@ export class Preloader extends Scene
         this.load.audio('music1', ['music/likea_my_chinese.ogg', 'music/likea_my_chinese.mp3'])
         this.load.audio('music2', ['music/Beijing-Beats---31s_AdobeStock.ogg', 'music/Beijing-Beats---31s_AdobeStock.mp3'])
         this.load.audio('crash', ['sfx/tr707-crash-cymbal-241376.ogg', 'sfx/tr707-crash-cymbal-241376.mp3']);
-        //Add audio files to audioFiles to decode
-        // this.sound.decodeAudio(audioFiles)
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/SDG_SnakeHead1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sTail', './sprites/SDG_SnakeButt1.png', {frameWidth: 64, frameHeight: 64})
-        this.load.spritesheet('sLineAB', './sprites/BODY SPLIT SHEET.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sBodyAB', './sprites/BODY SPLIT SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sBendAB', './sprites/TURN SPLIT SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sBodyA', './sprites/BODY YELLOW SHEET.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sBendA', './sprites/TURN YELLOW SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sBodyB', './sprites/BODY RED SHEET.png', {frameWidth: 64, frameHeight: 64})
+        this.load.spritesheet('sBendB', './sprites/TURN RED SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.image('food1', '/treat/cookie_chocolate_chip.png')
         this.load.image('food2', '/treat/cupcake.png')
         this.load.image('food3', '/treat/doughnut.png')
