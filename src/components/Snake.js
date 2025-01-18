@@ -172,42 +172,66 @@ var Snake = new Phaser.Class({
 
   grow: function () {
     this.updateSprites();
-    var newPart = this.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3 );
+    var newPart = this.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sTail', 3 );
     newPart.setOrigin(0);
     newPart.displayHeight = this.cellSize;
     newPart.displayWidth = this.cellSize;
     newPart.width = this.cellSize;
     newPart.height = this.cellSize;
     this.body.add(newPart);
-    
   },
 
   updateSprites: function () {
     const segments = this.body.getChildren();
+    var half = Math.ceil(segments.length / 2)
+    var frontHalf = segments.slice(1, half);
+    var backHalf = segments.slice(half);
+    //Maybe this func is where we assign the body segments the texture and the frame is assigned here for when the snake initially grows
+    //maybe a different update sprites happens when moving, cycling through the body segments' frames
+
+    // //Update textures of former Middle Segment and Tail Segment
+    //middle will be Line A
+    this.middleSegment.setTexture('sBodyA', 0);
+    //tail will be Line B/ Need to figure out how to update this one's texture
+    this.tailSegment.setTexture('sBodyB', 0);
+    // console.log(this.tailSegment);
+    this.body.runChildUpdate;
+
+    segments[half].setTexture('sLineAB', 0);
+
+    frontHalf.forEach((part) => {
+      // console.log(part)
+      part.setTexture('sBodyA', 0)
+    })
+    backHalf.forEach((part) => {
+      // console.log(part)
+      part.setTexture('sBodyB', 0)
+    })
+
     // skip head which is index0
-    for (let i= 1; i < segments.length - 1; i++) {
-      const current = segments[i];
-      const previous = segments[i - 1];
-      const next = segments[i + 1];
+    // for (let i= 1; i < segments.length - 2; i++) {
+    //   const current = segments[i];
+    //   const previous = segments[i - 1];
+    //   const next = segments[i + 1];
 
-      const fromDir = this.getDirection(previous, current);
-      const toDir = this.getDirection(current, next);
+    //   const fromDir = this.getDirection(previous, current);
+    //   const toDir = this.getDirection(current, next);
 
-      // Update sprite based on directions
-      if (fromDir !== toDir) {
-        // This is a corner piece
-        const cornerFrame = this.getCornerFrame(fromDir, toDir);
-        current.setTexture('sBendAB', cornerFrame);
-      } else {
-        // This is a straight piece
-        const straightFrame = this.getStraightFrame(fromDir);
-        current.setTexture('sLineAB', straightFrame);
-      }
+    //   // Update sprite based on directions
+    //   if (fromDir !== toDir) {
+    //     // This is a corner piece
+    //     const cornerFrame = this.getCornerFrame(fromDir, toDir);
+    //     current.setTexture('sBendAB', cornerFrame);
+    //   } else {
+    //     // This is a straight piece
+    //     const straightFrame = this.getStraightFrame(fromDir);
+    //     current.setTexture('sLineAB', straightFrame);
+    //   }
 
-    }
+    // }
 
     // Always update tail piece
-    if (segments.length > 1) {
+    if (segments.length > 3) {
       const tail = segments[segments.length - 1];
       const beforeTail = segments[segments.length - 2];
       const tailDir = this.getDirection(beforeTail, tail);
@@ -297,8 +321,8 @@ var Snake = new Phaser.Class({
     const tailFrames = {
         [UP]: 1,
         [DOWN]: 3,
-        [LEFT]: 0,
-        [RIGHT]: 2
+        [LEFT]: 2,
+        [RIGHT]: 0
     };
     return tailFrames[direction] || 0; // Default to left-facing tail
   },
