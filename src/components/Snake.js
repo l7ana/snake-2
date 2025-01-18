@@ -32,23 +32,23 @@ var Snake = new Phaser.Class({
 
     this.head.anims.create({
       key: 'right',
-      frames: scene.anims.generateFrameNumbers('sHead', { start: 0, end: 2 }),
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 0, end: 0 }),
       frameRate: 6, repeat: -1
     });
     this.head.anims.create({
       key: 'up',
-      frames: scene.anims.generateFrameNumbers('sHead', { start: 4, end: 6 }),
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 1, end: 1 }),
       frameRate: 6, repeat: -1
     });
     this.head.anims.create({
       key: 'left',
-      frames: scene.anims.generateFrameNumbers('sHead', { start: 8, end: 10 }),
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 2, end: 2 }),
       frameRate: 6,
       repeat: -1
     });
     this.head.anims.create({
       key: 'down',
-      frames: scene.anims.generateFrameNumbers('sHead', { start: 12, end: 14 }),
+      frames: scene.anims.generateFrameNumbers('sHead', { start: 3, end: 3 }),
       frameRate: 6, repeat: -1
     });
 

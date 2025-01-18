@@ -47,7 +47,7 @@ export class Game extends Scene
         this.sound.stopByKey('music1');
         this.sound.removeByKey('music1');
         this.sound.unlock();
-        var music = this.sound.add('music2', {loop: true, volume: 0.5});
+        var music = this.sound.add('music2', {loop: true, volume: 0.05});
         music.play();
 
         this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
