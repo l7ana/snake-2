@@ -1,3 +1,5 @@
+import { isMobile, calculateLayout } from './Helpers';
+
 //  Direction consts
 var UP = 0;
 var DOWN = 1;
@@ -8,8 +10,11 @@ var Snake = new Phaser.Class({
 
   initialize:
 
-  function Snake (scene, x, y, layout)
+  function Snake (scene, x, y)
   {
+    const mobile = isMobile(scene);
+    const layout = calculateLayout(mobile, scene);
+
     this.cellSize = layout.cellSize;
     this.cellXMax = layout.cellXMax;
     this.cellYMax = layout.cellYMax;

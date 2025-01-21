@@ -1,4 +1,5 @@
 import { Game, Scene } from 'phaser';
+import { isMobile, calculateLayout } from '../components/Helpers';
 
 export class Intro1 extends Scene {
     constructor() {
@@ -25,10 +26,14 @@ export class Intro1 extends Scene {
     }
 
     create() {
-        this.isMobile();
+
+
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
+        // this.isMobile();
 
         // Screen dimensions
-        const layout = this.calculateLayout();
+        // const layout = this.calculateLayout();
         
         // Store references to image and text as class properties
         this.storyImage = this.createStoryImage(layout).setAlpha(0);
@@ -68,31 +73,6 @@ export class Intro1 extends Scene {
             align: 'center',
             scale: 0.5
         }).setOrigin(0.5).setAlpha(0).setScale(1);
-    }
-
-    isMobile() {
-        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-        const isTouchDevice = this.sys.game.device.input.touch;
-    
-        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
-    }
-
-    calculateLayout() {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.isMobile();
-        
-        return {
-            gameWidth,
-            gameHeight,
-            centerX: gameWidth / 2,
-            centerY: gameHeight / 2,
-            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
-            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
-            isTouchDevice,
-            scale: isTouchDevice ? 2 : 1
-        };
     }
 
     createBorder({ gameWidth, sceneWidth, sceneHeight }) {
