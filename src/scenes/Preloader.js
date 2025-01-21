@@ -79,14 +79,10 @@ export class Preloader extends Scene
         this.load.image('four', mobile ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'scenes/04_OnFloor_890x593_@2x.jpg');
         this.load.image('five', mobile ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'scenes/05_EndScreen_890x593_@2x.jpg');
         
-        this.load.audio('glass3', ['sfx/glass_03.ogg', 'sfx/glass_03.mp3'])
-        this.load.audio('glass2', ['sfx/glass_02.ogg', 'sfx/glass_02.mp3'])
         this.load.audio('bookflip', ['sfx/book_flip.1.ogg', 'sfx/book_flip.1.mp3'])
-        this.load.audio('button1', ['sfx/button press 1.ogg', 'sfx/button press 1.mp3'])
-        this.load.audio('button2', ['sfx/button press 2.ogg', 'sfx/button press 2.mp3'])
         this.load.audio('music1', ['music/likea_my_chinese.ogg', 'music/likea_my_chinese.mp3'])
-        this.load.audio('music2', ['music/Beijing-Beats---31s_AdobeStock.ogg', 'music/Beijing-Beats---31s_AdobeStock.mp3'])
-        this.load.audio('crash', ['sfx/tr707-crash-cymbal-241376.ogg', 'sfx/tr707-crash-cymbal-241376.mp3']);
+        this.load.audio('music2', ['music/Beijing-Beats-31s_AdobeStock.ogg', 'music/Beijing-Beats-31s_AdobeStock.mp3'])
+        this.load.audio('crash', ['sfx/tr707-crash-cymbal.ogg', 'sfx/tr707-crash-cymbal.mp3']);
 
         this.load.spritesheet('snake1','./sprites/SDG_snake_1.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sHead', './sprites/SDG_SnakeHead1.png', {frameWidth: 64, frameHeight: 64})

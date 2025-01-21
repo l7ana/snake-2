@@ -56,8 +56,8 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
         this.sound.unlock();
-        this.sound.play('music1', {loop: true, volume: 0.05})
-        this.sound.setVolume(0.5)
+        this.sound.play('music1', {loop: true, volume: 0.3})
+        this.sound.setVolume(0.3)
         console.log(this.sound)
 
         // this.muteButton = this.add.text(layout.gameWidth-100, 50, 'Mute', {
@@ -86,7 +86,7 @@ export class Intro1 extends Scene {
 
     updateContent() {
         const content = this.storyContent[this.currentContentIndex];
-        this.sound.play('bookflip', {volume: .5});
+        this.sound.play('bookflip', {volume: 0.5});
         
         // Fade out current content
         this.tweens.add({
