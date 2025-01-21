@@ -92,49 +92,41 @@ var Snake = new Phaser.Class({
   },
 
   faceLeft: function () {
-    if (this.direction === UP || this.direction === DOWN) {
-      this.head.anims.play('left', true);
-      this.heading = LEFT;
-    }
+    if (this.direction === UP || this.direction === DOWN) { this.heading = LEFT; }
   },
 
   faceRight: function () {
-    if (this.direction === UP || this.direction === DOWN) {
-      this.head.anims.play('right', true);
-      this.heading = RIGHT;
-    }
+    if (this.direction === UP || this.direction === DOWN) { this.heading = RIGHT; }
   },
 
   faceUp: function () {
-    if (this.direction === LEFT || this.direction === RIGHT) {
-      this.head.anims.play('up', true);
-      this.heading = UP;
-    }
+    if (this.direction === LEFT || this.direction === RIGHT) { this.heading = UP; }
   },
 
   faceDown: function () {
-    if (this.direction === LEFT || this.direction === RIGHT) {
-      this.head.anims.play('down', true);
-      this.heading = DOWN;
-    }
+    if (this.direction === LEFT || this.direction === RIGHT) { this.heading = DOWN; }
   },
 
   move: function (time) {
     switch (this.heading) {
       case LEFT:
         this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, this.cellXMax + 1);
+        this.head.anims.play('left', true);
         break;
 
       case RIGHT:
         this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax + 1);
+        this.head.anims.play('right', true);
         break;
 
       case UP:
         this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, this.cellYMax);
+        this.head.anims.play('up', true);
         break;
 
       case DOWN:
         this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.cellYMax);
+        this.head.anims.play('down', true);
         break;
       }
 
