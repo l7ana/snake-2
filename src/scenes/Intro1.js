@@ -132,8 +132,8 @@ export class Intro1 extends Scene {
         const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 100;
-        const fontSize = isTouchDevice ? 26 : 20;
-        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.5;
+        const fontSize = isTouchDevice ? 26 : 18;
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.4;
         
         return this.add.text(textX, textY, this.storyContent[0].text, {
             fontFamily: 'Open Sans',
