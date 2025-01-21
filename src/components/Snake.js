@@ -252,23 +252,42 @@ var Snake = new Phaser.Class({
   },
 
   getDirection: function(from, to) {
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
+    //Will return or pos or neg number
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
     
-    // Account for screen wrapping
-    const wrappedDX = Math.abs(dx) > this.cellSize * (this.cellXMax / 2) 
-        ? -Math.sign(dx) * (this.cellSize * this.cellXMax - Math.abs(dx))
-        : dx;
-    const wrappedDY = Math.abs(dy) > this.cellSize * (this.cellYMax / 2)
-        ? -Math.sign(dy) * (this.cellSize * this.cellYMax - Math.abs(dy))
-        : dy;
-    
-    if (Math.abs(wrappedDX) > Math.abs(wrappedDY)) {
-        return wrappedDX > 0 ? RIGHT : LEFT;
-    } else {
-        return wrappedDY > 0 ? DOWN : UP;
+    // Handle horizontal wrapping
+    //if dx is larger than the middle x coordinate, then make dx negative or positive depending on whether it is greater than 0
+    if (Math.abs(dx) > this.cellSize * (this.cellXMax / 2)) {
+      // If wrapping right to left
+      if (dx > 0) {
+        dx = -(this.cellSize * (this.cellXMax + 1) - dx);
+      }
+      // If wrapping left to right
+      else {
+        dx = this.cellSize * (this.cellXMax + 1) + dx;
+      }
     }
-  },
+    
+    // Handle vertical wrapping
+    if (Math.abs(dy) > this.cellSize * (this.cellYMax / 2)) {
+      // If wrapping bottom to top
+      if (dy > 0) {
+        dy = -(this.cellSize * this.cellYMax - dy);
+      }
+      // If wrapping top to bottom
+      else {
+        dy = this.cellSize * this.cellYMax + dy;
+      }
+    }
+    
+    // Determine primary direction based on largest absolute difference
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return dx > 0 ? RIGHT : LEFT;
+    } else {
+      return dy > 0 ? DOWN : UP;
+    }
+},
 
   // Helper function to get straight piece frame number
   getStraightFrame: function(direction) {

@@ -152,7 +152,7 @@ export class Game extends Scene
             }
         }
         if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
-            this.sound.play('crash', {loop: false})
+            this.sound.play('crash', {loop: false, volume: 0.05})
             this.scene.start('GameOver');
         }
 
