@@ -87,11 +87,13 @@ export class Intro1 extends Scene {
     updateContent() {
         const content = this.storyContent[this.currentContentIndex];
         this.sound.play('bookflip', {volume: 0.5});
+        const fx = this.storyImage.preFX.addWipe(0.5, 0, 0);
         
         // Fade out current content
         this.tweens.add({
-            targets: [this.storyImage, this.storyText],
+            targets: [this.storyText, fx],
             alpha: 0,
+            progress: 1,
             duration: 500,
             onComplete: () => {
                 // Update image
@@ -102,8 +104,9 @@ export class Intro1 extends Scene {
                 
                 // Fade in new content
                 this.tweens.add({
-                    targets: [this.storyImage, this.storyText],
+                    targets: [this.storyImage, this.storyText, fx],
                     alpha: 1,
+                    progress: 0,
                     duration: 500
                 });
             }
@@ -190,15 +193,6 @@ export class Intro1 extends Scene {
         } else {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
         }
-
-        // if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
-        //     next.setScale(1), prev.setScale(1), startButton.setScale(1);
-        // }
-        // this.muteButton.on('pointerup', () => {
-        //     this.sound.setMute(true);
-        //     console.log(this.sound)
-        //     this.muteButton.setText('unmute')
-        // })
 
         prev.setVisible(false);
         startButton.setVisible(false);
