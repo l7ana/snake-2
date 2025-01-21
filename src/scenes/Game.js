@@ -83,7 +83,7 @@ export class Game extends Scene
             fontSize: mobile ? 36 : 30,
             color: '#FF593F',
             align: 'RIGHT'
-        }).setOrigin(mobile ? 1 : 0);
+        }).setOrigin(mobile ? 1 : 0).setLetterSpacing(1);
         
     }
 

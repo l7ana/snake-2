@@ -66,12 +66,17 @@ export class Intro1 extends Scene {
         //     fontSize: 16
         // });
 
+        const wordWrapWidth = mobile ? layout.gameWidth * 0.5: layout.gameWidth;
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
             fontSize: 50,
             color: '#FF593F',
             align: 'center',
-            scale: 0.5
+            scale: 0.5,
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
         }).setOrigin(0.5).setAlpha(0).setScale(1).setLetterSpacing(2);
     }
 
@@ -133,7 +138,7 @@ export class Intro1 extends Scene {
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 100;
         const fontSize = isTouchDevice ? 26 : 18;
-        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.4;
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.8: gameWidth * 0.4;
         
         return this.add.text(textX, textY, this.storyContent[0].text, {
             fontFamily: 'Open Sans',
