@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { isMobile, calculateLayout } from '../components/Helpers';
 
 export class Preloader extends Scene
 {
@@ -9,8 +10,8 @@ export class Preloader extends Scene
 
     init ()
     {
-        const isTouchDevice = this.isMobile();
-        const layout = this.calculateLayout();
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
 
         this.cursors = this.input.keyboard.createCursorKeys();
         //  We loaded this image in our Boot Scene, so we can display it here
@@ -58,46 +59,25 @@ export class Preloader extends Scene
         }, this);
     }
 
-    isMobile() {
-        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-    
-        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
-    }
-    calculateLayout() {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.isMobile();
-        
-        return {
-            gameWidth,
-            gameHeight,
-            centerX: gameWidth / 2,
-            centerY: gameHeight / 2,
-            sceneWidth: gameWidth * 0.75,
-            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
-            isTouchDevice
-        };
-    }
-
     preload ()
     {
-        const isTouchDevice = this.isMobile();
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
         if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ) {
-            this.load.image('one', isTouchDevice ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
-            this.load.image('two', isTouchDevice ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
-            this.load.image('three', isTouchDevice ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
-            this.load.image('four', isTouchDevice ? 'assets/scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
-            this.load.image('five', isTouchDevice ? 'assets/scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
+            this.load.image('one', mobile ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
+            this.load.image('two', mobile ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
+            this.load.image('three', mobile ? 'assets/scenes/03_Wallhooks_382x282_@2x.jpg' : 'assets/scenes/03_Wallhooks_890x593_@2x.jpg');
+            this.load.image('four', mobile ? 'assets/scenes/04_OnFloor_382x382_@2x.jpg' : 'assets/scenes/04_OnFloor_890x593_@2x.jpg');
+            this.load.image('five', mobile ? 'assets/scenes/05_EndScreen_382x382_@2x.jpg' : 'assets/scenes/05_EndScreen_890x593_@2x.jpg');
         } 
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.image('one', isTouchDevice ? 'scenes/01_Window_382x382_@2x.jpg' : 'scenes/01_Window_890x593_@2x.jpg');
-        this.load.image('two', isTouchDevice ? 'scenes/02_Jars_382x283_@2x.jpg' : 'scenes/02_Jars_890x593_@2x.jpg');
-        this.load.image('three', isTouchDevice ? 'scenes/03_Wallhooks_382x282_@2x.jpg' : 'scenes/03_Wallhooks_890x593_@2x.jpg');
-        this.load.image('four', isTouchDevice ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'scenes/04_OnFloor_890x593_@2x.jpg');
-        this.load.image('five', isTouchDevice ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'scenes/05_EndScreen_890x593_@2x.jpg');
+        this.load.image('one', mobile ? 'scenes/01_Window_382x382_@2x.jpg' : 'scenes/01_Window_890x593_@2x.jpg');
+        this.load.image('two', mobile ? 'scenes/02_Jars_382x283_@2x.jpg' : 'scenes/02_Jars_890x593_@2x.jpg');
+        this.load.image('three', mobile ? 'scenes/03_Wallhooks_382x282_@2x.jpg' : 'scenes/03_Wallhooks_890x593_@2x.jpg');
+        this.load.image('four', mobile ? 'scenes/04_OnFloor_382x382_@2x.jpg' : 'scenes/04_OnFloor_890x593_@2x.jpg');
+        this.load.image('five', mobile ? 'scenes/05_EndScreen_382x382_@2x.jpg' : 'scenes/05_EndScreen_890x593_@2x.jpg');
         
         this.load.audio('glass3', ['sfx/glass_03.ogg', 'sfx/glass_03.mp3'])
         this.load.audio('glass2', ['sfx/glass_02.ogg', 'sfx/glass_02.mp3'])
