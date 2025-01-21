@@ -52,6 +52,14 @@ export class Intro1 extends Scene {
         this.input = this.setupInput(layout);
         this.sound.unlock();
         this.sound.play('music1', {loop: true, volume: 0.05})
+        this.sound.setVolume(0.5)
+        console.log(this.sound)
+
+        // this.muteButton = this.add.text(layout.gameWidth-100, 50, 'Mute', {
+        //     fontFamily: 'Open Sans',
+        //     color: '#DECEB7',
+        //     fontSize: 16
+        // });
 
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
@@ -206,6 +214,11 @@ export class Intro1 extends Scene {
         // if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
         //     next.setScale(1), prev.setScale(1), startButton.setScale(1);
         // }
+        // this.muteButton.on('pointerup', () => {
+        //     this.sound.setMute(true);
+        //     console.log(this.sound)
+        //     this.muteButton.setText('unmute')
+        // })
 
         prev.setVisible(false);
         startButton.setVisible(false);
