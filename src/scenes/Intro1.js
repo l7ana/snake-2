@@ -72,7 +72,7 @@ export class Intro1 extends Scene {
             color: '#FF593F',
             align: 'center',
             scale: 0.5
-        }).setOrigin(0.5).setAlpha(0).setScale(1);
+        }).setOrigin(0.5).setAlpha(0).setScale(1).setLetterSpacing(2);
     }
 
     createBorder({ gameWidth, sceneWidth, sceneHeight }) {
