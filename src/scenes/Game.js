@@ -51,8 +51,9 @@ export class Game extends Scene
         this.sound.unlock();
         var music = this.sound.add('music2', {loop: true, volume: 0.3});
         music.play();
-
-        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
+        
+        this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0x53BCA3, 0.5, 0x53BCA3, 0.25).setAltFillStyle(0x53BCA3).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8);
         // Add debug logging
