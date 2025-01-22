@@ -108,6 +108,10 @@ export class Preloader extends Scene
         this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
         this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
 
+
+        this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
+        this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
+
         this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
         this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
         this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')

@@ -49,7 +49,7 @@ export class Game extends Scene
         this.sound.stopByKey('music1');
         this.sound.removeByKey('music1');
         this.sound.unlock();
-        var music = this.sound.add('music2', {loop: true, volume: 0.3});
+        var music = this.sound.add('music2', {loop: true, volume: 0.5});
         music.play();
         
         this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
@@ -61,6 +61,18 @@ export class Game extends Scene
         // console.log('Snake head physics body:', snake.head.body);
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food, layout), null, this );
         this.createBorder(layout);
+
+        const muteButton = this.add.image( mobile ? 64+45 : layout.gameWidth*0.1 + 64, mobile ? gameHeight-64 : 55 + 32, 'sound');
+        muteButton.setInteractive().setScale( mobile ? 0.75 : 0.5 );
+        muteButton.on('pointerup', () => {
+            if (this.sound.mute) {
+                this.sound.mute = false;
+                muteButton.setTexture('sound')
+            } else {
+                this.sound.mute = true;
+                muteButton.setTexture('mute')
+            }
+        })
         
         const textX = ((gameWidth - layout.sceneWidth) / 2) - 5;
         const textY = mobile ? layout.centerY + (layout.sceneHeight/2) - 100 : gameHeight - 100;
