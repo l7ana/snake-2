@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import Snake from '../components/Snake.js';
 import Food from '../components/Food.js';
+import { isMobile, calculateLayout } from '../components/Helpers';
 
 var snake;
 var food;
@@ -26,15 +27,16 @@ export class Game extends Scene
         const gameWidth = this.cameras.main.width;
         const gameHeight = this.cameras.main.height;
         const gameHalfWidth = gameWidth / 2;
-        const isTouchDevice = this.isMobile();
+
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
 
         // Screen dimensions
-        const layout = this.calculateLayout();
         cellSize = layout.cellSize;
         cellXMax = layout.cellXMax;
         cellYMax = layout.cellYMax;
 
-        if (!isTouchDevice) {
+        if (!mobile) {
             this.cursors = this.input.keyboard.createCursorKeys();
         } else {
             this.buildMobileControls(layout);
@@ -47,23 +49,36 @@ export class Game extends Scene
         this.sound.stopByKey('music1');
         this.sound.removeByKey('music1');
         this.sound.unlock();
-        var music = this.sound.add('music2', {loop: true, volume: 0.05});
+        var music = this.sound.add('music2', {loop: true, volume: 0.5});
         music.play();
-
-        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE0DDCE, 1, 0xAFAC98, 0.5).setAltFillStyle(0xAFAC98).setOutlineStyle();
+        
+        this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0x53BCA3, 0.5, 0x53BCA3, 0.25).setAltFillStyle(0x53BCA3).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
-        snake = new Snake(this, 8, 8, layout);
+        snake = new Snake(this, 8, 8);
         // Add debug logging
         // console.log('Food physics body:', food.body);
         // console.log('Snake head physics body:', snake.head.body);
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food, layout), null, this );
         this.createBorder(layout);
+
+        const muteButton = this.add.image( mobile ? 64+45 : layout.gameWidth*0.1 + 64, mobile ? gameHeight-64 : 55 + 32, 'sound');
+        muteButton.setInteractive().setScale( mobile ? 0.75 : 0.5 );
+        muteButton.on('pointerup', () => {
+            if (this.sound.mute) {
+                this.sound.mute = false;
+                muteButton.setTexture('sound')
+            } else {
+                this.sound.mute = true;
+                muteButton.setTexture('mute')
+            }
+        })
         
         const textX = ((gameWidth - layout.sceneWidth) / 2) - 5;
-        const textY = isTouchDevice ? layout.centerY + (layout.sceneHeight/2) - 100 : gameHeight - 100;
-        const fontSize = isTouchDevice ? 26 : 20;
-        const helperText = isTouchDevice ? '' : 'Use the arrow keys to move and eat as much food as you can!';
-        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.4;
+        const textY = mobile ? layout.centerY + (layout.sceneHeight/2) - 100 : gameHeight - 100;
+        const fontSize = mobile ? 26 : 20;
+        const helperText = mobile ? '' : 'Use the arrow keys to move and eat as much food as you can!';
+        const wordWrapWidth = mobile ? gameWidth * 0.9: gameWidth * 0.4;
         this.add.text(textX, textY, helperText, {
             fontFamily: 'Open Sans',
             fontSize: fontSize,
@@ -78,50 +93,17 @@ export class Game extends Scene
 
         this.scoreText = this.add.text(layout.sceneWidth, textY - 100, 'SCORE: ' + food.total, {
             fontFamily: 'Price Check',
-            fontSize: isTouchDevice ? 36 : 30,
+            fontSize: mobile ? 36 : 30,
             color: '#FF593F',
             align: 'RIGHT'
-        }).setOrigin(isTouchDevice ? 1 : 0);
+        }).setOrigin(mobile ? 1 : 0).setLetterSpacing(1);
         
-    }
-
-    isMobile() {
-        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-    
-        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
-    }
-
-    calculateLayout() {
-        const isTouchDevice = this.isMobile();
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const sceneWidth = isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75;
-        const sceneHeight = isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75;
-        
-        return {
-            gameWidth,
-            gameHeight,
-            centerX: gameWidth / 2,
-            centerY: gameHeight / 2,
-            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
-            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
-            sceneHalfY: (sceneHeight / 2) + 50,
-            yPos: 50,
-            isTouchDevice,
-            cellSize: isTouchDevice ? sceneWidth / 10 : sceneWidth / 21,
-            cellXMax: isTouchDevice ? 9 : 20,
-            cellYMax: isTouchDevice ? 9: 14,
-            scale: 1,
-            fontSize: this.isMobile() ? 36 : 20
-        };
     }
 
     createBorder({ gameWidth, sceneWidth, sceneHeight, }) {
         const graphics = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
-        //Consolidate createBorder function here so that the grid and rectangle can both be added to graphics, borrowing the same properties from layout.
-        
+      
         graphics.lineStyle(10, 0x457E7B)
         .strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
@@ -131,7 +113,7 @@ export class Game extends Scene
     // Add new collision handler method
     handleFoodCollision(snakeHead, food, layout) {
         if (snake.speed > 20 && food.total % 5 === 0) {
-            snake.speed -= 5;
+            snake.speed -= layout.isTouchDevice ? 10 : 5;
             console.log(`snake speed is: ${snake.speed}`)
         }
         snake.grow();
@@ -152,7 +134,7 @@ export class Game extends Scene
             }
         }
         if (Phaser.Input.Keyboard.JustDown(this.goNext)) {
-            this.sound.play('crash', {loop: false})
+            this.sound.play('crash', {loop: false, volume: 0.5})
             this.scene.start('GameOver');
         }
 

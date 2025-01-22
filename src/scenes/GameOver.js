@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { isMobile, calculateLayout } from '../components/Helpers';
 
 export class GameOver extends Scene
 {
@@ -9,8 +10,8 @@ export class GameOver extends Scene
 
     create ()
     {
-        this.isMobile();
-        const layout = this.calculateLayout();
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
         
         // Create border
         this.createStoryImage(layout);
@@ -18,11 +19,11 @@ export class GameOver extends Scene
         this.createText(layout);
 
         const firstLineTextY = 120;
-        const secondLineTextY = this.isMobile() ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 150;
-        const thirdLineTextY = this.isMobile() ? layout.centerY - (layout.centerY/2) + 60 : layout.centerY - 60;
+        const secondLineTextY = mobile ? layout.centerY - (layout.sceneHeight/2) + 10 : layout.centerY - 150;
+        const thirdLineTextY = mobile ? layout.centerY - (layout.centerY/2) + 60 : layout.centerY - 60;
 
         this.add.text(layout.centerX, firstLineTextY, 'THANKS FOR PLAYING!', {
-            fontFamily: 'Price Check Wide', fontSize: this.isMobile() ? 30 : 20, color: '#FF593F',
+            fontFamily: 'Price Check Wide', fontSize: mobile ? 30 : 20, color: '#FF593F',
             align: 'center'
         }).setOrigin(0.5).setLetterSpacing(1.5);
 
@@ -33,14 +34,14 @@ export class GameOver extends Scene
             align: 'center',
             lineSpacing: -10,
             wordWrap: { 
-                width: this.isMobile() ? layout.sceneWidth : layout.sceneWidth*.75, 
+                width: mobile ? layout.sceneWidth : layout.sceneWidth*.75, 
                 useAdvancedWrap: true 
             }
         }).setOrigin(0.5).setLetterSpacing(1);
 
 
         this.add.text(layout.centerX, thirdLineTextY, 'FROM ALL OF US AT SAE DESIGN', {
-            fontFamily: 'Open Sans', fontSize: this.isMobile() ? 24 : 18, color: '#DECEB7',
+            fontFamily: 'Open Sans', fontSize: mobile ? 24 : 18, color: '#DECEB7',
             align: 'center'
         }).setOrigin(0.5).setLetterSpacing(3);
 
@@ -48,13 +49,13 @@ export class GameOver extends Scene
         this.sound.removeByKey('music2');
 
         
-        const buttonY = this.isMobile() ? layout.gameHeight - 100 : layout.gameHeight - 90;
-        const replayButtonWidth = this.isMobile() ? 180 : 90;
-        const buttonScale = this.isMobile() ? 1 : 0.6;
-        const buttonHeight = this.isMobile() ? 64 : 32;
-        const shareButtonWidth = this.isMobile() ? 116 : 116;
-        const shareButtonX = this.isMobile() ? layout.sceneWidth + 25 : layout.sceneWidth + shareButtonWidth + 25;
-        const replayButtonX = this.isMobile() ? layout.gameWidth*0.2 + replayButtonWidth + 5 : shareButtonX - replayButtonWidth - 50;
+        const buttonY = mobile ? layout.gameHeight - 100 : layout.gameHeight - 90;
+        const replayButtonWidth = mobile ? 180 : 90;
+        const buttonScale = mobile ? 1 : 0.6;
+        const buttonHeight = mobile ? 64 : 32;
+        const shareButtonWidth = mobile ? 116 : 116;
+        const shareButtonX = mobile ? layout.sceneWidth + 25 : layout.sceneWidth + shareButtonWidth + 25;
+        const replayButtonX = mobile ? layout.gameWidth*0.2 + replayButtonWidth + 5 : shareButtonX - replayButtonWidth - 50;
         const shareButton = this.add.image(shareButtonX, buttonY + 25, 'share', 0).setOrigin(1, 0.5).setScale(buttonScale);
         const replayButton = this.add.image(replayButtonX, buttonY + 25, 'replay', 0, { width: replayButtonWidth }).setOrigin(1, 0.5).setScale(buttonScale);
         console.log(shareButton)
@@ -80,30 +81,6 @@ export class GameOver extends Scene
             document.body.removeChild(dummy);
             alert("Link copied!")
         });
-    }
-
-    isMobile() {
-        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-    
-        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
-    }
-
-    calculateLayout() {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.isMobile();
-        
-        return {
-            gameWidth,
-            gameHeight,
-            centerX: gameWidth / 2,
-            centerY: gameHeight / 2,
-            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
-            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
-            isTouchDevice,
-            scale: isTouchDevice ? 2 : 1
-        };
     }
 
     createBorder({ gameWidth, sceneWidth, sceneHeight }) {

@@ -1,4 +1,5 @@
 import { Game, Scene } from 'phaser';
+import { isMobile, calculateLayout } from '../components/Helpers';
 
 export class Intro1 extends Scene {
     constructor() {
@@ -25,10 +26,12 @@ export class Intro1 extends Scene {
     }
 
     create() {
-        this.isMobile();
 
-        // Screen dimensions
-        const layout = this.calculateLayout();
+
+        const mobile = isMobile(this);
+        const layout = calculateLayout(mobile, this);
+
+        this.sound.mute = false;
         
         // Store references to image and text as class properties
         this.storyImage = this.createStoryImage(layout).setAlpha(0);
@@ -51,40 +54,22 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
         this.sound.unlock();
-        this.sound.play('music1', {loop: true, volume: 0.05})
+        this.sound.play('music1', {loop: true, volume: 0.5})
+        this.sound.setVolume(0.3)
+        console.log(this.sound)
 
+        const wordWrapWidth = mobile ? layout.gameWidth * 0.5: layout.gameWidth;
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
             fontFamily: 'Price Check',
             fontSize: 50,
             color: '#FF593F',
             align: 'center',
-            scale: 0.5
-        }).setOrigin(0.5).setAlpha(0).setScale(1);
-    }
-
-    isMobile() {
-        const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
-        const isTouchDevice = this.sys.game.device.input.touch;
-    
-        return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
-    }
-
-    calculateLayout() {
-        const gameWidth = this.cameras.main.width;
-        const gameHeight = this.cameras.main.height;
-        const isTouchDevice = this.isMobile();
-        
-        return {
-            gameWidth,
-            gameHeight,
-            centerX: gameWidth / 2,
-            centerY: gameHeight / 2,
-            sceneWidth: isTouchDevice ? gameWidth * 0.9 : gameWidth * 0.75,
-            sceneHeight: isTouchDevice ? gameWidth * 0.9 : gameHeight * 0.75,
-            isTouchDevice,
-            scale: isTouchDevice ? 2 : 1
-        };
+            scale: 0.5,
+            wordWrap: { 
+                width: wordWrapWidth, 
+                useAdvancedWrap: true 
+            }
+        }).setOrigin(0.5).setAlpha(0).setScale(1).setLetterSpacing(2);
     }
 
     createBorder({ gameWidth, sceneWidth, sceneHeight }) {
@@ -98,12 +83,14 @@ export class Intro1 extends Scene {
 
     updateContent() {
         const content = this.storyContent[this.currentContentIndex];
-        this.sound.play('bookflip', {volume: .5});
+        this.sound.play('bookflip', {volume: 0.5});
+        const fx = this.storyImage.preFX.addWipe(0.5, 0, 0);
         
         // Fade out current content
         this.tweens.add({
-            targets: [this.storyImage, this.storyText],
+            targets: [this.storyText, fx],
             alpha: 0,
+            progress: 1,
             duration: 500,
             onComplete: () => {
                 // Update image
@@ -114,8 +101,9 @@ export class Intro1 extends Scene {
                 
                 // Fade in new content
                 this.tweens.add({
-                    targets: [this.storyImage, this.storyText],
+                    targets: [this.storyImage, this.storyText, fx],
                     alpha: 1,
+                    progress: 0,
                     duration: 500
                 });
             }
@@ -141,8 +129,8 @@ export class Intro1 extends Scene {
         const { gameWidth, gameHeight, centerY, sceneHeight, sceneWidth, isTouchDevice } = layout;
         const textX = ((gameWidth - sceneWidth) / 2) - 5;
         const textY = isTouchDevice ? centerY + (sceneHeight/2) - 100 : gameHeight - 100;
-        const fontSize = isTouchDevice ? 26 : 20;
-        const wordWrapWidth = isTouchDevice ? gameWidth * 0.9: gameWidth * 0.5;
+        const fontSize = isTouchDevice ? 26 : 18;
+        const wordWrapWidth = isTouchDevice ? gameWidth * 0.8: gameWidth * 0.4;
         
         return this.add.text(textX, textY, this.storyContent[0].text, {
             fontFamily: 'Open Sans',
@@ -196,16 +184,15 @@ export class Intro1 extends Scene {
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
         const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
+        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? 55 + 64 : 55 + 32, 'sound');
 
         if (isTouchDevice) {
             next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
+            muteButton.setScale(0.75)
         } else {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
+            muteButton.setScale(0.5)
         }
-
-        // if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
-        //     next.setScale(1), prev.setScale(1), startButton.setScale(1);
-        // }
 
         prev.setVisible(false);
         startButton.setVisible(false);
@@ -273,6 +260,19 @@ export class Intro1 extends Scene {
             
             this.updateContent();
         });
+
+        muteButton.setInteractive();
+        muteButton.on('pointerup', () => {
+            if (this.sound.mute) {
+                this.sound.mute = false;
+                console.log('hii')
+                muteButton.setTexture('sound')
+            } else {
+                this.sound.mute = true;
+                console.log('hii')
+                muteButton.setTexture('mute')
+            }
+        })
 
         startButton.setInteractive()
         .on('pointerover', function () {

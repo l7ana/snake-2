@@ -1,3 +1,5 @@
+import { isMobile, calculateLayout } from './Helpers';
+
 //  Direction consts
 var UP = 0;
 var DOWN = 1;
@@ -8,8 +10,11 @@ var Snake = new Phaser.Class({
 
   initialize:
 
-  function Snake (scene, x, y, layout)
+  function Snake (scene, x, y)
   {
+    const mobile = isMobile(scene);
+    const layout = calculateLayout(mobile, scene);
+
     this.cellSize = layout.cellSize;
     this.cellXMax = layout.cellXMax;
     this.cellYMax = layout.cellYMax;
@@ -21,6 +26,7 @@ var Snake = new Phaser.Class({
     this.y = (y * this.cellSize) + this.yAdjustment;
     this.headPosition = new Phaser.Geom.Point(x, y);
     this.physics = scene.physics;
+    this.hasntEaten = true;
 
     // Create head with frame 1 and enable physics
     this.head = scene.physics.add.sprite(
@@ -69,14 +75,14 @@ var Snake = new Phaser.Class({
     scene.physics.add.existing(this.body);
 
     //Create Middle
-    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 6 );
+    this.middleSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sBodyAB', 0 );
     this.middleSegment.setOrigin(0);
     this.middleSegment.displayHeight = this.cellSize;
     this.middleSegment.displayWidth = this.cellSize;
     this.body.add(this.middleSegment);
 
     // Create Tail
-    this.tailSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3 );
+    this.tailSegment = scene.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sTail', 0 );
     this.tailSegment.setOrigin(0);
     this.tailSegment.displayHeight = this.cellSize;
     this.tailSegment.displayWidth = this.cellSize;
@@ -91,49 +97,41 @@ var Snake = new Phaser.Class({
   },
 
   faceLeft: function () {
-    if (this.direction === UP || this.direction === DOWN) {
-      this.head.anims.play('left', true);
-      this.heading = LEFT;
-    }
+    if (this.direction === UP || this.direction === DOWN) { this.heading = LEFT; }
   },
 
   faceRight: function () {
-    if (this.direction === UP || this.direction === DOWN) {
-      this.head.anims.play('right', true);
-      this.heading = RIGHT;
-    }
+    if (this.direction === UP || this.direction === DOWN) { this.heading = RIGHT; }
   },
 
   faceUp: function () {
-    if (this.direction === LEFT || this.direction === RIGHT) {
-      this.heading = UP;
-      this.head.anims.play('up', true);
-    }
+    if (this.direction === LEFT || this.direction === RIGHT) { this.heading = UP; }
   },
 
   faceDown: function () {
-    if (this.direction === LEFT || this.direction === RIGHT) {
-      this.head.anims.play('down', true);
-      this.heading = DOWN;
-    }
+    if (this.direction === LEFT || this.direction === RIGHT) { this.heading = DOWN; }
   },
 
   move: function (time) {
     switch (this.heading) {
       case LEFT:
         this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x - 1, 0, this.cellXMax + 1);
+        this.head.anims.play('left', true);
         break;
 
       case RIGHT:
         this.headPosition.x = Phaser.Math.Wrap(this.headPosition.x + 1, 0, this.cellXMax + 1);
+        this.head.anims.play('right', true);
         break;
 
       case UP:
         this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y - 1, 0, this.cellYMax);
+        this.head.anims.play('up', true);
         break;
 
       case DOWN:
         this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.cellYMax);
+        this.head.anims.play('down', true);
         break;
       }
 
@@ -147,6 +145,8 @@ var Snake = new Phaser.Class({
       1, 
       this.tailPosition
     );
+
+    this.rotateSegments();
 
     //  Check to see if any of the body pieces have the same x/y as the head. If they do, the head ran into the body
     var hitBody = Phaser.Actions.GetFirst(this.body.getChildren(), { x: this.head.x, y: this.head.y }, 1);
@@ -163,43 +163,157 @@ var Snake = new Phaser.Class({
   },
 
   grow: function () {
-    this.updateSprites();
-    var newPart = this.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'snake1', 3 );
+    this.hasntEaten = false;
+    this.body.runChildUpdate;
+    this.updateSegmentTextures();
+    this.rotateSegments();
+    
+    var newPart = this.physics.add.sprite( this.tailPosition.x * this.cellSize, this.tailPosition.y * this.cellSize, 'sTail', 3 );
     newPart.setOrigin(0);
     newPart.displayHeight = this.cellSize;
     newPart.displayWidth = this.cellSize;
     newPart.width = this.cellSize;
     newPart.height = this.cellSize;
     this.body.add(newPart);
-    
   },
 
-  updateSprites: function () {
-    var bodySegments = this.body.getChildren();
-    var half = Math.ceil(bodySegments.length / 2)
-    var frontHalf = bodySegments.slice(1, half);
-    var backHalf = bodySegments.slice(half);
-    //Update textures of form Middle Segment and Tail Segment
-    this.middleSegment.setTexture('snake1', 4);
-    this.tailSegment.setTexture('snake1', 4);
-    this.body.runChildUpdate;
+  updateSegmentTextures: function () {
+    const segments = this.body.getChildren();
+    var half = Math.ceil(segments.length / 2)
+    var frontHalf = segments.slice(1, half);
+    var backHalf = segments.slice(half+1);
+    var middle = segments[half];
+    middle.setTexture('sBodyAB', 0);
 
-    for (let i = 0; i++; i >= this.body.length) {
-      console.log(this.body[i])
-    }
     frontHalf.forEach((part) => {
-      // console.log(part)
-      part.setTexture('snake1', 4)
+      part.setTexture('sBodyA', 0)
     })
     backHalf.forEach((part) => {
-      // console.log(part)
-      part.setTexture('snake1', 8)
+      part.setTexture('sBodyB', 0)
     })
+  },
 
-    //Assign split texture to middle
-    if (bodySegments.length >= 4) {
-      bodySegments[half].setTexture('snake1', 6);
+  rotateSegments: function() {
+    const segments = this.body.getChildren();
+    
+    // Skip the head (index 0) and start from first body segment
+    for (let i = 1; i < segments.length - 1; i++) {
+      const current = segments[i];
+      const previous = segments[i - 1];
+      const next = segments[i + 1];
+
+      const fromDir = this.getDirection(previous, current);
+      const toDir = this.getDirection(current, next);
+
+      // Check if this is the middle segment that bridges colors A and B
+      const isMiddleSegment = i === Math.floor(segments.length / 2);
+      
+      if (fromDir !== toDir) {
+        // This is a corner piece
+        const cornerFrame = this.getCornerFrame(fromDir, toDir);
+        if (isMiddleSegment) {
+          current.setTexture('sBendAB', cornerFrame);
+        } else if (i < Math.floor(segments.length / 2)) {
+          current.setTexture('sBendA', cornerFrame);
+        } else {
+          current.setTexture('sBendB', cornerFrame);
+        }
+      } else {
+        // This is a straight piece
+        const straightFrame = this.getStraightFrame(fromDir);
+        if (isMiddleSegment) {
+          current.setTexture('sBodyAB', straightFrame);
+        } else if (i < Math.floor(segments.length / 2)) {
+          current.setTexture('sBodyA', straightFrame);
+        } else {
+          current.setTexture('sBodyB', straightFrame);
+        }
+      }
     }
+
+    // Handle the tail separately
+    const tail = segments[segments.length - 1];
+    const beforeTail = segments[segments.length - 2];
+    const tailDir = this.getDirection(beforeTail, tail);
+    const tailFrame = this.getTailFrame(tailDir);
+    tail.setTexture('sTail', tailFrame);
+  },
+
+  // Update corner frame calculations for more precise rotations
+  getCornerFrame: function(fromDir, toDir) {
+    const cornerMap = {
+      [`${UP}-${RIGHT}`]: 7,    // Up to Right
+      [`${RIGHT}-${UP}`]: 6,    // Right to Up
+      [`${RIGHT}-${DOWN}`]: 2,  // Right to Down
+      [`${DOWN}-${RIGHT}`]: 3,  // Down to Right
+      [`${DOWN}-${LEFT}`]: 1,   // Down to Left
+      [`${LEFT}-${DOWN}`]: 0,   // Left to Down
+      [`${LEFT}-${UP}`]: 4,     // Left to Up
+      [`${UP}-${LEFT}`]: 5      // Up to Left
+    };
+    
+    const key = `${fromDir}-${toDir}`;
+    return cornerMap[key] ?? 0; // Default to first frame if combination not found
+  },
+
+  getDirection: function(from, to) {
+    //Will return or pos or neg number
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    
+    // Handle horizontal wrapping
+    //if dx is larger than the middle x coordinate, then make dx negative or positive depending on whether it is greater than 0
+    if (Math.abs(dx) > this.cellSize * (this.cellXMax / 2)) {
+      // If wrapping right to left
+      if (dx > 0) {
+        dx = -(this.cellSize * (this.cellXMax + 1) - dx);
+      }
+      // If wrapping left to right
+      else {
+        dx = this.cellSize * (this.cellXMax + 1) + dx;
+      }
+    }
+    
+    // Handle vertical wrapping
+    if (Math.abs(dy) > this.cellSize * (this.cellYMax / 2)) {
+      // If wrapping bottom to top
+      if (dy > 0) {
+        dy = -(this.cellSize * this.cellYMax - dy);
+      }
+      // If wrapping top to bottom
+      else {
+        dy = this.cellSize * this.cellYMax + dy;
+      }
+    }
+    
+    // Determine primary direction based on largest absolute difference
+    if (Math.abs(dx) > Math.abs(dy)) {
+      return dx > 0 ? RIGHT : LEFT;
+    } else {
+      return dy > 0 ? DOWN : UP;
+    }
+},
+
+  // Helper function to get straight piece frame number
+  getStraightFrame: function(direction) {
+    const striaghtFrames = {
+      [UP]: 3,
+      [DOWN]: 1,
+      [LEFT]: 0,
+      [RIGHT]: 2
+    };
+    return striaghtFrames[direction] || 0;
+  },
+
+  // Helper function to get tail piece frame number
+  getTailFrame: function(direction) {
+    const tailFrames = {
+        [UP]: 3,
+        [DOWN]: 1,
+        [LEFT]: 0,
+        [RIGHT]: 2
+    };
+    return tailFrames[direction] || 0; // Default to left-facing tail
   },
 
   updateGrid: function (grid) {
