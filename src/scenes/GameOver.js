@@ -87,7 +87,7 @@ export class GameOver extends Scene
         const debug = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
         
-        debug.lineStyle(10, 0x457E7B).strokeRect(borderX, 50, sceneWidth, sceneHeight);
+        debug.lineStyle(10, 0x345F5C).strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
         return debug;
     }

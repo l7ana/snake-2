@@ -53,7 +53,7 @@ export class Game extends Scene
         music.play();
         
         this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
-        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0x53BCA3, 0.5, 0x53BCA3, 0.25).setAltFillStyle(0x53BCA3).setOutlineStyle();
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xD0EDE6, 1, 0xA8DDD0, 1).setAltFillStyle(0xA8DDD0).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8);
         // Add debug logging
@@ -104,7 +104,7 @@ export class Game extends Scene
         const graphics = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
       
-        graphics.lineStyle(10, 0x457E7B)
+        graphics.lineStyle(10, 0x345F5C)
         .strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
         return graphics;
@@ -120,6 +120,7 @@ export class Game extends Scene
         food.eat();
         food.change();
         this.repositionFood(layout);
+        this.sound.play('gong2')
     }
 
     update (time, delta) {

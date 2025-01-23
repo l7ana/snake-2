@@ -81,6 +81,8 @@ export class Preloader extends Scene
         
         this.load.audio('bookflip', ['sfx/book_flip.1.ogg', 'sfx/book_flip.1.mp3'])
         this.load.audio('music1', ['music/likea_my_chinese.ogg', 'music/likea_my_chinese.mp3'])
+        this.load.audio('gong1', 'sfx/gong_01_01.mp3')
+        this.load.audio('gong2', 'sfx/gong_02_02.mp3')
         this.load.audio('music2', ['music/Beijing-Beats-31s_AdobeStock.ogg', 'music/Beijing-Beats-31s_AdobeStock.mp3'])
         this.load.audio('crash', ['sfx/tr707-crash-cymbal.ogg', 'sfx/tr707-crash-cymbal.mp3']);
 
@@ -103,10 +105,10 @@ export class Preloader extends Scene
         this.load.image('food8', '/treat/ice_cream_sandwich_02.png')
 
         //load key buttons
-        this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')
-        this.load.image('right', '/buttons/SDG_LNY2025_Right.svg')
-        this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
-        this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
+        this.load.image('left', '/buttons/SDG_LNY2025_Left.png')
+        this.load.image('right', '/buttons/SDG_LNY2025_Right.png')
+        this.load.image('up', '/buttons/SDG_LNY2025_Up.png')
+        this.load.image('down', '/buttons/SDG_LNY2025_Down.png')
 
 
         this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')

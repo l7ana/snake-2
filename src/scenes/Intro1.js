@@ -76,7 +76,7 @@ export class Intro1 extends Scene {
         const debug = this.add.graphics();
         const borderX = (gameWidth - sceneWidth) / 2;
         
-        debug.lineStyle(10, 0x457E7B).strokeRect(borderX, 50, sceneWidth, sceneHeight);
+        debug.lineStyle(10, 0x345F5C).strokeRect(borderX, 50, sceneWidth, sceneHeight);
             
         return debug;
     }
@@ -197,11 +197,11 @@ export class Intro1 extends Scene {
         prev.setVisible(false);
         startButton.setVisible(false);
 
-        next.setInteractive().setTint(0x128884)
+        next.setInteractive().setTint(0x008884)
         .on('pointerover', function () {
             next.clearTint();
         }).on('pointerout', function () {
-            next.setTint(0x128884);
+            next.setTint(0x008884);
         }).on('pointerup', () => {
             this.currentContentIndex++;
             prev.setVisible(true);
@@ -239,11 +239,11 @@ export class Intro1 extends Scene {
             }
         });
 
-        prev.setInteractive().setTint(0x128884)
+        prev.setInteractive().setTint(0x008884)
         .on('pointerover', function () {
             prev.clearTint();
         }).on('pointerout', function () {
-            prev.setTint(0x128884);
+            prev.setTint(0x008884);
         }).on('pointerup', () => {
             this.currentContentIndex--;
             console.log(this.currentContentIndex)
@@ -278,7 +278,7 @@ export class Intro1 extends Scene {
         .on('pointerover', function () {
             next.clearTint();
         }).on('pointerout', function () {
-            next.setTint(0x128884);
+            next.setTint(0x008884);
         }).on('pointerup', () => {
             // If we've reached the end of the content, move to next scene// If we've reached the end of the content, move to next scene
             this.cameras.main.fadeOut(1000,17, 39, 37, (camera, progress) => {
