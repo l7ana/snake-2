@@ -53,7 +53,7 @@ export class Game extends Scene
         music.play();
         
         this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
-        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xD0EDE6, 1, 0xA8DDD0, 1).setAltFillStyle(0xA8DDD0).setOutlineStyle();
+        this.grid = this.add.grid(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, layout.cellSize, layout.cellSize, 0xE5E5DA, 1, 0xD8D8CA, 1).setAltFillStyle(0xD8D8CA).setOutlineStyle();
         food = new Food(this, 2, 4, layout);
         snake = new Snake(this, 8, 8);
         // Add debug logging
@@ -63,14 +63,16 @@ export class Game extends Scene
         this.createBorder(layout);
 
         const muteButton = this.add.image( mobile ? 64+45 : layout.gameWidth*0.1 + 64, mobile ? gameHeight-64 : 55 + 32, 'sound');
-        muteButton.setInteractive().setScale( mobile ? 0.75 : 0.5 );
+        muteButton.setInteractive().setScale( mobile ? 0.75 : 0.5 ).setAlpha(0.5);
         muteButton.on('pointerup', () => {
             if (this.sound.mute) {
                 this.sound.mute = false;
                 muteButton.setTexture('sound')
+                muteButton.clearTint();
             } else {
                 this.sound.mute = true;
                 muteButton.setTexture('mute')
+                muteButton.setTint(0x008884)
             }
         })
         
@@ -94,7 +96,7 @@ export class Game extends Scene
         this.scoreText = this.add.text(layout.sceneWidth, textY - 100, 'SCORE: ' + food.total, {
             fontFamily: 'Price Check',
             fontSize: mobile ? 36 : 30,
-            color: '#FF593F',
+            color: '#008884',
             align: 'RIGHT'
         }).setOrigin(mobile ? 1 : 0).setLetterSpacing(1);
         

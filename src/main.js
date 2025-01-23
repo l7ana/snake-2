@@ -28,6 +28,7 @@ function isMobile() {
 
 const config = {
     type: Phaser.AUTO,
+    // renderer: Phaser.CANVAS,
     parent: 'game-container',
     mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,

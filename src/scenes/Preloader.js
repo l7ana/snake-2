@@ -95,30 +95,46 @@ export class Preloader extends Scene
         this.load.spritesheet('sBendA', './sprites/TURN YELLOW SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sBodyB', './sprites/BODY RED SHEET.png', {frameWidth: 64, frameHeight: 64})
         this.load.spritesheet('sBendB', './sprites/TURN RED SHEET.png', {frameWidth: 64, frameHeight: 64})
-        this.load.image('food1', '/treat/cookie_chocolate_chip.png')
-        this.load.image('food2', '/treat/cupcake.png')
-        this.load.image('food3', '/treat/doughnut.png')
-        this.load.image('food4', '/treat/ice_cream_bar_01.png')
-        this.load.image('food5', '/treat/ice_cream_sundae_02.png')
-        this.load.image('food6', '/treat/popsicle.png')
-        this.load.image('food7', '/treat/shake.png')
-        this.load.image('food8', '/treat/ice_cream_sandwich_02.png')
+
+        this.load.svg('food1', '/treat/SDG_LNY2025_Watermelon.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food2', '/treat/SDG_LNY2025_Mui2.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food3', '/treat/SDG_LNY2025_Mui1.svg', { scale: mobile ? 0.43 : 0.6 })
+        this.load.svg('food4', '/treat/SDG_LNY2025_Arare1.svg', { scale: mobile ? 0.43 : 0.6 })
+        this.load.svg('food5', '/treat/SDG_LNY2025_Arare2.svg', { scale: mobile ? 0.43 : 0.6 })
+        this.load.svg('food6', '/treat/SDG_LNY2025_Gummy1.svg', { scale: mobile ? 0.43 : 0.6 })
+        this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: mobile ? 0.43 : 0.6 })
+        this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: mobile ? 0.43 : 0.6 })
+
+        // if (mobile) {
+        //     this.treatScale = 0.43;
+        // } else {
+        //     this.treatScale = 0.6;
+        // }
+        
+        // this.load.svg('food1', '/treat/SDG_LNY2025_Watermelon.svg', { scale: this.treatScale })
+        // this.load.svg('food2', '/treat/SDG_LNY2025_Mui2.svg', { scale: this.treatScale })
+        // this.load.svg('food3', '/treat/SDG_LNY2025_Mui1.svg', { scale: this.treatScale })
+        // this.load.svg('food4', '/treat/SDG_LNY2025_Arare1.svg', { scale: this.treatScale })
+        // this.load.svg('food5', '/treat/SDG_LNY2025_Arare2.svg', { scale: this.treatScale })
+        // this.load.svg('food6', '/treat/SDG_LNY2025_Gummy1.svg', { scale: this.treatScale })
+        // this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: this.treatScale })
+        // this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: this.treatScale })
 
         //load key buttons
-        this.load.image('left', '/buttons/SDG_LNY2025_Left.png')
-        this.load.image('right', '/buttons/SDG_LNY2025_Right.png')
-        this.load.image('up', '/buttons/SDG_LNY2025_Up.png')
-        this.load.image('down', '/buttons/SDG_LNY2025_Down.png')
+        this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')
+        this.load.image('right', '/buttons/SDG_LNY2025_Right.svg')
+        this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
+        this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
 
 
         this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
         this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
 
-        this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
-        this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
-        this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')
-        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg')
-        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg')
+        this.load.image('next', '/buttons/SDG_LNY2025_Next.svg')
+        this.load.image('prev', '/buttons/SDG_LNY2025_Prev.svg')
+        this.load.image('start', '/buttons/SDG_LNY2025_Start.svg')
+        this.load.image('replay', '/buttons/SDG_LNY2025_Replay.svg')
+        this.load.image('share', '/buttons/SDG_LNY2025_Share.svg')
     }
 
     create ()

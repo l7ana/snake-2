@@ -26,10 +26,16 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.setOrigin(0);
     this.enableBody = true;
 
+    this.calculatedScale = this.cellSize / this.displayWidth;
+    // this.scale = this.calculatedScale;
+    // this.setScale(this.calculatedScale);
+
     this.width = this.cellSize;
     this.height = this.cellSize;
-    this.displayHeight = this.cellSize;
-    this.displayWidth = this.cellSize;
+    console.log(this.calculatedScale)
+    console.log(this)
+    // this.displayHeight = this.cellSize;
+    // this.displayWidth = this.cellSize;
     
     this.total = 0;
 

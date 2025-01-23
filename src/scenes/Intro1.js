@@ -56,7 +56,6 @@ export class Intro1 extends Scene {
         this.sound.unlock();
         this.sound.play('music1', {loop: true, volume: 0.5})
         this.sound.setVolume(0.3)
-        console.log(this.sound)
 
         const wordWrapWidth = mobile ? layout.gameWidth * 0.5: layout.gameWidth;
         this.gameText = this.add.text(layout.centerX, layout.isTouchDevice ? (layout.gameHeight*0.15) : 50 + (layout.gameHeight*0.15), 'CLICK START GAME TO BEGIN', {
@@ -184,7 +183,7 @@ export class Intro1 extends Scene {
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
         const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
-        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? 55 + 64 : 55 + 32, 'sound');
+        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5);
 
         if (isTouchDevice) {
             next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
@@ -264,6 +263,7 @@ export class Intro1 extends Scene {
         muteButton.setInteractive();
         muteButton.on('pointerup', () => {
             if (this.sound.mute) {
+                muteButton.clearTint();
                 this.sound.mute = false;
                 console.log('hii')
                 muteButton.setTexture('sound')
@@ -271,6 +271,7 @@ export class Intro1 extends Scene {
                 this.sound.mute = true;
                 console.log('hii')
                 muteButton.setTexture('mute')
+                muteButton.setTint(0x008884)
             }
         })
 

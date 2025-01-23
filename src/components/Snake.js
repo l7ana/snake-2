@@ -12,8 +12,8 @@ var Snake = new Phaser.Class({
 
   function Snake (scene, x, y)
   {
-    const mobile = isMobile(scene);
-    const layout = calculateLayout(mobile, scene);
+    this.mobile = isMobile(scene);
+    const layout = calculateLayout(this.mobile, scene);
 
     this.cellSize = layout.cellSize;
     this.cellXMax = layout.cellXMax;
@@ -130,7 +130,7 @@ var Snake = new Phaser.Class({
         break;
 
       case DOWN:
-        this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.cellYMax);
+        this.headPosition.y = Phaser.Math.Wrap(this.headPosition.y + 1, 0, this.mobile ? this.cellYMax + 1 : this.cellYMax);
         this.head.anims.play('down', true);
         break;
       }
