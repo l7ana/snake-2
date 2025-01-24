@@ -136,6 +136,30 @@ h2 {
     }
   }
 
+    h2 {
+        font-family: 'PriceCheck';
+    }
+
+    .container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .cards-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 20px;
+    }
+
+    a.card {
+        text-decoration: none;
+        width: 300px;
+    }
+
+    .card-image {
+        width: 300px;
+    }  
+
   /* @media only screen and (min-width: 1040px) {
     #game-container {
         width: 80%;
