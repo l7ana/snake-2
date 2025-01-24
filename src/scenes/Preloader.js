@@ -98,27 +98,12 @@ export class Preloader extends Scene
 
         this.load.svg('food1', '/treat/SDG_LNY2025_Watermelon.svg', { scale: mobile ? 1 : 0.6 })
         this.load.svg('food2', '/treat/SDG_LNY2025_Mui2.svg', { scale: mobile ? 1 : 0.6 })
-        this.load.svg('food3', '/treat/SDG_LNY2025_Mui1.svg', { scale: mobile ? 0.43 : 0.6 })
-        this.load.svg('food4', '/treat/SDG_LNY2025_Arare1.svg', { scale: mobile ? 0.43 : 0.6 })
-        this.load.svg('food5', '/treat/SDG_LNY2025_Arare2.svg', { scale: mobile ? 0.43 : 0.6 })
-        this.load.svg('food6', '/treat/SDG_LNY2025_Gummy1.svg', { scale: mobile ? 0.43 : 0.6 })
-        this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: mobile ? 0.43 : 0.6 })
-        this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: mobile ? 0.43 : 0.6 })
-
-        // if (mobile) {
-        //     this.treatScale = 0.43;
-        // } else {
-        //     this.treatScale = 0.6;
-        // }
-        
-        // this.load.svg('food1', '/treat/SDG_LNY2025_Watermelon.svg', { scale: this.treatScale })
-        // this.load.svg('food2', '/treat/SDG_LNY2025_Mui2.svg', { scale: this.treatScale })
-        // this.load.svg('food3', '/treat/SDG_LNY2025_Mui1.svg', { scale: this.treatScale })
-        // this.load.svg('food4', '/treat/SDG_LNY2025_Arare1.svg', { scale: this.treatScale })
-        // this.load.svg('food5', '/treat/SDG_LNY2025_Arare2.svg', { scale: this.treatScale })
-        // this.load.svg('food6', '/treat/SDG_LNY2025_Gummy1.svg', { scale: this.treatScale })
-        // this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: this.treatScale })
-        // this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: this.treatScale })
+        this.load.svg('food3', '/treat/SDG_LNY2025_Mui1.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food4', '/treat/SDG_LNY2025_Arare1.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food5', '/treat/SDG_LNY2025_Arare2.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food6', '/treat/SDG_LNY2025_Gummy1.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: mobile ? 1 : 0.6 })
+        this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: mobile ? 1 : 0.6 })
 
         //load key buttons
         this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')

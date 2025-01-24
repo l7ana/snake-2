@@ -28,13 +28,16 @@ function isMobile() {
 
 const config = {
     type: Phaser.AUTO,
-    // renderer: Phaser.CANVAS,
+    // type: Phaser.CANVAS,
     parent: 'game-container',
     mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: width,
     height: height,
     backgroundColor: '#112725',
+    pixelArt: false,
+    roundPixels: false,
+    mipmapFilter: "LINEAR_MIPMAP_LINEAR",
     scene: [
         Boot,
         Preloader,
