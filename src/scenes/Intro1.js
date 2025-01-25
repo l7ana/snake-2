@@ -186,10 +186,10 @@ export class Intro1 extends Scene {
         
         const startButtonWidth = isSpecialDevice ? 90 : isTouchDevice ? 180 : 60;
         const startButtonX = isSpecialDevice ? gameWidth - startButtonWidth*.5 :
-            isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
+            isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*2 + 15;
         const startButtonTween = isSpecialDevice && isTouchDevice ? 1.3 :
             isSpecialDevice ? 1.05 : 
-            isTouchDevice ? 0.85 : 0.65;
+            isTouchDevice ? 0.85 : 0.6;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
@@ -214,7 +214,7 @@ export class Intro1 extends Scene {
             if (this.currentContentIndex >= this.storyContent.length - 1) {
                 this.updateContent();
                 next.setVisible(false);
-                prev.setX(isSpecialDevice && isTouchDevice ? prevX - startButtonWidth*1.5 + 10 : prevX - startButtonWidth*.75 + 10)
+                prev.setX(isSpecialDevice && isTouchDevice ? prevX - startButtonWidth*1.5 + 10 : prevX - startButtonWidth + 10)
 
                 startButton.setVisible(true);
                 this.gameText.setVisible(true);
