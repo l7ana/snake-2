@@ -27,7 +27,6 @@ export class Intro1 extends Scene {
 
     create() {
 
-
         const mobile = isMobile(this);
         const layout = calculateLayout(mobile, this);
 
@@ -169,33 +168,43 @@ export class Intro1 extends Scene {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
 
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
         const { gameHeight, sceneWidth, isTouchDevice } = layout;
+        const isSpecialDevice = isSafari || isChrome && isMacOS;
+
         const buttonWidth = isTouchDevice ? 86 : 43;
-        const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90;
+        const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90 ;
+        const buttonScale = isSpecialDevice ? 1 : 
+            isTouchDevice ? 0.75 : 0.5;
+        const startButtonScale = isSpecialDevice ? 1 : 
+            isTouchDevice ? 1 : 0.6;
 
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
         const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
+        const startButtonX = isSpecialDevice ? sceneWidth + sceneWidth*0.05 :
+            isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
         const startButtonTween = isTouchDevice ? 1.05 : 0.65;
         
-        const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
-        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
-        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
-        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5);
+        const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
+        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5).setScale(buttonScale);
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0).setScale(startButtonScale);
 
-        if (isTouchDevice) {
-            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
-            muteButton.setScale(0.75)
-        } else {
-            next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
-            muteButton.setScale(0.5)
+        //Troubleshooting special devices
+        if (isSpecialDevice) {
+            next.setDisplaySize(100, 50)
+            startButton.setDisplaySize(180, 64).setAlpha(1).setScale(0.6)
+            startButton.width = 180;
+            startButton.height = 64;
+            startButton.setVisible(true);
+            console.log(startButton)
         }
-        if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
-            next.setScale(1), prev.setScale(1), startButton.setScale(1), muteButton.setScale(1);
-        }
-        console.log(this.sys.game.device.browser)
+        console.log(isSpecialDevice)
 
         prev.setVisible(false);
         startButton.setVisible(false);
