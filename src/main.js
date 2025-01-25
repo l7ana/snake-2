@@ -8,23 +8,23 @@ import { Preloader } from './scenes/Preloader';
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 
 
-let width = 1080;
-let height = 720;
+let width;
+let height;
 
 function isMobile() {
   const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
   const deviceWidthSmall = screen.availHeight > screen.availWidth || window.innerHeight > window.innerWidth;
   return regex.test(navigator.userAgent) && deviceWidthSmall ? true : false;
 }
-  
-  if (isMobile()) {
-    width = 720;
-    height = 1080;
-  } else {
-    width = 1080;
-    height = 720;
-  }
 
+if (isMobile()) {
+  width = 720;
+  height = 1080;
+} else {
+  width = 1080;
+  height = 720;
+} 
+console.log('this is mobile:', isMobile())
 
 const config = {
     type: Phaser.AUTO,

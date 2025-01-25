@@ -192,6 +192,10 @@ export class Intro1 extends Scene {
             next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
             muteButton.setScale(0.5)
         }
+        if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari) {
+            next.setScale(1), prev.setScale(1), startButton.setScale(1), muteButton.setScale(1);
+        }
+        console.log(this.sys.game.device.browser)
 
         prev.setVisible(false);
         startButton.setVisible(false);
