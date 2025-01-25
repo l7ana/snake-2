@@ -121,7 +121,7 @@ export class Preloader extends Scene
         this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
         this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
 
-        if (this.isSpecialDevice) {
+        if (isSpecialDevice) {
             this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: 129, height: 96 })
             this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: 129, height: 96 })
             this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: 202.5 , height: 72 })
