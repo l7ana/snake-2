@@ -24,7 +24,6 @@ if (isMobile()) {
   width = 1080;
   height = 720;
 } 
-console.log('this is mobile:', isMobile())
 
 const config = {
     type: Phaser.AUTO,

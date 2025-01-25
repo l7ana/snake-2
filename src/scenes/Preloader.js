@@ -63,6 +63,12 @@ export class Preloader extends Scene
     {
         const mobile = isMobile(this);
         const layout = calculateLayout(mobile, this);
+
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const isSpecialDevice = isSafari || isChrome && isMacOS;
+
         if (this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ) {
             this.load.image('one', mobile ? 'assets/scenes/01_Window_382x382_@2x.jpg' : 'assets/scenes/01_Window_890x593_@2x.jpg');
             this.load.image('two', mobile ? 'assets/scenes/02_Jars_382x283_@2x.jpg' : 'assets/scenes/02_Jars_890x593_@2x.jpg');
@@ -115,11 +121,11 @@ export class Preloader extends Scene
         this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
         this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
 
-        this.load.image('next', '/buttons/SDG_LNY2025_Next.svg')
-        this.load.image('prev', '/buttons/SDG_LNY2025_Prev.svg')
-        this.load.image('start', '/buttons/SDG_LNY2025_Start.svg')
-        this.load.image('replay', '/buttons/SDG_LNY2025_Replay.svg')
-        this.load.image('share', '/buttons/SDG_LNY2025_Share.svg')
+        this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
+        this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
+        this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
+        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: 180, height:64})
+        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: 180, height:64})
     }
 
     create ()

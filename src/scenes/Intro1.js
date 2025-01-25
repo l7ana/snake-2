@@ -172,39 +172,27 @@ export class Intro1 extends Scene {
         const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
         const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
-        const { gameHeight, sceneWidth, isTouchDevice } = layout;
+        const { gameWidth, gameHeight, sceneWidth, isTouchDevice } = layout;
         const isSpecialDevice = isSafari || isChrome && isMacOS;
 
         const buttonWidth = isTouchDevice ? 86 : 43;
         const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90 ;
         const buttonScale = isSpecialDevice ? 1 : 
             isTouchDevice ? 0.75 : 0.5;
-        const startButtonScale = isSpecialDevice ? 1 : 
-            isTouchDevice ? 1 : 0.6;
 
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
-        const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isSpecialDevice ? sceneWidth + sceneWidth*0.05 :
+        const startButtonWidth = isSpecialDevice ? 90 : isTouchDevice ? 180 : 60;
+        const startButtonX = isSpecialDevice ? gameWidth - startButtonWidth*.5 :
             isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
-        const startButtonTween = isTouchDevice ? 1.05 : 0.65;
+        const startButtonTween = isSpecialDevice ? 1.05 : 
+            isTouchDevice ? 1.05 : 0.65;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
         const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5).setScale(buttonScale);
-        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0).setScale(startButtonScale);
-
-        //Troubleshooting special devices
-        if (isSpecialDevice) {
-            next.setDisplaySize(100, 50)
-            startButton.setDisplaySize(180, 64).setAlpha(1).setScale(0.6)
-            startButton.width = 180;
-            startButton.height = 64;
-            startButton.setVisible(true);
-            console.log(startButton)
-        }
-        console.log(isSpecialDevice)
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0).setOrigin(1, 0.5).setAlpha(0).setScale(buttonScale);
 
         prev.setVisible(false);
         startButton.setVisible(false);
