@@ -111,28 +111,36 @@ export class Preloader extends Scene
         this.load.svg('food7', '/treat/SDG_LNY2025_Gummy2.svg', { scale: mobile ? 1 : 0.6 })
         this.load.svg('food8', '/treat/SDG_LNY2025_Gummy3.svg', { scale: mobile ? 1 : 0.6 })
 
-        //load key buttons
-        this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')
-        this.load.image('right', '/buttons/SDG_LNY2025_Right.svg')
-        this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
-        this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
-
-
-        this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
-        this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
 
         if (isSpecialDevice) {
+            //load key buttons
+            this.load.svg('left', '/buttons/SDG_LNY2025_Left.svg',{width: 147, height: 147})
+            this.load.svg('right', '/buttons/SDG_LNY2025_Right.svg',{width: 147, height: 147})
+            this.load.svg('up', '/buttons/SDG_LNY2025_Up.svg',{width: 147, height: 147})
+            this.load.svg('down', '/buttons/SDG_LNY2025_Down.svg',{width: 147, height: 147})
             this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: 129, height: 96 })
             this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: 129, height: 96 })
             this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: 202.5 , height: 72 })
             this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: 202.5 , height: 72 })
             this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: 202.5 , height: 72 })
+
+            this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg', {width: 64, height: 64})
+            this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg', {width: 64, height: 64})
         } else {
+            //load key buttons
+            this.load.image('left', '/buttons/SDG_LNY2025_Left.svg')
+            this.load.image('right', '/buttons/SDG_LNY2025_Right.svg')
+            this.load.image('up', '/buttons/SDG_LNY2025_Up.svg')
+            this.load.image('down', '/buttons/SDG_LNY2025_Down.svg')
+
             this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
             this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
             this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')
             this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg')
             this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg')
+
+            this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
+            this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
         }
     }
 
