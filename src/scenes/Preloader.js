@@ -124,8 +124,8 @@ export class Preloader extends Scene
         this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
         this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
         this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
-        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: 180, height:64})
-        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: 180, height:64})
+        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
+        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
     }
 
     create ()

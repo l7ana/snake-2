@@ -12,6 +12,11 @@ export class GameOver extends Scene
     {
         const mobile = isMobile(this);
         const layout = calculateLayout(mobile, this);
+
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const isSpecialDevice = isSafari || isChrome && isMacOS;
         
         // Create border
         this.createStoryImage(layout);
@@ -51,11 +56,15 @@ export class GameOver extends Scene
         
         const buttonY = mobile ? layout.gameHeight - 100 : layout.gameHeight - 90;
         const replayButtonWidth = mobile ? 180 : 90;
-        const buttonScale = mobile ? 1 : 0.6;
-        const buttonHeight = mobile ? 64 : 32;
+        const buttonScale = isSpecialDevice && mobile ? 1.5 :
+            isSpecialDevice ? .9 : 
+            mobile ? 0.75 : 0.5;
         const shareButtonWidth = mobile ? 116 : 116;
-        const shareButtonX = mobile ? layout.sceneWidth + 25 : layout.sceneWidth + shareButtonWidth + 25;
-        const replayButtonX = mobile ? layout.gameWidth*0.2 + replayButtonWidth + 5 : shareButtonX - replayButtonWidth - 50;
+        const shareButtonX = isSpecialDevice && mobile ? layout.sceneWidth :
+            isSpecialDevice ? layout.sceneWidth + shareButtonWidth*1.25 + 30 :
+            mobile ? layout.sceneWidth + 25 : layout.sceneWidth + shareButtonWidth + 25;
+        const replayButtonX = isSpecialDevice ? shareButtonX - replayButtonWidth - 100 :
+            mobile ? layout.gameWidth*0.2 + replayButtonWidth + 5 : shareButtonX - replayButtonWidth - 50;
         const shareButton = this.add.image(shareButtonX, buttonY + 25, 'share', 0).setOrigin(1, 0.5).setScale(buttonScale);
         const replayButton = this.add.image(replayButtonX, buttonY + 25, 'replay', 0, { width: replayButtonWidth }).setOrigin(1, 0.5).setScale(buttonScale);
         console.log(shareButton)
