@@ -177,7 +177,8 @@ export class Intro1 extends Scene {
 
         const buttonWidth = isTouchDevice ? 86 : 43;
         const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90 ;
-        const buttonScale = isSpecialDevice ? 1 : 
+        const buttonScale = isSpecialDevice && isTouchDevice ? 1.5 :
+            isSpecialDevice ? 1 : 
             isTouchDevice ? 0.75 : 0.5;
 
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
@@ -187,12 +188,14 @@ export class Intro1 extends Scene {
         const startButtonX = isSpecialDevice ? gameWidth - startButtonWidth*.5 :
             isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
         const startButtonTween = isSpecialDevice ? 1.05 : 
-            isTouchDevice ? 1.05 : 0.65;
+            isTouchDevice ? 0.85 : 0.65;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
         const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5).setScale(buttonScale);
         const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0).setOrigin(1, 0.5).setAlpha(0).setScale(buttonScale);
+
+        console.log(`this is mobile: ${isTouchDevice}, and is special: ${isSpecialDevice}`)
 
         prev.setVisible(false);
         startButton.setVisible(false);
@@ -210,7 +213,7 @@ export class Intro1 extends Scene {
             if (this.currentContentIndex >= this.storyContent.length - 1) {
                 this.updateContent();
                 next.setVisible(false);
-                prev.setX(prevX - startButtonWidth + 10)
+                prev.setX(prevX - startButtonWidth*.75 + 10)
 
                 startButton.setVisible(true);
                 this.gameText.setVisible(true);
@@ -223,7 +226,7 @@ export class Intro1 extends Scene {
                     onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
-                            scale: this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ? 1.1 : startButtonTween,
+                            scale: startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,

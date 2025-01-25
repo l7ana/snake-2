@@ -121,11 +121,19 @@ export class Preloader extends Scene
         this.load.svg('sound', '/buttons/SDG_LNY2025_Sound.svg')
         this.load.svg('mute', '/buttons/SDG_LNY2025_Mute.svg')
 
-        this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
-        this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: isSpecialDevice ? 129 : 86, height: isSpecialDevice ? 96 : 64})
-        this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
-        this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
-        this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: isSpecialDevice ? 202.5 : 180, height: isSpecialDevice ? 72 : 64})
+        if (this.isSpecialDevice) {
+            this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg', {width: 129, height: 96 })
+            this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg',  {width: 129, height: 96 })
+            this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg', {width: 202.5 , height: 72 })
+            this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg', {width: 202.5 , height: 72 })
+            this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg', {width: 202.5 , height: 72 })
+        } else {
+            this.load.svg('next', '/buttons/SDG_LNY2025_Next.svg')
+            this.load.svg('prev', '/buttons/SDG_LNY2025_Prev.svg')
+            this.load.svg('start', '/buttons/SDG_LNY2025_Start.svg')
+            this.load.svg('replay', '/buttons/SDG_LNY2025_Replay.svg')
+            this.load.svg('share', '/buttons/SDG_LNY2025_Share.svg')
+        }
     }
 
     create ()
