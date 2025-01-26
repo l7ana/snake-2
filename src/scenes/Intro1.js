@@ -27,7 +27,6 @@ export class Intro1 extends Scene {
 
     create() {
 
-
         const mobile = isMobile(this);
         const layout = calculateLayout(mobile, this);
 
@@ -54,7 +53,7 @@ export class Intro1 extends Scene {
         // Setup input
         this.input = this.setupInput(layout);
         this.sound.unlock();
-        this.sound.play('music1', {loop: true, volume: 0.5})
+        this.sound.play('music1', {loop: true, volume: 0.3})
         this.sound.setVolume(0.3)
 
         const wordWrapWidth = mobile ? layout.gameWidth * 0.5: layout.gameWidth;
@@ -169,29 +168,35 @@ export class Intro1 extends Scene {
         this.input.addPointer(2);
         this.pointer = this.input.activePointer;
 
-        const { gameHeight, sceneWidth, isTouchDevice } = layout;
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+        const { gameWidth, gameHeight, sceneWidth, isTouchDevice } = layout;
+        const isSpecialDevice = isSafari || isChrome && isMacOS;
+
         const buttonWidth = isTouchDevice ? 86 : 43;
-        const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90;
+        const buttonY = isTouchDevice ? gameHeight - 100 : gameHeight - 90 ;
+        const buttonScale = isSpecialDevice && isTouchDevice ? 1.25 :
+            isSpecialDevice ? 1 : 
+            isTouchDevice ? 0.75 : 0.5;
 
         const nextX = isTouchDevice ? sceneWidth - (buttonWidth*1.25) - 5 : sceneWidth + buttonWidth - 5;
         const prevX = isTouchDevice ? (sceneWidth*0.9) - (buttonWidth*1.75): sceneWidth - (buttonWidth);
         
-        const startButtonWidth = isTouchDevice ? 180 : 90;
-        const startButtonX = isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*1.5 + 5;
-        const startButtonTween = isTouchDevice ? 1.05 : 0.65;
+        const startButtonWidth = isSpecialDevice ? 90 : isTouchDevice ? 180 : 60;
+        const startButtonX = isSpecialDevice ? gameWidth - startButtonWidth*.5 :
+            isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*2 + 15;
+        const startButtonTween = isSpecialDevice && isTouchDevice ? 1.3 :
+            isSpecialDevice ? 1.05 : 
+            isTouchDevice ? 0.85 : 0.6;
         
-        const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5);
-        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth });
-        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0, { width: startButtonWidth }).setOrigin(1, 0.5).setAlpha(0);
-        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5);
+        const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
+        const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
+        const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5).setScale(buttonScale);
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0).setOrigin(1, 0.5).setAlpha(0).setScale(buttonScale);
 
-        if (isTouchDevice) {
-            next.setScale(0.75), prev.setScale(0.75), startButton.setScale(1)
-            muteButton.setScale(0.75)
-        } else {
-            next.setScale(0.5), prev.setScale(0.5), startButton.setScale(0.6)
-            muteButton.setScale(0.5)
-        }
+        console.log(`this is mobile: ${isTouchDevice}, and is special: ${isSpecialDevice}`)
 
         prev.setVisible(false);
         startButton.setVisible(false);
@@ -209,7 +214,7 @@ export class Intro1 extends Scene {
             if (this.currentContentIndex >= this.storyContent.length - 1) {
                 this.updateContent();
                 next.setVisible(false);
-                prev.setX(prevX - startButtonWidth + 10)
+                prev.setX(isSpecialDevice && isTouchDevice ? prevX - startButtonWidth*1.5 + 10 : prevX - startButtonWidth + 10)
 
                 startButton.setVisible(true);
                 this.gameText.setVisible(true);
@@ -222,7 +227,7 @@ export class Intro1 extends Scene {
                     onActive: () =>{
                         this.tweens.add({
                             targets: startButton,
-                            scale: this.sys.game.device.browser.safari || this.sys.game.device.browser.mobileSafari ? 1.1 : startButtonTween,
+                            scale: startButtonTween,
                             ease: 'Power1',
                             yoyo: true,
                             loop: 100,

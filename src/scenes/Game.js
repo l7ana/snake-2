@@ -49,7 +49,7 @@ export class Game extends Scene
         this.sound.stopByKey('music1');
         this.sound.removeByKey('music1');
         this.sound.unlock();
-        var music = this.sound.add('music2', {loop: true, volume: 0.5});
+        var music = this.sound.add('music2', {loop: true, volume: 0.6});
         music.play();
         
         this.add.rectangle(gameHalfWidth, layout.sceneHalfY, layout.sceneWidth, layout.sceneHeight, 0xFFFFFF)
@@ -62,8 +62,17 @@ export class Game extends Scene
         this.physics.add.overlap( snake.head, food, (head, food) => this.handleFoodCollision(head, food, layout), null, this );
         this.createBorder(layout);
 
-        const muteButton = this.add.image( mobile ? 64+45 : layout.gameWidth*0.1 + 64, mobile ? gameHeight-64 : 55 + 32, 'sound');
-        muteButton.setInteractive().setScale( mobile ? 0.75 : 0.5 ).setAlpha(0.5);
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+        const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const isSpecialDevice = isSafari || isChrome && isMacOS;
+
+        const buttonScale = isSpecialDevice && mobile ? 1.5 :
+            isSpecialDevice ? 1 : 
+            mobile ? 0.75 : 0.5;
+
+        const muteButton = this.add.image( isSpecialDevice ? layout.gameWidth*0.1 + 64 : mobile ? 64+45 : layout.gameWidth*0.1 + 64, mobile ? gameHeight-64 : 55 + 32, 'sound');
+        muteButton.setInteractive().setScale(buttonScale).setAlpha(0.5);
         muteButton.on('pointerup', () => {
             if (this.sound.mute) {
                 this.sound.mute = false;

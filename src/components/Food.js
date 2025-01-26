@@ -1,3 +1,5 @@
+// import sharp from 'sharp'
+
 export default class Food extends Phaser.Physics.Arcade.Image
 {
   constructor (scene, x, y, layout) {
@@ -27,13 +29,11 @@ export default class Food extends Phaser.Physics.Arcade.Image
     this.enableBody = true;
 
     this.calculatedScale = this.cellSize / this.displayWidth;
-    // this.scale = this.calculatedScale;
-    // this.setScale(this.calculatedScale);
 
     this.width = this.cellSize;
     this.height = this.cellSize;
-    console.log(this.calculatedScale)
-    console.log(this)
+    // console.log(this.calculatedScale)
+    // console.log(this)
     // this.displayHeight = this.cellSize;
     // this.displayWidth = this.cellSize;
     

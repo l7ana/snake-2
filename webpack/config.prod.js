@@ -66,6 +66,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./index.html"
         }),
+        new HtmlWebpackPlugin({
+            template: "./past.html",
+            filename: "past.html",
+            inject: false
+        }),
         new CopyPlugin({
             patterns: [
                 { from: 'public/assets', to: 'assets' },
