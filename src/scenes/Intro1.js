@@ -187,14 +187,17 @@ export class Intro1 extends Scene {
         const startButtonWidth = isSpecialDevice ? 90 : isTouchDevice ? 180 : 60;
         const startButtonX = isSpecialDevice ? gameWidth - startButtonWidth*.5 :
             isTouchDevice ? sceneWidth + sceneWidth*0.05  : sceneWidth + startButtonWidth*2 + 15;
+        const startbuttonScale = isSpecialDevice && isTouchDevice ? 1.25 :
+            isSpecialDevice ? 1 : 
+            isTouchDevice ? 1 : 0.5;
         const startButtonTween = isSpecialDevice && isTouchDevice ? 1.3 :
             isSpecialDevice ? 1.05 : 
-            isTouchDevice ? 0.85 : 0.6;
+            isTouchDevice ? 1.05 : 0.6;
         
         const next = this.add.image(nextX, buttonY + 25, 'next', 0, { width: buttonWidth }).setOrigin(0, 0.5).setScale(buttonScale);
         const prev = this.add.image(prevX, buttonY + 25, 'prev', 0, { width: buttonWidth }).setScale(buttonScale);
         const muteButton = this.add.image( isTouchDevice ? 64+45 : layout.gameWidth*0.1 + 64, isTouchDevice ? gameHeight-64 : 55 + 32, 'sound').setAlpha(0.5).setScale(buttonScale);
-        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0).setOrigin(1, 0.5).setAlpha(0).setScale(buttonScale);
+        const startButton = this.add.image(startButtonX, buttonY + 25, 'start', 0).setOrigin(1, 0.5).setAlpha(0).setScale(startbuttonScale);
 
         console.log(`this is mobile: ${isTouchDevice}, and is special: ${isSpecialDevice}`)
 
