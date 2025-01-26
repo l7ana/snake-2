@@ -131,7 +131,7 @@ export class Game extends Scene
         food.eat();
         food.change();
         this.repositionFood(layout);
-        this.sound.play('gong2')
+        this.sound.play('gong2', {volume: 0.5})
     }
 
     update (time, delta) {
